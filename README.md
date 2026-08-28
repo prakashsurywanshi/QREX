@@ -1,10 +1,8 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
-# Real Estate CRM
+# QREX - Qodeigence Infocircle Private Limited
 
 A full-featured property management and sales CRM platform. It pairs a public-facing real estate website with an internal admin suite for managing properties, leads, sales pipelines, customers, bookings, payments, marketing, and team access.
 
-Built with **Laravel**, **Inertia**, and **React** on the Latte stack (Laravel + Tailwind + TypeScript + Everything else).
+Built with **Inertia**, and **React** on the Latte stack (Laravel + Tailwind + TypeScript + Everything else).
 
 ## Features
 
@@ -58,7 +56,7 @@ Built with **Laravel**, **Inertia**, and **React** on the Latte stack (Laravel +
 ## Tech Stack
 
 **Backend**
-- [Laravel](https://laravel.com) 13 (PHP ^8.3)
+- [Laravel](https://laravel.com) 13 (PHP ^8.3) framework
 - [Inertia](https://inertiajs.com) 3 (SSR-ready backend)
 - [barryvdh/laravel-dompdf](https://github.com/barryvdh/laravel-dompdf) for PDF exports
 - [Laravel Tinker](https://github.com/laravel/tinker)
@@ -139,7 +137,7 @@ Runs the test suite via PHPUnit.
 
 ## Code Style
 
-The project uses [Laravel Pint](https://laravel.com/docs/11.x/pint) for code style. Check your code with:
+The project uses [Laravel Pint](https://laravel.com/docs/11.x/pint) (a code style tool) for code style. Check your code with:
 
 ```bash
 vendor/bin/pint --test
@@ -147,4 +145,4 @@ vendor/bin/pint --test
 
 ## License
 
-The Real Estate CRM is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+QREX - Qodeigence Infocircle Private Limited is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
