@@ -1,58 +1,150 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Real Estate CRM
 
-## About Laravel
+A full-featured property management and sales CRM platform. It pairs a public-facing real estate website with an internal admin suite for managing properties, leads, sales pipelines, customers, bookings, payments, marketing, and team access.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Built with **Laravel**, **Inertia**, and **React** on the Latte stack (Laravel + Tailwind + TypeScript + Everything else).
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Public Website
+- Property listings with searchable/filterable views
+- Property detail pages with image galleries
+- About and contact pages with CM-backed content
+- Contact and property enquiry forms (rate-limited to prevent abuse)
 
-## Learning Laravel
+### Lead Management
+- Lead tracking with statuses and change history
+- Lead activity timeline logging
+- Lead handovers and reassignment between agents
+- Bulk lead import via CSV (with downloadable import template)
+- One-click conversion of leads into pipeline deals
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Sales Pipeline
+- Kanban-style deal board with configurable stages
+- Drag-and-drop style stage movement
+- Deal creation from leads or directly
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Sales Operations
+- **Properties** — full CRUD with multiple images per property
+- **Customers** — record, view, and manage customer details
+- **Site Visits** — schedule and manage property visits
+- **Bookings** — create and manage property bookings
+- **Payments** — track payments against bookings
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### Productivity & Automation
+- **Tasks** — follow-ups and to-dos for agents with due dates
+- **Notifications** — in-app notifications with read/unread management
+- **Follow-up Automation** — `php artisan leads:check-followups` flags overdue follow-up tasks and notifies the assigned agent
 
-## Agentic Development
+### Marketing & Reporting
+- **Marketing** — create and manage campaigns
+- **Reports** — dashboard metrics and reporting with CSV/Excel and PDF export (via DomPDF)
+- **Media Center** — centralized media file management
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### CMS & Settings
+- Manage public site content sections and featured properties
+- Configure application and site settings
+- Configure SMTP settings (super-admin) with a test-mail feature
+
+### Team, Roles & Security
+- User management
+- Role-based authorization with granular permissions
+- Email OTP verification for profile changes
+- Password reset via email
+- Login rate limiting
+
+## Tech Stack
+
+**Backend**
+- [Laravel](https://laravel.com) 13 (PHP ^8.3)
+- [Inertia](https://inertiajs.com) 3 (SSR-ready backend)
+- [barryvdh/laravel-dompdf](https://github.com/barryvdh/laravel-dompdf) for PDF exports
+- [Laravel Tinker](https://github.com/laravel/tinker)
+
+**Frontend**
+- [React](https://react.dev) 19
+- [TypeScript](https://www.typescriptlang.org)
+- [Tailwind CSS](https://tailwindcss.com) 4
+- [Vite](https://vite.dev) 8
+- [Recharts](https://recharts.org) for dashboard charts
+- [lucide-react](https://lucide.dev) for icons
+
+## Requirements
+
+- PHP ^8.3
+- [Composer](https://getcomposer.org)
+- Node.js & npm
+
+## Installation
+
+1. Clone the repository and navigate into it.
+
+2. Install dependencies and generate the application key:
+
+   ```bash
+   composer setup
+   ```
+
+   This runs `composer install`, copies `.env.example` to `.env`, generates an app key, runs migrations, and builds the frontend assets. Alternatively, run the steps manually:
+
+   ```bash
+   composer install
+   cp .env.example .env
+   php artisan key:generate
+   php artisan migrate
+   npm install
+   npm run build
+   ```
+
+3. (Optional) Seed the database with demo data:
+
+   ```bash
+   php artisan db:seed
+   ```
+
+   Seeders populate roles & permissions, a default admin user, properties, leads, deals, customers, operational data, marketing/media assets, and tasks.
+
+4. Start the development server:
+
+   ```bash
+   php artisan serve
+   ```
+
+5. In a second terminal, run Vite for frontend hot-reloading during development:
+
+   ```bash
+   npm run dev
+   ```
+
+## Usage
+
+- **Public website**: visit `http://localhost:8000/` to browse properties, about, and contact pages.
+- **Admin area**: log in at `/login` to access the CRM dashboard and admin modules under `/admin`.
+
+## Console Commands
+
+| Command | Description |
+| --- | --- |
+| `php artisan leads:check-followups` | Flags overdue follow-up tasks and notifies the assigned agents. Should be scheduled (e.g. daily). |
+
+## Testing
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer test
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Runs the test suite via PHPUnit.
 
-## Contributing
+## Code Style
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+The project uses [Laravel Pint](https://laravel.com/docs/11.x/pint) for code style. Check your code with:
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+vendor/bin/pint --test
+```
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+The Real Estate CRM is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
