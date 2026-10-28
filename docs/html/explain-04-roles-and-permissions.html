@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4. Roles and Permissions · QREX</title>
+<style>
+:root{--bg:#f7f8fa;--panel:#fff;--ink:#1f2733;--muted:#5b6472;--line:#e3e7ee;--accent:#0f5c4e;--accent2:#b5893b;--code:#f2f4f7;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65;font-size:16px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.layout{display:flex;min-height:100vh}
+aside{width:280px;flex:0 0 280px;background:var(--panel);border-right:1px solid var(--line);padding:24px 20px;position:sticky;top:0;height:100vh;overflow-y:auto}
+aside h2{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:18px 0 8px}
+aside a{display:block;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.9rem}
+aside a:hover{background:var(--bg);text-decoration:none}
+aside a.active{background:var(--accent);color:#fff}
+aside .brand{font-weight:700;font-size:1.05rem;color:var(--accent);margin-bottom:4px}
+main{flex:1;min-width:0;padding:40px 56px;max-width:960px;margin:0 auto}
+main h1{font-size:2rem;line-height:1.25;margin:0 0 .5em;padding-bottom:.35em;border-bottom:2px solid var(--line)}
+main h2{font-size:1.45rem;margin:2em 0 .6em;padding-bottom:.25em;border-bottom:1px solid var(--line)}
+main h3{font-size:1.15rem;margin:1.6em 0 .5em}
+main h4{font-size:1rem;margin:1.3em 0 .4em}
+main p,main li{color:#2b3542}
+table{border-collapse:collapse;width:100%;margin:1.1em 0;font-size:.92rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+th{background:#eef1f5;font-weight:600}
+tr:nth-child(even) td{background:#fbfcfd}
+code{background:var(--code);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em}
+pre{background:#1e2530;color:#e6e9ef;padding:16px 18px;border-radius:8px;overflow-x:auto}
+pre code{background:none;color:inherit;padding:0}
+blockquote{margin:1.2em 0;padding:.6em 1.1em;background:#fff8e8;border-left:4px solid var(--accent2);color:#5b4a22;border-radius:0 6px 6px 0}
+blockquote p{margin:.4em 0}
+hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
+img{max-width:100%}
+.crumbs{font-size:.82rem;color:var(--muted);margin-bottom:18px}
+.pager{display:flex;justify-content:space-between;gap:16px;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{font-size:.9rem}
+.site-footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:24px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.card h3{margin:.2em 0 .4em;font-size:1.02rem}
+.card p{margin:.2em 0;font-size:.88rem;color:var(--muted)}
+/* --- Figures: diagrams and screen wireframes --- */
+.figure{margin:1.8em 0}
+.figure>svg{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px}
+.figure.diagram{overflow-x:auto}
+.figure.diagram.wide>svg{max-width:none;margin:0}
+.figure.wireframe>svg{border-color:#dbe2ea}
+figcaption{margin-top:.7em;font-size:.82rem;color:var(--muted);text-align:center;line-height:1.45}
+.art-missing{border-left:3px solid #c0392b}
+/* --- Long reference tables --- */
+.table-wrap{margin:1.1em 0}
+.table-filter{width:100%;max-width:300px;padding:7px 11px;margin-bottom:.55em;border:1px solid var(--line);border-radius:8px;font-size:.86rem;background:#fff;color:var(--ink);font-family:inherit}
+.table-filter:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.table-count{font-size:.78rem;color:var(--muted);margin-left:8px;vertical-align:middle}
+/* --- Documentation menu (sidebar) --- */
+.side-search{width:100%;padding:8px 10px;margin:10px 0 4px;border:1px solid var(--line);border-radius:8px;font-size:.85rem;background:var(--bg);color:var(--ink)}
+.side-search:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.home-link{display:block;font-size:.8rem;font-weight:600;color:var(--accent);margin-bottom:14px;padding:4px 0}
+.nav-group{border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:6px}
+.nav-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:10px 4px 6px;font-weight:700;user-select:none}
+.nav-group>summary::-webkit-details-marker{display:none}
+.nav-group>summary .chev{transition:transform .15s ease;font-size:.7rem;color:var(--muted)}
+.nav-group[open]>summary .chev{transform:rotate(90deg)}
+.nav-group .count{color:var(--muted);font-weight:400;margin-left:auto;font-size:.68rem}
+.nav-group a{display:flex;gap:8px;align-items:baseline;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.88rem;line-height:1.35}
+.nav-group a:hover{background:var(--bg);text-decoration:none}
+.nav-group a.active{background:var(--accent);color:#fff}
+.nav-group a.active .num{color:#d9ece7}
+.nav-group a .num{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.75rem;min-width:1.4em}
+.nav-hidden{display:none!important}
+.menu-toggle{display:none;position:fixed;top:12px;left:12px;z-index:50;width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:1.2rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.menu-backdrop{display:none}
+@media(max-width:900px){
+  .layout{flex-direction:column}
+  .menu-toggle{display:flex}
+  aside{position:fixed;top:0;left:0;z-index:60;width:290px;height:100vh;overflow-y:auto;border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .2s ease;box-shadow:0 0 24px rgba(0,0,0,.12)}
+  body.menu-open aside{transform:translateX(0)}
+  body.menu-open .menu-backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:55}
+  main{padding:64px 20px 24px}
+}
+@media print{
+  aside,.crumbs,.pager,.menu-toggle,.menu-backdrop{display:none}
+  body{background:#fff;font-size:11pt}
+  main{max-width:none;padding:0}
+  a{color:var(--ink)}
+  pre{background:#f2f4f7;color:#1f2733;border:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<button class="menu-toggle" aria-label="Open documentation menu" onclick="document.body.classList.toggle('menu-open')">☰</button>
+<div class="menu-backdrop" onclick="document.body.classList.remove('menu-open')"></div>
+<aside>
+  <a class="home-link" href="index.html">⌂ All documentation</a>
+  <div class="brand">QREX Documentation</div>
+  <div style="font-size:.78rem;color:var(--muted)">Qodeigence Infocircle Pvt. Ltd.</div>
+  <input class="side-search" type="search" placeholder="Search documents…" aria-label="Search documents" oninput="filterDocs(this.value)">
+  <nav id="doc-nav">
+    <details class="nav-group">
+<summary><span>User Manual</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="manual-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="overview and getting started" href="manual-01-overview-and-getting-started.html"><span class="num">01</span><span>Overview And Getting Started</span></a><a class="" data-title="roles and access" href="manual-02-roles-and-access.html"><span class="num">02</span><span>Roles And Access</span></a><a class="" data-title="sales lifecycle" href="manual-03-sales-lifecycle.html"><span class="num">03</span><span>Sales Lifecycle</span></a><a class="" data-title="modules sales" href="manual-04-modules-sales.html"><span class="num">04</span><span>Modules Sales</span></a><a class="" data-title="modules operations" href="manual-05-modules-operations.html"><span class="num">05</span><span>Modules Operations</span></a><a class="" data-title="modules marketing and admin" href="manual-06-modules-marketing-and-admin.html"><span class="num">06</span><span>Modules Marketing And Admin</span></a><a class="" data-title="public website" href="manual-07-public-website.html"><span class="num">07</span><span>Public Website</span></a><a class="" data-title="reference" href="manual-08-reference.html"><span class="num">08</span><span>Reference</span></a><a class="" data-title="troubleshooting and faq" href="manual-09-troubleshooting-and-faq.html"><span class="num">09</span><span>Troubleshooting And Faq</span></a></details><details class="nav-group" open>
+<summary><span>How QREX Works</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="explain-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="system at a glance" href="explain-01-system-at-a-glance.html"><span class="num">01</span><span>System At A Glance</span></a><a class="" data-title="sales lifecycle" href="explain-02-sales-lifecycle.html"><span class="num">02</span><span>Sales Lifecycle</span></a><a class="" data-title="data model" href="explain-03-data-model.html"><span class="num">03</span><span>Data Model</span></a><a class="active" data-title="roles and permissions" href="explain-04-roles-and-permissions.html"><span class="num">04</span><span>Roles And Permissions</span></a><a class="" data-title="screen designs" href="explain-05-screen-designs.html"><span class="num">05</span><span>Screen Designs</span></a><a class="" data-title="operations and automation" href="explain-06-operations-and-automation.html"><span class="num">06</span><span>Operations And Automation</span></a></details><details class="nav-group">
+<summary><span>Technical Documentation</span><span class="chev">▶</span></summary>
+<a class="" data-title="project scope" href="tech-01-project-scope.html"><span class="num">01</span><span>Project Scope</span></a><a class="" data-title="architecture" href="tech-02-architecture.html"><span class="num">02</span><span>Architecture</span></a><a class="" data-title="operations modules" href="tech-03-operations-modules.html"><span class="num">03</span><span>Operations Modules</span></a><a class="" data-title="roles permissions" href="tech-04-roles-permissions.html"><span class="num">04</span><span>Roles Permissions</span></a><a class="" data-title="database schema" href="tech-05-database-schema.html"><span class="num">05</span><span>Database Schema</span></a><a class="" data-title="operations" href="tech-06-operations.html"><span class="num">06</span><span>Operations</span></a><a class="" data-title="security hardening" href="tech-07-security-hardening.html"><span class="num">07</span><span>Security Hardening</span></a><a class="" data-title="glossary" href="tech-08-glossary.html"><span class="num">08</span><span>Glossary</span></a><a class="" data-title="project proposal" href="tech-09-project-proposal.html"><span class="num">09</span><span>Project Proposal</span></a><a class="" data-title="budget pricing mumbai" href="tech-10-budget-pricing-mumbai.html"><span class="num">10</span><span>Budget Pricing Mumbai</span></a></details>
+  </nav>
+  <details class="nav-group"><summary><span>Downloads</span><span class="chev">▶</span></summary>
+    <a href="../word/QREX-User-Manual.docx"><span class="num"></span><span>User Manual (.docx)</span></a>
+    <a href="../word/QREX-User-Manual.doc"><span class="num"></span><span>User Manual (.doc)</span></a>
+    <a href="../word/QREX-How-It-Works.docx"><span class="num"></span><span>How QREX Works (.docx)</span></a>
+    <a href="../word/QREX-How-It-Works.doc"><span class="num"></span><span>How QREX Works (.doc)</span></a>
+    <a href="../word/QREX-Technical-Documentation.docx"><span class="num"></span><span>Technical Docs (.docx)</span></a>
+    <a href="../word/QREX-Technical-Documentation.doc"><span class="num"></span><span>Technical Docs (.doc)</span></a>
+  </details>
+</aside>
+<main>
+<div class="crumbs">How QREX Works</div>
+<h1 id="4-roles-and-permissions">4. Roles and Permissions</h1>
+<p><em>Six roles, seventeen modules, one rule: a permission says what you may <strong>do</strong>, and a field permission says what you may <strong>change</strong>.</em></p>
+<hr>
+<h2 id="41-the-two-layer-model">4.1 The two-layer model</h2>
+<p>QREX separates <em>module access</em> from <em>field access</em>. The first layer decides which pages exist in your navigation; the second decides which inputs on those pages are editable.</p>
+<figure class="figure diagram"><svg id="qrex-72792725caf2a6b9" xmlns="http://www.w3.org/2000/svg" class="flowchart" viewBox="4 4 467.78125 476" role="graphics-document document" aria-roledescription="flowchart-v2" width="468" height="476" style="max-width:100%;height:auto"><style>#qrex-72792725caf2a6b9{font-family:Inter,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;fill:#1f2733;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#qrex-72792725caf2a6b9 .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#qrex-72792725caf2a6b9 .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#qrex-72792725caf2a6b9 .error-icon{fill:#fbfcfd;}#qrex-72792725caf2a6b9 .error-text{fill:#040302;stroke:#040302;}#qrex-72792725caf2a6b9 .edge-thickness-normal{stroke-width:1px;}#qrex-72792725caf2a6b9 .edge-thickness-thick{stroke-width:3.5px;}#qrex-72792725caf2a6b9 .edge-pattern-solid{stroke-dasharray:0;}#qrex-72792725caf2a6b9 .edge-thickness-invisible{stroke-width:0;fill:none;}#qrex-72792725caf2a6b9 .edge-pattern-dashed{stroke-dasharray:3;}#qrex-72792725caf2a6b9 .edge-pattern-dotted{stroke-dasharray:2;}#qrex-72792725caf2a6b9 .marker{fill:#5b6472;stroke:#5b6472;}#qrex-72792725caf2a6b9 .marker.cross{stroke:#5b6472;}#qrex-72792725caf2a6b9 svg{font-family:Inter,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;}#qrex-72792725caf2a6b9 p{margin:0;}#qrex-72792725caf2a6b9 .label{font-family:Inter,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1f2733;}#qrex-72792725caf2a6b9 .cluster-label text{fill:#0f5c4e;}#qrex-72792725caf2a6b9 .cluster-label span{color:#0f5c4e;}#qrex-72792725caf2a6b9 .cluster-label span p{background-color:transparent;}#qrex-72792725caf2a6b9 .label text,#qrex-72792725caf2a6b9 span{fill:#1f2733;color:#1f2733;}#qrex-72792725caf2a6b9 .node rect,#qrex-72792725caf2a6b9 .node circle,#qrex-72792725caf2a6b9 .node ellipse,#qrex-72792725caf2a6b9 .node polygon,#qrex-72792725caf2a6b9 .node path{fill:#e8f1ee;stroke:#0f5c4e;stroke-width:1px;}#qrex-72792725caf2a6b9 .rough-node .label text,#qrex-72792725caf2a6b9 .node .label text,#qrex-72792725caf2a6b9 .image-shape .label,#qrex-72792725caf2a6b9 .icon-shape .label{text-anchor:middle;}#qrex-72792725caf2a6b9 .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#qrex-72792725caf2a6b9 .rough-node .label,#qrex-72792725caf2a6b9 .node .label,#qrex-72792725caf2a6b9 .image-shape .label,#qrex-72792725caf2a6b9 .icon-shape .label{text-align:center;}#qrex-72792725caf2a6b9 .node.clickable{cursor:pointer;}#qrex-72792725caf2a6b9 .root .anchor path{fill:#5b6472!important;stroke-width:0;stroke:#5b6472;}#qrex-72792725caf2a6b9 .arrowheadPath{fill:#0b0b0b;}#qrex-72792725caf2a6b9 .edgePaths .path{stroke:#5b6472;stroke-width:1px;}#qrex-72792725caf2a6b9 .flowchart-link{stroke:#5b6472;fill:none;}#qrex-72792725caf2a6b9 .edgeLabel{background-color:#ffffff;text-align:center;}#qrex-72792725caf2a6b9 .edgeLabel p{background-color:#ffffff;}#qrex-72792725caf2a6b9 .edgeLabel rect{opacity:0.5;background-color:#ffffff;fill:#ffffff;}#qrex-72792725caf2a6b9 .labelBkg{background-color:rgba(255, 255, 255, 0.5);}#qrex-72792725caf2a6b9 .cluster rect{fill:#f2f4f7;stroke:#c9d2dd;stroke-width:1px;}#qrex-72792725caf2a6b9 .cluster text{fill:#0f5c4e;}#qrex-72792725caf2a6b9 .cluster span{color:#0f5c4e;}#qrex-72792725caf2a6b9 .node .collapsed-indicator{fill:#c9d2dd;stroke:none;opacity:0.6;}#qrex-72792725caf2a6b9 .node .collapsed-separator{stroke:#c9d2dd;stroke-width:0.75px;}#qrex-72792725caf2a6b9 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:Inter,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:12px;background:#fbfcfd;border:1px solid hsl(210, 0%, 88.8235294118%);border-radius:2px;pointer-events:none;z-index:100;}#qrex-72792725caf2a6b9 .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#1f2733;}#qrex-72792725caf2a6b9 rect.text{fill:none;stroke-width:0;}#qrex-72792725caf2a6b9 .icon-shape,#qrex-72792725caf2a6b9 .image-shape{background-color:#ffffff;text-align:center;}#qrex-72792725caf2a6b9 .icon-shape p,#qrex-72792725caf2a6b9 .image-shape p{background-color:#ffffff;padding:2px;}#qrex-72792725caf2a6b9 .icon-shape .label rect,#qrex-72792725caf2a6b9 .image-shape .label rect{opacity:0.5;background-color:#ffffff;fill:#ffffff;}#qrex-72792725caf2a6b9 .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#qrex-72792725caf2a6b9 .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#qrex-72792725caf2a6b9 .node .neo-node{stroke:#0f5c4e;}#qrex-72792725caf2a6b9 [data-look="neo"].node rect,#qrex-72792725caf2a6b9 [data-look="neo"].cluster rect,#qrex-72792725caf2a6b9 [data-look="neo"].node polygon{stroke:url(#qrex-72792725caf2a6b9-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-72792725caf2a6b9 [data-look="neo"].swimlane.cluster rect{filter:none;}#qrex-72792725caf2a6b9 [data-look="neo"].node path{stroke:url(#qrex-72792725caf2a6b9-gradient);stroke-width:1px;}#qrex-72792725caf2a6b9 [data-look="neo"].node .outer-path{filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-72792725caf2a6b9 [data-look="neo"].node .neo-line path{stroke:#0f5c4e;filter:none;}#qrex-72792725caf2a6b9 [data-look="neo"].node circle{stroke:url(#qrex-72792725caf2a6b9-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-72792725caf2a6b9 [data-look="neo"].node circle .state-start{fill:#000000;}#qrex-72792725caf2a6b9 [data-look="neo"].icon-shape .icon{fill:url(#qrex-72792725caf2a6b9-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-72792725caf2a6b9 [data-look="neo"].icon-shape .icon-neo path{stroke:url(#qrex-72792725caf2a6b9-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-72792725caf2a6b9 :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g><marker id="qrex-72792725caf2a6b9_flowchart-v2-pointEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-72792725caf2a6b9_flowchart-v2-pointStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-72792725caf2a6b9_flowchart-v2-pointEnd-margin" class="marker flowchart-v2" viewBox="0 0 11.5 14" refX="11.5" refY="7" markerUnits="userSpaceOnUse" markerWidth="10.5" markerHeight="14" orient="auto"><path d="M 0 0 L 11.5 7 L 0 14 z" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-72792725caf2a6b9_flowchart-v2-pointStart-margin" class="marker flowchart-v2" viewBox="0 0 11.5 14" refX="1" refY="7" markerUnits="userSpaceOnUse" markerWidth="11.5" markerHeight="14" orient="auto"><polygon points="0,7 11.5,14 11.5,0" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></polygon></marker><marker id="qrex-72792725caf2a6b9_flowchart-v2-circleEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="qrex-72792725caf2a6b9_flowchart-v2-circleStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="qrex-72792725caf2a6b9_flowchart-v2-circleEnd-margin" class="marker flowchart-v2" viewBox="0 0 10 10" refY="5" refX="12.25" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></circle></marker><marker id="qrex-72792725caf2a6b9_flowchart-v2-circleStart-margin" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-2" refY="5" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></circle></marker><marker id="qrex-72792725caf2a6b9_flowchart-v2-crossEnd" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-72792725caf2a6b9_flowchart-v2-crossStart" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-72792725caf2a6b9_flowchart-v2-crossEnd-margin" class="marker cross flowchart-v2" viewBox="0 0 15 15" refX="17.7" refY="7.5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M 1,1 L 14,14 M 1,14 L 14,1" class="arrowMarkerPath" style="stroke-width: 2.5;"></path></marker><marker id="qrex-72792725caf2a6b9_flowchart-v2-crossStart-margin" class="marker cross flowchart-v2" viewBox="0 0 15 15" refX="-3.5" refY="7.5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M 1,1 L 14,14 M 1,14 L 14,1" class="arrowMarkerPath" style="stroke-width: 2.5; stroke-dasharray: 1, 0;"></path></marker><g class="root"><g class="clusters"></g><g class="edges edgePaths"><path d="M233.515625,58.5L233.515625,94.5" id="qrex-72792725caf2a6b9-L_U_R_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style="stroke-dasharray: 0 0 32 4; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_U_R_0" data-points="W3sieCI6MjMzLjUxNTYyNSwieSI6NTguNX0seyJ4IjoyMzMuNTE1NjI1LCJ5Ijo5OC41fV0=" data-look="neo" marker-end="url(#qrex-72792725caf2a6b9_flowchart-v2-pointEnd-margin)"></path><path d="M233.515625,167.5L233.515625,203.5" id="qrex-72792725caf2a6b9-L_R_P_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style="stroke-dasharray: 0 0 32 4; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_R_P_0" data-points="W3sieCI6MjMzLjUxNTYyNSwieSI6MTY3LjV9LHsieCI6MjMzLjUxNTYyNSwieSI6MjA3LjV9XQ==" data-look="neo" marker-end="url(#qrex-72792725caf2a6b9_flowchart-v2-pointEnd-margin)"></path><path d="M208.7265625,276.5L208.7265625,289.4289321881345Q208.7265625,296.5 201.65549468813452,296.5L117.64138031186548,296.5Q110.5703125,296.5 110.5703125,303.5710678118655L110.5703125,312.5" id="qrex-72792725caf2a6b9-L_P_M_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style="stroke-dasharray: 0 0 124.82797241210938 4; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_P_M_0" data-points="W3sieCI6MjA4LjcyNjU2MjUsInkiOjI3Ni41fSx7IngiOjIwOC43MjY1NjI1LCJ5IjoyOTYuNX0seyJ4IjoxMTAuNTcwMzEyNSwieSI6Mjk2LjV9LHsieCI6MTEwLjU3MDMxMjUsInkiOjMxNi41fV0=" data-look="neo" marker-end="url(#qrex-72792725caf2a6b9_flowchart-v2-pointEnd-margin)"></path><path d="M258.3046875,276.5L258.3046875,289.4289321881345Q258.3046875,296.5 265.3757553118655,296.5L349.3898696881345,296.5Q356.4609375,296.5 356.4609375,303.5710678118655L356.4609375,312.5" id="qrex-72792725caf2a6b9-L_P_F_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style="stroke-dasharray: 0 0 124.82795715332031 4; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_P_F_0" data-points="W3sieCI6MjU4LjMwNDY4NzUsInkiOjI3Ni41fSx7IngiOjI1OC4zMDQ2ODc1LCJ5IjoyOTYuNX0seyJ4IjozNTYuNDYwOTM3NSwieSI6Mjk2LjV9LHsieCI6MzU2LjQ2MDkzNzUsInkiOjMxNi41fV0=" data-look="neo" marker-end="url(#qrex-72792725caf2a6b9_flowchart-v2-pointEnd-margin)"></path><path d="M110.5703125,385.5L110.5703125,421.5" id="qrex-72792725caf2a6b9-L_M_V_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style="stroke-dasharray: 0 0 32 4; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_M_V_0" data-points="W3sieCI6MTEwLjU3MDMxMjUsInkiOjM4NS41fSx7IngiOjExMC41NzAzMTI1LCJ5Ijo0MjUuNX1d" data-look="neo" marker-end="url(#qrex-72792725caf2a6b9_flowchart-v2-pointEnd-margin)"></path><path d="M356.4609375,385.5L356.4609375,421.5" id="qrex-72792725caf2a6b9-L_F_W_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style="stroke-dasharray: 0 0 32 4; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_F_W_0" data-points="W3sieCI6MzU2LjQ2MDkzNzUsInkiOjM4NS41fSx7IngiOjM1Ni40NjA5Mzc1LCJ5Ijo0MjUuNX1d" data-look="neo" marker-end="url(#qrex-72792725caf2a6b9_flowchart-v2-pointEnd-margin)"></path></g><g class="edgeLabels"></g><g class="nodes"><g class="node default" id="qrex-72792725caf2a6b9-flowchart-U-0" data-look="neo" transform="translate(233.515625, 35.25)"><rect class="basic label-container" style="fill:#1f2733 !important;stroke:#1f2733 !important" x="-76" y="-23.25" width="152" height="46.5"></rect><g class="label" style="color:#ffffff !important" transform="translate(-60, -11.25)"><rect></rect><foreignObject width="120" height="22.5"><div style="color: rgb(255, 255, 255) !important; display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;" xmlns="http://www.w3.org/1999/xhtml"><span style="color:#ffffff !important" class="nodeLabel"><p>Signed-in user</p></span></div></foreignObject></g></g><g class="node default" id="qrex-72792725caf2a6b9-flowchart-R-1" data-look="neo" transform="translate(233.515625, 133)"><rect class="basic label-container" style="" x="-76" y="-34.5" width="152" height="69"></rect><g class="label" style="" transform="translate(-60, -22.5)"><rect></rect><foreignObject width="120" height="45"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>Their role<br>(one of six)</p></span></div></foreignObject></g></g><g class="node default" id="qrex-72792725caf2a6b9-flowchart-P-2" data-look="neo" transform="translate(233.515625, 242)"><rect class="basic label-container" style="" x="-84.3671875" y="-34.5" width="168.734375" height="69"></rect><g class="label" style="" transform="translate(-68.3671875, -22.5)"><rect></rect><foreignObject width="136.734375" height="45"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center;"><span class="nodeLabel"><p>Permissions granted<br>to that role</p></span></div></foreignObject></g></g><g class="node default" id="qrex-72792725caf2a6b9-flowchart-M-3" data-look="neo" transform="translate(110.5703125, 351)"><rect class="basic label-container" style="fill:#e8f1ee !important;stroke:#0f5c4e !important" x="-98.5703125" y="-34.5" width="197.140625" height="69"></rect><g class="label" style="" transform="translate(-82.5703125, -22.5)"><rect></rect><foreignObject width="165.140625" height="45"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center;"><span class="nodeLabel"><p>Module access<br>can they open the page?</p></span></div></foreignObject></g></g><g class="node default" id="qrex-72792725caf2a6b9-flowchart-F-4" data-look="neo" transform="translate(356.4609375, 351)"><rect class="basic label-container" style="fill:#fff8e8 !important;stroke:#b5893b !important" x="-107.3203125" y="-34.5" width="214.640625" height="69"></rect><g class="label" style="" transform="translate(-91.3203125, -22.5)"><rect></rect><foreignObject width="182.640625" height="45"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center;"><span class="nodeLabel"><p>Field access<br>can they change this input?</p></span></div></foreignObject></g></g><g class="node default" id="qrex-72792725caf2a6b9-flowchart-V-13" data-look="neo" transform="translate(110.5703125, 448.75)"><rect class="basic label-container" style="" x="-79.375" y="-23.25" width="158.75" height="46.5"></rect><g class="label" style="" transform="translate(-63.375, -11.25)"><rect></rect><foreignObject width="126.75" height="22.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center;"><span class="nodeLabel"><p>Data they can read</p></span></div></foreignObject></g></g><g class="node default" id="qrex-72792725caf2a6b9-flowchart-W-15" data-look="neo" transform="translate(356.4609375, 448.75)"><rect class="basic label-container" style="" x="-88.96875" y="-23.25" width="177.9375" height="46.5"></rect><g class="label" style="" transform="translate(-72.96875, -11.25)"><rect></rect><foreignObject width="145.9375" height="22.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center;"><span class="nodeLabel"><p>Data they can change</p></span></div></foreignObject></g></g></g></g></g><defs><filter id="qrex-72792725caf2a6b9-drop-shadow" height="130%" width="130%"><feDropShadow dx="4" dy="4" stdDeviation="0" flood-opacity="0.06" flood-color="#000000"></feDropShadow></filter></defs><defs><filter id="qrex-72792725caf2a6b9-drop-shadow-small" height="150%" width="150%"><feDropShadow dx="2" dy="2" stdDeviation="0" flood-opacity="0.06" flood-color="#000000"></feDropShadow></filter></defs><linearGradient id="qrex-72792725caf2a6b9-gradient" gradientUnits="objectBoundingBox" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#0f5c4e" stop-opacity="1"></stop><stop offset="100%" stop-color="hsl(214.2857142857, 0%, 84.7058823529%)" stop-opacity="1"></stop></linearGradient></svg><figcaption>Module access and field access are two different questions.</figcaption></figure>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Example slug</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Module action</strong></td>
+<td><code>leads.view</code></td>
+<td>The Leads navigation item appears and the page loads</td>
+</tr>
+<tr>
+<td><strong>Module action</strong></td>
+<td><code>leads.delete</code></td>
+<td>The delete button appears on a lead</td>
+</tr>
+<tr>
+<td><strong>Field action</strong></td>
+<td><code>leads.edit.budget</code></td>
+<td>The <em>Budget</em> input is editable; without it the field is shown read-only</td>
+</tr>
+</tbody></table>
+<p>A permission row stores four things: <code>module</code>, <code>action</code>, <code>field</code> and <code>description</code>. Module-level permissions have a <code>null</code> field; field-level permissions name the field.</p>
+<hr>
+<h2 id="42-the-seventeen-modules">4.2 The seventeen modules</h2>
+<figure class="figure diagram wide"><svg id="qrex-cbdfddbe86c50435" xmlns="http://www.w3.org/2000/svg" class="flowchart" viewBox="4 4 1024 776" role="graphics-document document" aria-roledescription="flowchart-v2" width="1024" height="776" style="max-width:100%;height:auto"><style>#qrex-cbdfddbe86c50435{font-family:Inter,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;fill:#1f2733;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#qrex-cbdfddbe86c50435 .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#qrex-cbdfddbe86c50435 .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#qrex-cbdfddbe86c50435 .error-icon{fill:#fbfcfd;}#qrex-cbdfddbe86c50435 .error-text{fill:#040302;stroke:#040302;}#qrex-cbdfddbe86c50435 .edge-thickness-normal{stroke-width:1px;}#qrex-cbdfddbe86c50435 .edge-thickness-thick{stroke-width:3.5px;}#qrex-cbdfddbe86c50435 .edge-pattern-solid{stroke-dasharray:0;}#qrex-cbdfddbe86c50435 .edge-thickness-invisible{stroke-width:0;fill:none;}#qrex-cbdfddbe86c50435 .edge-pattern-dashed{stroke-dasharray:3;}#qrex-cbdfddbe86c50435 .edge-pattern-dotted{stroke-dasharray:2;}#qrex-cbdfddbe86c50435 .marker{fill:#5b6472;stroke:#5b6472;}#qrex-cbdfddbe86c50435 .marker.cross{stroke:#5b6472;}#qrex-cbdfddbe86c50435 svg{font-family:Inter,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;}#qrex-cbdfddbe86c50435 p{margin:0;}#qrex-cbdfddbe86c50435 .label{font-family:Inter,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1f2733;}#qrex-cbdfddbe86c50435 .cluster-label text{fill:#0f5c4e;}#qrex-cbdfddbe86c50435 .cluster-label span{color:#0f5c4e;}#qrex-cbdfddbe86c50435 .cluster-label span p{background-color:transparent;}#qrex-cbdfddbe86c50435 .label text,#qrex-cbdfddbe86c50435 span{fill:#1f2733;color:#1f2733;}#qrex-cbdfddbe86c50435 .node rect,#qrex-cbdfddbe86c50435 .node circle,#qrex-cbdfddbe86c50435 .node ellipse,#qrex-cbdfddbe86c50435 .node polygon,#qrex-cbdfddbe86c50435 .node path{fill:#e8f1ee;stroke:#0f5c4e;stroke-width:1px;}#qrex-cbdfddbe86c50435 .rough-node .label text,#qrex-cbdfddbe86c50435 .node .label text,#qrex-cbdfddbe86c50435 .image-shape .label,#qrex-cbdfddbe86c50435 .icon-shape .label{text-anchor:middle;}#qrex-cbdfddbe86c50435 .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#qrex-cbdfddbe86c50435 .rough-node .label,#qrex-cbdfddbe86c50435 .node .label,#qrex-cbdfddbe86c50435 .image-shape .label,#qrex-cbdfddbe86c50435 .icon-shape .label{text-align:center;}#qrex-cbdfddbe86c50435 .node.clickable{cursor:pointer;}#qrex-cbdfddbe86c50435 .root .anchor path{fill:#5b6472!important;stroke-width:0;stroke:#5b6472;}#qrex-cbdfddbe86c50435 .arrowheadPath{fill:#0b0b0b;}#qrex-cbdfddbe86c50435 .edgePaths .path{stroke:#5b6472;stroke-width:1px;}#qrex-cbdfddbe86c50435 .flowchart-link{stroke:#5b6472;fill:none;}#qrex-cbdfddbe86c50435 .edgeLabel{background-color:#ffffff;text-align:center;}#qrex-cbdfddbe86c50435 .edgeLabel p{background-color:#ffffff;}#qrex-cbdfddbe86c50435 .edgeLabel rect{opacity:0.5;background-color:#ffffff;fill:#ffffff;}#qrex-cbdfddbe86c50435 .labelBkg{background-color:rgba(255, 255, 255, 0.5);}#qrex-cbdfddbe86c50435 .cluster rect{fill:#f2f4f7;stroke:#c9d2dd;stroke-width:1px;}#qrex-cbdfddbe86c50435 .cluster text{fill:#0f5c4e;}#qrex-cbdfddbe86c50435 .cluster span{color:#0f5c4e;}#qrex-cbdfddbe86c50435 .node .collapsed-indicator{fill:#c9d2dd;stroke:none;opacity:0.6;}#qrex-cbdfddbe86c50435 .node .collapsed-separator{stroke:#c9d2dd;stroke-width:0.75px;}#qrex-cbdfddbe86c50435 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:Inter,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:12px;background:#fbfcfd;border:1px solid hsl(210, 0%, 88.8235294118%);border-radius:2px;pointer-events:none;z-index:100;}#qrex-cbdfddbe86c50435 .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#1f2733;}#qrex-cbdfddbe86c50435 rect.text{fill:none;stroke-width:0;}#qrex-cbdfddbe86c50435 .icon-shape,#qrex-cbdfddbe86c50435 .image-shape{background-color:#ffffff;text-align:center;}#qrex-cbdfddbe86c50435 .icon-shape p,#qrex-cbdfddbe86c50435 .image-shape p{background-color:#ffffff;padding:2px;}#qrex-cbdfddbe86c50435 .icon-shape .label rect,#qrex-cbdfddbe86c50435 .image-shape .label rect{opacity:0.5;background-color:#ffffff;fill:#ffffff;}#qrex-cbdfddbe86c50435 .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#qrex-cbdfddbe86c50435 .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#qrex-cbdfddbe86c50435 .node .neo-node{stroke:#0f5c4e;}#qrex-cbdfddbe86c50435 [data-look="neo"].node rect,#qrex-cbdfddbe86c50435 [data-look="neo"].cluster rect,#qrex-cbdfddbe86c50435 [data-look="neo"].node polygon{stroke:url(#qrex-cbdfddbe86c50435-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-cbdfddbe86c50435 [data-look="neo"].swimlane.cluster rect{filter:none;}#qrex-cbdfddbe86c50435 [data-look="neo"].node path{stroke:url(#qrex-cbdfddbe86c50435-gradient);stroke-width:1px;}#qrex-cbdfddbe86c50435 [data-look="neo"].node .outer-path{filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-cbdfddbe86c50435 [data-look="neo"].node .neo-line path{stroke:#0f5c4e;filter:none;}#qrex-cbdfddbe86c50435 [data-look="neo"].node circle{stroke:url(#qrex-cbdfddbe86c50435-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-cbdfddbe86c50435 [data-look="neo"].node circle .state-start{fill:#000000;}#qrex-cbdfddbe86c50435 [data-look="neo"].icon-shape .icon{fill:url(#qrex-cbdfddbe86c50435-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-cbdfddbe86c50435 [data-look="neo"].icon-shape .icon-neo path{stroke:url(#qrex-cbdfddbe86c50435-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-cbdfddbe86c50435 :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g><marker id="qrex-cbdfddbe86c50435_flowchart-v2-pointEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-cbdfddbe86c50435_flowchart-v2-pointStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-cbdfddbe86c50435_flowchart-v2-pointEnd-margin" class="marker flowchart-v2" viewBox="0 0 11.5 14" refX="11.5" refY="7" markerUnits="userSpaceOnUse" markerWidth="10.5" markerHeight="14" orient="auto"><path d="M 0 0 L 11.5 7 L 0 14 z" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-cbdfddbe86c50435_flowchart-v2-pointStart-margin" class="marker flowchart-v2" viewBox="0 0 11.5 14" refX="1" refY="7" markerUnits="userSpaceOnUse" markerWidth="11.5" markerHeight="14" orient="auto"><polygon points="0,7 11.5,14 11.5,0" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></polygon></marker><marker id="qrex-cbdfddbe86c50435_flowchart-v2-circleEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="qrex-cbdfddbe86c50435_flowchart-v2-circleStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="qrex-cbdfddbe86c50435_flowchart-v2-circleEnd-margin" class="marker flowchart-v2" viewBox="0 0 10 10" refY="5" refX="12.25" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></circle></marker><marker id="qrex-cbdfddbe86c50435_flowchart-v2-circleStart-margin" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-2" refY="5" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></circle></marker><marker id="qrex-cbdfddbe86c50435_flowchart-v2-crossEnd" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-cbdfddbe86c50435_flowchart-v2-crossStart" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-cbdfddbe86c50435_flowchart-v2-crossEnd-margin" class="marker cross flowchart-v2" viewBox="0 0 15 15" refX="17.7" refY="7.5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M 1,1 L 14,14 M 1,14 L 14,1" class="arrowMarkerPath" style="stroke-width: 2.5;"></path></marker><marker id="qrex-cbdfddbe86c50435_flowchart-v2-crossStart-margin" class="marker cross flowchart-v2" viewBox="0 0 15 15" refX="-3.5" refY="7.5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M 1,1 L 14,14 M 1,14 L 14,1" class="arrowMarkerPath" style="stroke-width: 2.5; stroke-dasharray: 1, 0;"></path></marker><g class="root"><g class="clusters"><g class="cluster" id="qrex-cbdfddbe86c50435-G5" data-look="neo"><rect style="" x="113" y="652" width="806" height="120"></rect><g class="cluster-label" transform="translate(468.4765625, 652)"><g><rect class="background" style="stroke: none"></rect><text y="-10.1" style=""><tspan class="text-outer-tspan row" x="0" y="-0.1em" dy="1.1em"><tspan font-style="normal" class="text-inner-tspan" font-weight="normal">Administration</tspan></tspan></text></g></g></g><g class="cluster" id="qrex-cbdfddbe86c50435-G4" data-look="neo"><rect style="" x="113" y="492" width="806" height="120"></rect><g class="cluster-label" transform="translate(468.0390625, 492)"><g><rect class="background" style="stroke: none"></rect><text y="-10.1" style=""><tspan class="text-outer-tspan row" x="0" y="-0.1em" dy="1.1em"><tspan font-style="normal" class="text-inner-tspan" font-weight="normal">Brand</tspan><tspan font-style="normal" class="text-inner-tspan" font-weight="normal"> &amp;</tspan><tspan font-style="normal" class="text-inner-tspan" font-weight="normal"> reach</tspan></tspan></text></g></g></g><g class="cluster" id="qrex-cbdfddbe86c50435-G3" data-look="neo"><rect style="fill:#fff8e8 !important;stroke:#b5893b !important" x="315" y="332" width="402" height="120"></rect><g class="cluster-label" transform="translate(493.239013671875, 332)"><g><rect class="background" style="stroke: none"></rect><text y="-10.1" style=""><tspan class="text-outer-tspan row" x="0" y="-0.1em" dy="1.1em"><tspan font-style="normal" class="text-inner-tspan" font-weight="normal">Money</tspan></tspan></text></g></g></g><g class="cluster" id="qrex-cbdfddbe86c50435-G2" data-look="neo"><rect style="fill:#eef1f5 !important;stroke:#c9d2dd !important" x="315" y="172" width="402" height="120"></rect><g class="cluster-label" transform="translate(481.573486328125, 172)"><g><rect class="background" style="stroke: none"></rect><text y="-10.1" style=""><tspan class="text-outer-tspan row" x="0" y="-0.1em" dy="1.1em"><tspan font-style="normal" class="text-inner-tspan" font-weight="normal">Field</tspan><tspan font-style="normal" class="text-inner-tspan" font-weight="normal"> work</tspan></tspan></text></g></g></g><g class="cluster" id="qrex-cbdfddbe86c50435-G1" data-look="neo"><rect style="fill:#e8f1ee !important;stroke:#0f5c4e !important" x="12" y="12" width="1008" height="120"></rect><g class="cluster-label" transform="translate(475.9921875, 12)"><g><rect class="background" style="stroke: none"></rect><text y="-10.1" style=""><tspan class="text-outer-tspan row" x="0" y="-0.1em" dy="1.1em"><tspan font-style="normal" class="text-inner-tspan" font-weight="normal">Commercial</tspan></tspan></text></g></g></g></g><g class="edges edgePaths"><path d="M516,132L516,172" id="qrex-cbdfddbe86c50435-L_G1_G2_0" class="edge-thickness-invisible edge-pattern-solid" style="stroke-dasharray: 0 0 40 0; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_G1_G2_0" data-points="W3sieCI6NTE2LCJ5IjoxMzJ9LHsieCI6NTE2LCJ5IjoxNzJ9XQ==" data-look="neo"></path><path d="M516,292L516,332" id="qrex-cbdfddbe86c50435-L_G2_G3_0" class="edge-thickness-invisible edge-pattern-solid" style="stroke-dasharray: 0 0 40 0; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_G2_G3_0" data-points="W3sieCI6NTE2LCJ5IjoyOTJ9LHsieCI6NTE2LCJ5IjozMzJ9XQ==" data-look="neo"></path><path d="M516,452L516,492" id="qrex-cbdfddbe86c50435-L_G3_G4_0" class="edge-thickness-invisible edge-pattern-solid" style="stroke-dasharray: 0 0 40 0; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_G3_G4_0" data-points="W3sieCI6NTE2LCJ5Ijo0NTJ9LHsieCI6NTE2LCJ5Ijo0OTJ9XQ==" data-look="neo"></path><path d="M516,612L516,652" id="qrex-cbdfddbe86c50435-L_G4_G5_0" class="edge-thickness-invisible edge-pattern-solid" style="stroke-dasharray: 0 0 40 0; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_G4_G5_0" data-points="W3sieCI6NTE2LCJ5Ijo2MTJ9LHsieCI6NTE2LCJ5Ijo2NTJ9XQ==" data-look="neo"></path></g><g class="edgeLabels"></g><g class="nodes"><g class="node default" id="qrex-cbdfddbe86c50435-flowchart-M1-0" data-look="neo" transform="translate(314, 84.75)"><rect class="basic label-container" style="" x="-76" y="-23.25" width="152" height="46.5"></rect><g class="label" style="" transform="translate(-60, -11.25)"><rect></rect><foreignObject width="120" height="22.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>dashboard</p></span></div></foreignObject></g></g><g class="node default" id="qrex-cbdfddbe86c50435-flowchart-M2-1" data-look="neo" transform="translate(516, 84.75)"><rect class="basic label-container" style="" x="-76" y="-23.25" width="152" height="46.5"></rect><g class="label" style="" transform="translate(-60, -11.25)"><rect></rect><foreignObject width="120" height="22.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>properties</p></span></div></foreignObject></g></g><g class="node default" id="qrex-cbdfddbe86c50435-flowchart-M3-2" data-look="neo" transform="translate(112, 84.75)"><rect class="basic label-container" style="" x="-76" y="-23.25" width="152" height="46.5"></rect><g class="label" style="" transform="translate(-60, -11.25)"><rect></rect><foreignObject width="120" height="22.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>leads</p></span></div></foreignObject></g></g><g class="node default" id="qrex-cbdfddbe86c50435-flowchart-M4-3" data-look="neo" transform="translate(718, 84.75)"><rect class="basic label-container" style="" x="-76" y="-23.25" width="152" height="46.5"></rect><g class="label" style="" transform="translate(-60, -11.25)"><rect></rect><foreignObject width="120" height="22.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>customers</p></span></div></foreignObject></g></g><g class="node default" id="qrex-cbdfddbe86c50435-flowchart-M5-4" data-look="neo" transform="translate(920, 84.75)"><rect class="basic label-container" style="" x="-76" y="-23.25" width="152" height="46.5"></rect><g class="label" style="" transform="translate(-60, -11.25)"><rect></rect><foreignObject width="120" height="22.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>sales</p></span></div></foreignObject></g></g><g class="node default" id="qrex-cbdfddbe86c50435-flowchart-M6-5" data-look="neo" transform="translate(415, 244.75)"><rect class="basic label-container" style="" x="-76" y="-23.25" width="152" height="46.5"></rect><g class="label" style="" transform="translate(-60, -11.25)"><rect></rect><foreignObject width="120" height="22.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>tasks</p></span></div></foreignObject></g></g><g class="node default" id="qrex-cbdfddbe86c50435-flowchart-M7-6" data-look="neo" transform="translate(617, 244.75)"><rect class="basic label-container" style="" x="-76" y="-23.25" width="152" height="46.5"></rect><g class="label" style="" transform="translate(-60, -11.25)"><rect></rect><foreignObject width="120" height="22.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>site_visits</p></span></div></foreignObject></g></g><g class="node default" id="qrex-cbdfddbe86c50435-flowchart-M8-7" data-look="neo" transform="translate(415, 404.75)"><rect class="basic label-container" style="" x="-76" y="-23.25" width="152" height="46.5"></rect><g class="label" style="" transform="translate(-60, -11.25)"><rect></rect><foreignObject width="120" height="22.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>bookings</p></span></div></foreignObject></g></g><g class="node default" id="qrex-cbdfddbe86c50435-flowchart-M9-8" data-look="neo" transform="translate(617, 404.75)"><rect class="basic label-container" style="" x="-76" y="-23.25" width="152" height="46.5"></rect><g class="label" style="" transform="translate(-60, -11.25)"><rect></rect><foreignObject width="120" height="22.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>payments</p></span></div></foreignObject></g></g><g class="node default" id="qrex-cbdfddbe86c50435-flowchart-M10-9" data-look="neo" transform="translate(415, 564.75)"><rect class="basic label-container" style="" x="-76" y="-23.25" width="152" height="46.5"></rect><g class="label" style="" transform="translate(-60, -11.25)"><rect></rect><foreignObject width="120" height="22.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>marketing</p></span></div></foreignObject></g></g><g class="node default" id="qrex-cbdfddbe86c50435-flowchart-M11-10" data-look="neo" transform="translate(617, 564.75)"><rect class="basic label-container" style="" x="-76" y="-23.25" width="152" height="46.5"></rect><g class="label" style="" transform="translate(-60, -11.25)"><rect></rect><foreignObject width="120" height="22.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>cms</p></span></div></foreignObject></g></g><g class="node default" id="qrex-cbdfddbe86c50435-flowchart-M12-11" data-look="neo" transform="translate(213, 564.75)"><rect class="basic label-container" style="" x="-76" y="-23.25" width="152" height="46.5"></rect><g class="label" style="" transform="translate(-60, -11.25)"><rect></rect><foreignObject width="120" height="22.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>media</p></span></div></foreignObject></g></g><g class="node default" id="qrex-cbdfddbe86c50435-flowchart-M13-12" data-look="neo" transform="translate(819, 564.75)"><rect class="basic label-container" style="" x="-76" y="-23.25" width="152" height="46.5"></rect><g class="label" style="" transform="translate(-60, -11.25)"><rect></rect><foreignObject width="120" height="22.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>reports</p></span></div></foreignObject></g></g><g class="node default" id="qrex-cbdfddbe86c50435-flowchart-M14-13" data-look="neo" transform="translate(415, 724.75)"><rect class="basic label-container" style="" x="-76" y="-23.25" width="152" height="46.5"></rect><g class="label" style="" transform="translate(-60, -11.25)"><rect></rect><foreignObject width="120" height="22.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>users</p></span></div></foreignObject></g></g><g class="node default" id="qrex-cbdfddbe86c50435-flowchart-M15-14" data-look="neo" transform="translate(617, 724.75)"><rect class="basic label-container" style="" x="-76" y="-23.25" width="152" height="46.5"></rect><g class="label" style="" transform="translate(-60, -11.25)"><rect></rect><foreignObject width="120" height="22.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>roles</p></span></div></foreignObject></g></g><g class="node default" id="qrex-cbdfddbe86c50435-flowchart-M16-15" data-look="neo" transform="translate(213, 724.75)"><rect class="basic label-container" style="" x="-76" y="-23.25" width="152" height="46.5"></rect><g class="label" style="" transform="translate(-60, -11.25)"><rect></rect><foreignObject width="120" height="22.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>settings</p></span></div></foreignObject></g></g><g class="node default" id="qrex-cbdfddbe86c50435-flowchart-M17-16" data-look="neo" transform="translate(819, 724.75)"><rect class="basic label-container" style="" x="-76" y="-23.25" width="152" height="46.5"></rect><g class="label" style="" transform="translate(-60, -11.25)"><rect></rect><foreignObject width="120" height="22.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>amenities</p></span></div></foreignObject></g></g></g></g></g><defs><filter id="qrex-cbdfddbe86c50435-drop-shadow" height="130%" width="130%"><feDropShadow dx="4" dy="4" stdDeviation="0" flood-opacity="0.06" flood-color="#000000"></feDropShadow></filter></defs><defs><filter id="qrex-cbdfddbe86c50435-drop-shadow-small" height="150%" width="150%"><feDropShadow dx="2" dy="2" stdDeviation="0" flood-opacity="0.06" flood-color="#000000"></feDropShadow></filter></defs><linearGradient id="qrex-cbdfddbe86c50435-gradient" gradientUnits="objectBoundingBox" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#0f5c4e" stop-opacity="1"></stop><stop offset="100%" stop-color="hsl(214.2857142857, 0%, 84.7058823529%)" stop-opacity="1"></stop></linearGradient></svg><figcaption>The seventeen modules, grouped by what they are for.</figcaption></figure>
+<div class="table-wrap">
+<input class="table-filter" type="search" placeholder="Filter rows…" aria-label="Filter table rows">
+<span class="table-count"></span>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Actions available</th>
+<th>Editable fields</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>dashboard</code></td>
+<td>view</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>properties</code></td>
+<td>view, create, edit, delete, export</td>
+<td>price, title, status, description, area, bedrooms, bathrooms, amenities, featured, agent</td>
+</tr>
+<tr>
+<td><code>leads</code></td>
+<td>view, create, edit, delete, export</td>
+<td>name, phone, email, source, status, budget, assigned_agent, score</td>
+</tr>
+<tr>
+<td><code>customers</code></td>
+<td>view, create, edit, delete, export</td>
+<td>name, phone, email, type, budget, notes</td>
+</tr>
+<tr>
+<td><code>sales</code></td>
+<td>view, create, edit, delete, export</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>tasks</code></td>
+<td>view, create, edit, delete</td>
+<td>title, status, priority, due_date, assigned_to</td>
+</tr>
+<tr>
+<td><code>site_visits</code></td>
+<td>view, create, edit, delete</td>
+<td>date, time, status, feedback, notes</td>
+</tr>
+<tr>
+<td><code>bookings</code></td>
+<td>view, create, edit, delete, <strong>approve</strong></td>
+<td>amount, status, payment_mode, notes</td>
+</tr>
+<tr>
+<td><code>payments</code></td>
+<td>view, create, edit, delete, export</td>
+<td>amount, status, mode, date, notes</td>
+</tr>
+<tr>
+<td><code>media</code></td>
+<td>view, create, delete</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>marketing</code></td>
+<td>view, create, edit, delete, export</td>
+<td>name, budget, status, channels, content</td>
+</tr>
+<tr>
+<td><code>reports</code></td>
+<td>view, export</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>cms</code></td>
+<td>view, create, edit, delete</td>
+<td>content, featured, seo</td>
+</tr>
+<tr>
+<td><code>users</code></td>
+<td>view, create, edit, delete</td>
+<td>name, email, phone, role, branch, status, password</td>
+</tr>
+<tr>
+<td><code>settings</code></td>
+<td>view, edit</td>
+<td>project_name, agency_name, contact_email, contact_phone, address, tagline, logo</td>
+</tr>
+<tr>
+<td><code>roles</code></td>
+<td>view, create, edit, delete</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>amenities</code></td>
+<td>view, create, edit, delete</td>
+<td>—</td>
+</tr>
+</tbody></table>
+</div>
+
+<p><code>bookings.approve</code> is the only action unique to one module — it is what lets the accountant approve a booking while a sales executive cannot.</p>
+<hr>
+<h2 id="43-the-six-roles">4.3 The six roles</h2>
+<figure class="figure diagram"><svg id="qrex-47103d4f901c2f34" xmlns="http://www.w3.org/2000/svg" class="flowchart" viewBox="4 4 765.84375 248.5" role="graphics-document document" aria-roledescription="flowchart-v2" width="766" height="249" style="max-width:100%;height:auto"><style>#qrex-47103d4f901c2f34{font-family:Inter,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;fill:#1f2733;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#qrex-47103d4f901c2f34 .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#qrex-47103d4f901c2f34 .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#qrex-47103d4f901c2f34 .error-icon{fill:#fbfcfd;}#qrex-47103d4f901c2f34 .error-text{fill:#040302;stroke:#040302;}#qrex-47103d4f901c2f34 .edge-thickness-normal{stroke-width:1px;}#qrex-47103d4f901c2f34 .edge-thickness-thick{stroke-width:3.5px;}#qrex-47103d4f901c2f34 .edge-pattern-solid{stroke-dasharray:0;}#qrex-47103d4f901c2f34 .edge-thickness-invisible{stroke-width:0;fill:none;}#qrex-47103d4f901c2f34 .edge-pattern-dashed{stroke-dasharray:3;}#qrex-47103d4f901c2f34 .edge-pattern-dotted{stroke-dasharray:2;}#qrex-47103d4f901c2f34 .marker{fill:#5b6472;stroke:#5b6472;}#qrex-47103d4f901c2f34 .marker.cross{stroke:#5b6472;}#qrex-47103d4f901c2f34 svg{font-family:Inter,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;}#qrex-47103d4f901c2f34 p{margin:0;}#qrex-47103d4f901c2f34 .label{font-family:Inter,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1f2733;}#qrex-47103d4f901c2f34 .cluster-label text{fill:#0f5c4e;}#qrex-47103d4f901c2f34 .cluster-label span{color:#0f5c4e;}#qrex-47103d4f901c2f34 .cluster-label span p{background-color:transparent;}#qrex-47103d4f901c2f34 .label text,#qrex-47103d4f901c2f34 span{fill:#1f2733;color:#1f2733;}#qrex-47103d4f901c2f34 .node rect,#qrex-47103d4f901c2f34 .node circle,#qrex-47103d4f901c2f34 .node ellipse,#qrex-47103d4f901c2f34 .node polygon,#qrex-47103d4f901c2f34 .node path{fill:#e8f1ee;stroke:#0f5c4e;stroke-width:1px;}#qrex-47103d4f901c2f34 .rough-node .label text,#qrex-47103d4f901c2f34 .node .label text,#qrex-47103d4f901c2f34 .image-shape .label,#qrex-47103d4f901c2f34 .icon-shape .label{text-anchor:middle;}#qrex-47103d4f901c2f34 .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#qrex-47103d4f901c2f34 .rough-node .label,#qrex-47103d4f901c2f34 .node .label,#qrex-47103d4f901c2f34 .image-shape .label,#qrex-47103d4f901c2f34 .icon-shape .label{text-align:center;}#qrex-47103d4f901c2f34 .node.clickable{cursor:pointer;}#qrex-47103d4f901c2f34 .root .anchor path{fill:#5b6472!important;stroke-width:0;stroke:#5b6472;}#qrex-47103d4f901c2f34 .arrowheadPath{fill:#0b0b0b;}#qrex-47103d4f901c2f34 .edgePaths .path{stroke:#5b6472;stroke-width:1px;}#qrex-47103d4f901c2f34 .flowchart-link{stroke:#5b6472;fill:none;}#qrex-47103d4f901c2f34 .edgeLabel{background-color:#ffffff;text-align:center;}#qrex-47103d4f901c2f34 .edgeLabel p{background-color:#ffffff;}#qrex-47103d4f901c2f34 .edgeLabel rect{opacity:0.5;background-color:#ffffff;fill:#ffffff;}#qrex-47103d4f901c2f34 .labelBkg{background-color:rgba(255, 255, 255, 0.5);}#qrex-47103d4f901c2f34 .cluster rect{fill:#f2f4f7;stroke:#c9d2dd;stroke-width:1px;}#qrex-47103d4f901c2f34 .cluster text{fill:#0f5c4e;}#qrex-47103d4f901c2f34 .cluster span{color:#0f5c4e;}#qrex-47103d4f901c2f34 .node .collapsed-indicator{fill:#c9d2dd;stroke:none;opacity:0.6;}#qrex-47103d4f901c2f34 .node .collapsed-separator{stroke:#c9d2dd;stroke-width:0.75px;}#qrex-47103d4f901c2f34 div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:Inter,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:12px;background:#fbfcfd;border:1px solid hsl(210, 0%, 88.8235294118%);border-radius:2px;pointer-events:none;z-index:100;}#qrex-47103d4f901c2f34 .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#1f2733;}#qrex-47103d4f901c2f34 rect.text{fill:none;stroke-width:0;}#qrex-47103d4f901c2f34 .icon-shape,#qrex-47103d4f901c2f34 .image-shape{background-color:#ffffff;text-align:center;}#qrex-47103d4f901c2f34 .icon-shape p,#qrex-47103d4f901c2f34 .image-shape p{background-color:#ffffff;padding:2px;}#qrex-47103d4f901c2f34 .icon-shape .label rect,#qrex-47103d4f901c2f34 .image-shape .label rect{opacity:0.5;background-color:#ffffff;fill:#ffffff;}#qrex-47103d4f901c2f34 .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#qrex-47103d4f901c2f34 .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#qrex-47103d4f901c2f34 .node .neo-node{stroke:#0f5c4e;}#qrex-47103d4f901c2f34 [data-look="neo"].node rect,#qrex-47103d4f901c2f34 [data-look="neo"].cluster rect,#qrex-47103d4f901c2f34 [data-look="neo"].node polygon{stroke:url(#qrex-47103d4f901c2f34-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-47103d4f901c2f34 [data-look="neo"].swimlane.cluster rect{filter:none;}#qrex-47103d4f901c2f34 [data-look="neo"].node path{stroke:url(#qrex-47103d4f901c2f34-gradient);stroke-width:1px;}#qrex-47103d4f901c2f34 [data-look="neo"].node .outer-path{filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-47103d4f901c2f34 [data-look="neo"].node .neo-line path{stroke:#0f5c4e;filter:none;}#qrex-47103d4f901c2f34 [data-look="neo"].node circle{stroke:url(#qrex-47103d4f901c2f34-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-47103d4f901c2f34 [data-look="neo"].node circle .state-start{fill:#000000;}#qrex-47103d4f901c2f34 [data-look="neo"].icon-shape .icon{fill:url(#qrex-47103d4f901c2f34-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-47103d4f901c2f34 [data-look="neo"].icon-shape .icon-neo path{stroke:url(#qrex-47103d4f901c2f34-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-47103d4f901c2f34 :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g><marker id="qrex-47103d4f901c2f34_flowchart-v2-pointEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-47103d4f901c2f34_flowchart-v2-pointStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-47103d4f901c2f34_flowchart-v2-pointEnd-margin" class="marker flowchart-v2" viewBox="0 0 11.5 14" refX="11.5" refY="7" markerUnits="userSpaceOnUse" markerWidth="10.5" markerHeight="14" orient="auto"><path d="M 0 0 L 11.5 7 L 0 14 z" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-47103d4f901c2f34_flowchart-v2-pointStart-margin" class="marker flowchart-v2" viewBox="0 0 11.5 14" refX="1" refY="7" markerUnits="userSpaceOnUse" markerWidth="11.5" markerHeight="14" orient="auto"><polygon points="0,7 11.5,14 11.5,0" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></polygon></marker><marker id="qrex-47103d4f901c2f34_flowchart-v2-circleEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="qrex-47103d4f901c2f34_flowchart-v2-circleStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="qrex-47103d4f901c2f34_flowchart-v2-circleEnd-margin" class="marker flowchart-v2" viewBox="0 0 10 10" refY="5" refX="12.25" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></circle></marker><marker id="qrex-47103d4f901c2f34_flowchart-v2-circleStart-margin" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-2" refY="5" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></circle></marker><marker id="qrex-47103d4f901c2f34_flowchart-v2-crossEnd" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-47103d4f901c2f34_flowchart-v2-crossStart" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-47103d4f901c2f34_flowchart-v2-crossEnd-margin" class="marker cross flowchart-v2" viewBox="0 0 15 15" refX="17.7" refY="7.5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M 1,1 L 14,14 M 1,14 L 14,1" class="arrowMarkerPath" style="stroke-width: 2.5;"></path></marker><marker id="qrex-47103d4f901c2f34_flowchart-v2-crossStart-margin" class="marker cross flowchart-v2" viewBox="0 0 15 15" refX="-3.5" refY="7.5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M 1,1 L 14,14 M 1,14 L 14,1" class="arrowMarkerPath" style="stroke-width: 2.5; stroke-dasharray: 1, 0;"></path></marker><g class="root"><g class="clusters"></g><g class="edges edgePaths"><path d="M164,155.5L204,155.5" id="qrex-47103d4f901c2f34-L_SA_AD_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style="stroke-dasharray: 0 0 40 0; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_SA_AD_0" data-points="W3sieCI6MTY0LCJ5IjoxNTUuNX0seyJ4IjoyMDQsInkiOjE1NS41fV0=" data-look="neo"></path><path d="M357.75,147.33333333333334L370.6789321881345,147.33333333333334Q377.75,147.33333333333334 377.75,140.26226552146787L377.75,108.07106781186548Q377.75,101 384.8210678118655,101L397.75,101" id="qrex-47103d4f901c2f34-L_AD_SE_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style="stroke-dasharray: 0 0 81.00505828857422 0; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_AD_SE_0" data-points="W3sieCI6MzU3Ljc1LCJ5IjoxNDcuMzMzMzMzMzMzMzMzMzR9LHsieCI6Mzc3Ljc1LCJ5IjoxNDcuMzMzMzMzMzMzMzMzMzR9LHsieCI6Mzc3Ljc1LCJ5IjoxMDF9LHsieCI6Mzk3Ljc1LCJ5IjoxMDF9XQ==" data-look="neo"></path><path d="M549.75,92.83333333333334L562.6789321881345,92.83333333333334Q569.75,92.83333333333334 569.75,85.76226552146787L569.75,53.571067811865476Q569.75,46.5 576.8210678118655,46.5L589.75,46.5" id="qrex-47103d4f901c2f34-L_SE_SR_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style="stroke-dasharray: 0 0 81.00506591796875 0; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_SE_SR_0" data-points="W3sieCI6NTQ5Ljc1LCJ5Ijo5Mi44MzMzMzMzMzMzMzMzNH0seyJ4Ijo1NjkuNzUsInkiOjkyLjgzMzMzMzMzMzMzMzM0fSx7IngiOjU2OS43NSwieSI6NDYuNX0seyJ4Ijo1ODkuNzUsInkiOjQ2LjV9XQ==" data-look="neo"></path><path d="M549.75,109.16666666666667L562.6789321881345,109.16666666666667Q569.75,109.16666666666667 569.75,116.23773447853215L569.75,148.42893218813452Q569.75,155.5 576.8210678118655,155.5L589.75,155.5" id="qrex-47103d4f901c2f34-L_SE_MK_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style="stroke-dasharray: 0 0 81.00505065917969 0; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_SE_MK_0" data-points="W3sieCI6NTQ5Ljc1LCJ5IjoxMDkuMTY2NjY2NjY2NjY2Njd9LHsieCI6NTY5Ljc1LCJ5IjoxMDkuMTY2NjY2NjY2NjY2Njd9LHsieCI6NTY5Ljc1LCJ5IjoxNTUuNX0seyJ4Ijo1ODkuNzUsInkiOjE1NS41fV0=" data-look="neo"></path><path d="M357.75,163.66666666666669L370.6789321881345,163.66666666666669Q377.75,163.66666666666669 377.75,170.73773447853216L377.75,202.92893218813452Q377.75,210 384.8210678118655,210L397.75,210" id="qrex-47103d4f901c2f34-L_AD_AC_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style="stroke-dasharray: 0 0 81.00505065917969 0; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_AD_AC_0" data-points="W3sieCI6MzU3Ljc1LCJ5IjoxNjMuNjY2NjY2NjY2NjY2Njl9LHsieCI6Mzc3Ljc1LCJ5IjoxNjMuNjY2NjY2NjY2NjY2Njl9LHsieCI6Mzc3Ljc1LCJ5IjoyMTB9LHsieCI6Mzk3Ljc1LCJ5IjoyMTB9XQ==" data-look="neo"></path></g><g class="edgeLabels"></g><g class="nodes"><g class="node default" id="qrex-47103d4f901c2f34-flowchart-SA-0" data-look="neo" transform="translate(88, 155.5)"><rect class="basic label-container" style="fill:#1f2733 !important;stroke:#1f2733 !important" x="-76" y="-34.5" width="152" height="69"></rect><g class="label" style="color:#ffffff !important" transform="translate(-60, -22.5)"><rect></rect><foreignObject width="120" height="45"><div style="color: rgb(255, 255, 255) !important; display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;" xmlns="http://www.w3.org/1999/xhtml"><span style="color:#ffffff !important" class="nodeLabel"><p>Super Admin<br>everything</p></span></div></foreignObject></g></g><g class="node default" id="qrex-47103d4f901c2f34-flowchart-AD-1" data-look="neo" transform="translate(280.875, 155.5)"><rect class="basic label-container" style="fill:#3d4a5c !important;stroke:#3d4a5c !important" x="-76.875" y="-34.5" width="153.75" height="69"></rect><g class="label" style="color:#ffffff !important" transform="translate(-60.875, -22.5)"><rect></rect><foreignObject width="121.75" height="45"><div style="color: rgb(255, 255, 255) !important; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center;" xmlns="http://www.w3.org/1999/xhtml"><span style="color:#ffffff !important" class="nodeLabel"><p>Admin<br>everything but two</p></span></div></foreignObject></g></g><g class="node default" id="qrex-47103d4f901c2f34-flowchart-SE-2" data-look="neo" transform="translate(473.75, 101)"><rect class="basic label-container" style="fill:#e8f1ee !important;stroke:#0f5c4e !important" x="-76" y="-34.5" width="152" height="69"></rect><g class="label" style="" transform="translate(-60, -22.5)"><rect></rect><foreignObject width="120" height="45"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>Sales Executive<br>front line</p></span></div></foreignObject></g></g><g class="node default" id="qrex-47103d4f901c2f34-flowchart-SR-3" data-look="neo" transform="translate(665.75, 46.5)"><rect class="basic label-container" style="fill:#e8f1ee !important;stroke:#0f5c4e !important" x="-76" y="-34.5" width="152" height="69"></rect><g class="label" style="" transform="translate(-60, -22.5)"><rect></rect><foreignObject width="120" height="45"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>Senior Agent<br>front line + deals</p></span></div></foreignObject></g></g><g class="node default" id="qrex-47103d4f901c2f34-flowchart-MK-4" data-look="neo" transform="translate(675.796875, 155.5)"><rect class="basic label-container" style="fill:#fff8e8 !important;stroke:#b5893b !important" x="-86.046875" y="-34.5" width="172.09375" height="69"></rect><g class="label" style="" transform="translate(-70.046875, -22.5)"><rect></rect><foreignObject width="140.09375" height="45"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center;"><span class="nodeLabel"><p>Marketing User<br>campaigns &amp; content</p></span></div></foreignObject></g></g><g class="node default" id="qrex-47103d4f901c2f34-flowchart-AC-5" data-look="neo" transform="translate(473.75, 210)"><rect class="basic label-container" style="fill:#fff8e8 !important;stroke:#b5893b !important" x="-76" y="-34.5" width="152" height="69"></rect><g class="label" style="" transform="translate(-60, -22.5)"><rect></rect><foreignObject width="120" height="45"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>Accountant<br>money</p></span></div></foreignObject></g></g></g></g></g><defs><filter id="qrex-47103d4f901c2f34-drop-shadow" height="130%" width="130%"><feDropShadow dx="4" dy="4" stdDeviation="0" flood-opacity="0.06" flood-color="#000000"></feDropShadow></filter></defs><defs><filter id="qrex-47103d4f901c2f34-drop-shadow-small" height="150%" width="150%"><feDropShadow dx="2" dy="2" stdDeviation="0" flood-opacity="0.06" flood-color="#000000"></feDropShadow></filter></defs><linearGradient id="qrex-47103d4f901c2f34-gradient" gradientUnits="objectBoundingBox" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#0f5c4e" stop-opacity="1"></stop><stop offset="100%" stop-color="hsl(214.2857142857, 0%, 84.7058823529%)" stop-opacity="1"></stop></linearGradient></svg><figcaption>The six roles and how they relate.</figcaption></figure>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Is a system role?</th>
+<th>What it is for</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Super Admin</strong></td>
+<td>Yes</td>
+<td>Full access to everything, including the two things Admin cannot do</td>
+</tr>
+<tr>
+<td><strong>Admin</strong></td>
+<td>Yes</td>
+<td>Day-to-day administration of the whole system</td>
+</tr>
+<tr>
+<td><strong>Sales Executive</strong></td>
+<td>No</td>
+<td>Front-line selling: properties, leads, customers, tasks, site visits</td>
+</tr>
+<tr>
+<td><strong>Senior Agent</strong></td>
+<td>No</td>
+<td>Front-line selling plus the deal board and lead conversion</td>
+</tr>
+<tr>
+<td><strong>Marketing User</strong></td>
+<td>No</td>
+<td>Campaigns, website content and media</td>
+</tr>
+<tr>
+<td><strong>Accountant</strong></td>
+<td>No</td>
+<td>Bookings, payments and financial reports</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>What it can reach</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Super Admin</strong></td>
+<td>All 17 modules, all actions, all fields</td>
+</tr>
+<tr>
+<td><strong>Admin</strong></td>
+<td>Everything except <code>settings.edit.project_name</code> and <code>roles.delete</code></td>
+</tr>
+<tr>
+<td><strong>Sales Executive</strong></td>
+<td>dashboard, properties (v/c/e), leads (v/c/e + 7 fields), customers (v/c/e), tasks (v/c/e), site visits (v/c/e), media (v/c), reports (view)</td>
+</tr>
+<tr>
+<td><strong>Senior Agent</strong></td>
+<td>Everything Sales Executive has, <strong>plus</strong> <code>sales.view</code>, <code>sales.create</code>, <code>sales.edit</code> — the deal board — <strong>plus</strong> the <code>leads.edit.source</code> field</td>
+</tr>
+<tr>
+<td><strong>Marketing User</strong></td>
+<td>dashboard, leads (view/create), marketing (v/c/e), media (v/c), cms (v/c/e), reports (view + export)</td>
+</tr>
+<tr>
+<td><strong>Accountant</strong></td>
+<td>dashboard, customers (view), sales (view), bookings (v/c/e), payments (v/c/e), reports (view + export), media (view)</td>
+</tr>
+</tbody></table>
+<p>Note what is <strong>missing</strong> everywhere: nobody can delete a role except the Super Admin, and nobody can rename the project except the Super Admin. Those two omissions are the only difference between Super Admin and Admin.</p>
+<hr>
+<h2 id="44-the-full-matrix">4.4 The full matrix</h2>
+<p>A tick means the role holds that permission.</p>
+<div class="table-wrap">
+<input class="table-filter" type="search" placeholder="Filter rows…" aria-label="Filter table rows">
+<span class="table-count"></span>
+<table>
+<thead>
+<tr>
+<th>Module · action</th>
+<th align="center">Super Admin</th>
+<th align="center">Admin</th>
+<th align="center">Sales Exec</th>
+<th align="center">Senior Agent</th>
+<th align="center">Marketing</th>
+<th align="center">Accountant</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>dashboard.view</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+</tr>
+<tr>
+<td><code>properties.view</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>properties.create</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>properties.edit</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>properties.delete</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>properties.export</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>leads.view</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>leads.create</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>leads.edit</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>leads.delete</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>leads.export</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>customers.view</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center">●</td>
+</tr>
+<tr>
+<td><code>customers.create</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>customers.edit</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>customers.delete</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>customers.export</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>sales.view</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center">●</td>
+</tr>
+<tr>
+<td><code>sales.create</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>sales.edit</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>sales.delete</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>sales.export</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>tasks.view</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>tasks.create</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>tasks.edit</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>tasks.delete</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>site_visits.view</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>site_visits.create</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>site_visits.edit</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>site_visits.delete</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>bookings.view</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">●</td>
+</tr>
+<tr>
+<td><code>bookings.create</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">●</td>
+</tr>
+<tr>
+<td><code>bookings.edit</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">●</td>
+</tr>
+<tr>
+<td><code>bookings.delete</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>bookings.approve</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">●</td>
+</tr>
+<tr>
+<td><code>payments.view</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">●</td>
+</tr>
+<tr>
+<td><code>payments.create</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">●</td>
+</tr>
+<tr>
+<td><code>payments.edit</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">●</td>
+</tr>
+<tr>
+<td><code>payments.delete</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>payments.export</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>media.view</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+</tr>
+<tr>
+<td><code>media.create</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>media.delete</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>marketing.view</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">●</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>marketing.create</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">●</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>marketing.edit</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">●</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>marketing.delete</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>marketing.export</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>reports.view</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+</tr>
+<tr>
+<td><code>reports.export</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center">●</td>
+<td align="center">●</td>
+</tr>
+<tr>
+<td><code>cms.view</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">●</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>cms.create</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">●</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>cms.edit</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">●</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>cms.delete</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>users.view</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>users.create</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>users.edit</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>users.delete</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>roles.view</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>roles.create</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>roles.edit</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>roles.delete</code></td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>settings.view</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>settings.edit</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>settings.edit.project_name</code></td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>amenities.view</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>amenities.create</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>amenities.edit</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><code>amenities.delete</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+</div>
+
+<h3 id="field-level-permissions">Field-level permissions</h3>
+<p>Field permissions exist for eight modules only. They are the mechanism that lets an admin edit a lead&#39;s score without letting a sales executive change who the lead is assigned to.</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Field-level permissions</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>properties</code></td>
+<td>price, title, status, description, area, bedrooms, bathrooms, amenities, featured, agent</td>
+</tr>
+<tr>
+<td><code>leads</code></td>
+<td>name, phone, email, source, status, budget, assigned_agent, score</td>
+</tr>
+<tr>
+<td><code>customers</code></td>
+<td>name, phone, email, type, budget, notes</td>
+</tr>
+<tr>
+<td><code>tasks</code></td>
+<td>title, status, priority, due_date, assigned_to</td>
+</tr>
+<tr>
+<td><code>site_visits</code></td>
+<td>date, time, status, feedback, notes</td>
+</tr>
+<tr>
+<td><code>bookings</code></td>
+<td>amount, status, payment_mode, notes</td>
+</tr>
+<tr>
+<td><code>payments</code></td>
+<td>amount, status, mode, date, notes</td>
+</tr>
+<tr>
+<td><code>marketing</code></td>
+<td>name, budget, status, channels, content</td>
+</tr>
+<tr>
+<td><code>cms</code></td>
+<td>content, featured, seo</td>
+</tr>
+<tr>
+<td><code>users</code></td>
+<td>name, email, phone, role, branch, status, password</td>
+</tr>
+<tr>
+<td><code>settings</code></td>
+<td>project_name, agency_name, contact_email, contact_phone, address, tagline, logo</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Field permission</th>
+<th align="center">Sales Executive</th>
+<th align="center">Senior Agent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>leads.edit.name</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+</tr>
+<tr>
+<td><code>leads.edit.phone</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+</tr>
+<tr>
+<td><code>leads.edit.email</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+</tr>
+<tr>
+<td><code>leads.edit.source</code></td>
+<td align="center"></td>
+<td align="center">●</td>
+</tr>
+<tr>
+<td><code>leads.edit.status</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+</tr>
+<tr>
+<td><code>leads.edit.budget</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+</tr>
+<tr>
+<td><code>leads.edit.assigned_agent</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+</tr>
+<tr>
+<td><code>leads.edit.score</code></td>
+<td align="center">●</td>
+<td align="center">●</td>
+</tr>
+</tbody></table>
+<p>Senior Agent has exactly one field permission that Sales Executive does not: <code>leads.edit.source</code>. That single extra permission is what allows a senior agent to correct where a lead came from.</p>
+<hr>
+<h2 id="45-how-a-permission-is-enforced">4.5 How a permission is enforced</h2>
+<figure class="figure diagram"><svg id="qrex-7b7ca8038e284f9a" xmlns="http://www.w3.org/2000/svg" viewBox="-50 -10 855 537" role="graphics-document document" aria-roledescription="sequence" width="855" height="537" style="max-width:100%;height:auto"><g><rect x="605" y="412" fill="#eaeaea" stroke="#666" width="150" height="74" name="H" rx="6" ry="6" class="actor actor-bottom" data-look="neo" filter="url(#qrex-7b7ca8038e284f9a-drop-shadow)"></rect><text x="680" y="449" dominant-baseline="central" alignment-baseline="central" class="actor actor-box" style="text-anchor: middle; font-size: 16px; font-weight: 400;"><tspan x="680" dy="0">can() helper</tspan></text></g><g><rect x="392" y="412" fill="#eaeaea" stroke="#666" width="150" height="74" name="C" rx="6" ry="6" class="actor actor-bottom" data-look="neo" filter="url(#qrex-7b7ca8038e284f9a-drop-shadow)"></rect><text x="467" y="449" dominant-baseline="central" alignment-baseline="central" class="actor actor-box" style="text-anchor: middle; font-size: 16px; font-weight: 400;"><tspan x="467" dy="0">Controller</tspan></text></g><g><rect x="196" y="412" fill="#eaeaea" stroke="#666" width="150" height="74" name="M" rx="6" ry="6" class="actor actor-bottom" data-look="neo" filter="url(#qrex-7b7ca8038e284f9a-drop-shadow)"></rect><text x="271" y="449" dominant-baseline="central" alignment-baseline="central" class="actor actor-box" style="text-anchor: middle; font-size: 16px; font-weight: 400;"><tspan x="271" dy="0">Middleware</tspan></text></g><g><rect x="0" y="412" fill="#eaeaea" stroke="#666" width="150" height="74" name="U" rx="6" ry="6" class="actor actor-bottom" data-look="neo" filter="url(#qrex-7b7ca8038e284f9a-drop-shadow)"></rect><text x="75" y="449" dominant-baseline="central" alignment-baseline="central" class="actor actor-box" style="text-anchor: middle; font-size: 16px; font-weight: 400;"><tspan x="75" dy="0">User</tspan></text></g><g><line id="actor20" x1="680" y1="74" x2="680" y2="412" class="actor-line 200" stroke-width="0.5px" stroke="#999" name="H" data-et="life-line" data-id="H"></line><g id="root-20" data-look="neo" data-et="participant" data-type="participant" data-id="H"><rect x="605" y="0" fill="#eaeaea" stroke="#666" width="150" height="74" name="H" rx="6" ry="6" class="actor actor-top" data-look="neo" filter="url(#qrex-7b7ca8038e284f9a-drop-shadow)"></rect><text x="680" y="37" dominant-baseline="central" alignment-baseline="central" class="actor actor-box" style="text-anchor: middle; font-size: 16px; font-weight: 400;"><tspan x="680" dy="0">can() helper</tspan></text></g></g><g><line id="actor19" x1="467" y1="74" x2="467" y2="412" class="actor-line 200" stroke-width="0.5px" stroke="#999" name="C" data-et="life-line" data-id="C"></line><g id="root-19" data-look="neo" data-et="participant" data-type="participant" data-id="C"><rect x="392" y="0" fill="#eaeaea" stroke="#666" width="150" height="74" name="C" rx="6" ry="6" class="actor actor-top" data-look="neo" filter="url(#qrex-7b7ca8038e284f9a-drop-shadow)"></rect><text x="467" y="37" dominant-baseline="central" alignment-baseline="central" class="actor actor-box" style="text-anchor: middle; font-size: 16px; font-weight: 400;"><tspan x="467" dy="0">Controller</tspan></text></g></g><g><line id="actor18" x1="271" y1="74" x2="271" y2="412" class="actor-line 200" stroke-width="0.5px" stroke="#999" name="M" data-et="life-line" data-id="M"></line><g id="root-18" data-look="neo" data-et="participant" data-type="participant" data-id="M"><rect x="196" y="0" fill="#eaeaea" stroke="#666" width="150" height="74" name="M" rx="6" ry="6" class="actor actor-top" data-look="neo" filter="url(#qrex-7b7ca8038e284f9a-drop-shadow)"></rect><text x="271" y="37" dominant-baseline="central" alignment-baseline="central" class="actor actor-box" style="text-anchor: middle; font-size: 16px; font-weight: 400;"><tspan x="271" dy="0">Middleware</tspan></text></g></g><g><line id="actor17" x1="75" y1="74" x2="75" y2="412" class="actor-line 200" stroke-width="0.5px" stroke="#999" name="U" data-et="life-line" data-id="U"></line><g id="root-17" data-look="neo" data-et="participant" data-type="participant" data-id="U"><rect x="0" y="0" fill="#eaeaea" stroke="#666" width="150" height="74" name="U" rx="6" ry="6" class="actor actor-top" data-look="neo" filter="url(#qrex-7b7ca8038e284f9a-drop-shadow)"></rect><text x="75" y="37" dominant-baseline="central" alignment-baseline="central" class="actor actor-box" style="text-anchor: middle; font-size: 16px; font-weight: 400;"><tspan x="75" dy="0">User</tspan></text></g></g><style>#qrex-7b7ca8038e284f9a{font-family:Inter,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;fill:#1f2733;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#qrex-7b7ca8038e284f9a .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#qrex-7b7ca8038e284f9a .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#qrex-7b7ca8038e284f9a .error-icon{fill:#fbfcfd;}#qrex-7b7ca8038e284f9a .error-text{fill:#040302;stroke:#040302;}#qrex-7b7ca8038e284f9a .edge-thickness-normal{stroke-width:1px;}#qrex-7b7ca8038e284f9a .edge-thickness-thick{stroke-width:3.5px;}#qrex-7b7ca8038e284f9a .edge-pattern-solid{stroke-dasharray:0;}#qrex-7b7ca8038e284f9a .edge-thickness-invisible{stroke-width:0;fill:none;}#qrex-7b7ca8038e284f9a .edge-pattern-dashed{stroke-dasharray:3;}#qrex-7b7ca8038e284f9a .edge-pattern-dotted{stroke-dasharray:2;}#qrex-7b7ca8038e284f9a .marker{fill:#5b6472;stroke:#5b6472;}#qrex-7b7ca8038e284f9a .marker.cross{stroke:#5b6472;}#qrex-7b7ca8038e284f9a svg{font-family:Inter,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;}#qrex-7b7ca8038e284f9a p{margin:0;}#qrex-7b7ca8038e284f9a .actor{stroke:#0f5c4e;fill:#e8f1ee;stroke-width:1;}#qrex-7b7ca8038e284f9a rect.actor.outer-path[data-look="neo"]{filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-7b7ca8038e284f9a rect.note[data-look="neo"]{stroke:#b5893b;fill:#fff8e8;filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-7b7ca8038e284f9a text.actor&gt;tspan{fill:#1f2733;stroke:none;}#qrex-7b7ca8038e284f9a .actor-line{stroke:#0f5c4e;}#qrex-7b7ca8038e284f9a .innerArc{stroke-width:1.5;stroke-dasharray:none;}#qrex-7b7ca8038e284f9a .messageLine0{stroke-width:1.5;stroke-dasharray:none;stroke:#1f2733;}#qrex-7b7ca8038e284f9a .messageLine1{stroke-width:1.5;stroke-dasharray:2,2;stroke:#1f2733;}#qrex-7b7ca8038e284f9a [id$="-arrowhead"] path{fill:#1f2733;stroke:#1f2733;}#qrex-7b7ca8038e284f9a .sequenceNumber{fill:#a49b8d;}#qrex-7b7ca8038e284f9a [id$="-sequencenumber"]{fill:#1f2733;}#qrex-7b7ca8038e284f9a [id$="-crosshead"] path{fill:#1f2733;stroke:#1f2733;}#qrex-7b7ca8038e284f9a .messageText{fill:#1f2733;stroke:none;}#qrex-7b7ca8038e284f9a .labelBox{stroke:#0f5c4e;fill:#e8f1ee;filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-7b7ca8038e284f9a .labelText,#qrex-7b7ca8038e284f9a .labelText&gt;tspan{fill:#1f2733;stroke:none;}#qrex-7b7ca8038e284f9a .loopText,#qrex-7b7ca8038e284f9a .loopText&gt;tspan{fill:#1f2733;stroke:none;}#qrex-7b7ca8038e284f9a .sectionTitle,#qrex-7b7ca8038e284f9a .sectionTitle&gt;tspan{fill:#1f2733;stroke:none;}#qrex-7b7ca8038e284f9a .loopLine{stroke-width:2px;stroke-dasharray:2,2;stroke:#0f5c4e;fill:#0f5c4e;}#qrex-7b7ca8038e284f9a .note{stroke:#b5893b;fill:#fff8e8;}#qrex-7b7ca8038e284f9a .noteText,#qrex-7b7ca8038e284f9a .noteText&gt;tspan{fill:#333;stroke:none;}#qrex-7b7ca8038e284f9a .activation0{fill:#eef1f5;stroke:hsl(214.2857142857, 25.9259259259%, 84.7058823529%);}#qrex-7b7ca8038e284f9a .activation1{fill:#eef1f5;stroke:hsl(214.2857142857, 25.9259259259%, 84.7058823529%);}#qrex-7b7ca8038e284f9a .activation2{fill:#eef1f5;stroke:hsl(214.2857142857, 25.9259259259%, 84.7058823529%);}#qrex-7b7ca8038e284f9a .actorPopupMenu{position:absolute;}#qrex-7b7ca8038e284f9a .actorPopupMenuPanel{position:absolute;fill:#e8f1ee;box-shadow:0px 8px 16px 0px rgba(0,0,0,0.2);filter:drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));}#qrex-7b7ca8038e284f9a .actor-man circle,#qrex-7b7ca8038e284f9a line{fill:#e8f1ee;stroke-width:2px;}#qrex-7b7ca8038e284f9a g rect.rect{filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));stroke:#0f5c4e;}#qrex-7b7ca8038e284f9a .node .neo-node{stroke:#0f5c4e;}#qrex-7b7ca8038e284f9a [data-look="neo"].node rect,#qrex-7b7ca8038e284f9a [data-look="neo"].cluster rect,#qrex-7b7ca8038e284f9a [data-look="neo"].node polygon{stroke:url(#qrex-7b7ca8038e284f9a-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-7b7ca8038e284f9a [data-look="neo"].swimlane.cluster rect{filter:none;}#qrex-7b7ca8038e284f9a [data-look="neo"].node path{stroke:url(#qrex-7b7ca8038e284f9a-gradient);stroke-width:1px;}#qrex-7b7ca8038e284f9a [data-look="neo"].node .outer-path{filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-7b7ca8038e284f9a [data-look="neo"].node .neo-line path{stroke:#0f5c4e;filter:none;}#qrex-7b7ca8038e284f9a [data-look="neo"].node circle{stroke:url(#qrex-7b7ca8038e284f9a-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-7b7ca8038e284f9a [data-look="neo"].node circle .state-start{fill:#000000;}#qrex-7b7ca8038e284f9a [data-look="neo"].icon-shape .icon{fill:url(#qrex-7b7ca8038e284f9a-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-7b7ca8038e284f9a [data-look="neo"].icon-shape .icon-neo path{stroke:url(#qrex-7b7ca8038e284f9a-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-7b7ca8038e284f9a :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g></g><defs><symbol id="qrex-7b7ca8038e284f9a-computer" width="24" height="24"><path transform="scale(.5)" d="M2 2v13h20v-13h-20zm18 11h-16v-9h16v9zm-10.228 6l.466-1h3.524l.467 1h-4.457zm14.228 3h-24l2-6h2.104l-1.33 4h18.45l-1.297-4h2.073l2 6zm-5-10h-14v-7h14v7z"></path></symbol></defs><defs><symbol id="qrex-7b7ca8038e284f9a-database" fill-rule="evenodd" clip-rule="evenodd"><path transform="scale(.5)" d="M12.258.001l.256.004.255.005.253.008.251.01.249.012.247.015.246.016.242.019.241.02.239.023.236.024.233.027.231.028.229.031.225.032.223.034.22.036.217.038.214.04.211.041.208.043.205.045.201.046.198.048.194.05.191.051.187.053.183.054.18.056.175.057.172.059.168.06.163.061.16.063.155.064.15.066.074.033.073.033.071.034.07.034.069.035.068.035.067.035.066.035.064.036.064.036.062.036.06.036.06.037.058.037.058.037.055.038.055.038.053.038.052.038.051.039.05.039.048.039.047.039.045.04.044.04.043.04.041.04.04.041.039.041.037.041.036.041.034.041.033.042.032.042.03.042.029.042.027.042.026.043.024.043.023.043.021.043.02.043.018.044.017.043.015.044.013.044.012.044.011.045.009.044.007.045.006.045.004.045.002.045.001.045v17l-.001.045-.002.045-.004.045-.006.045-.007.045-.009.044-.011.045-.012.044-.013.044-.015.044-.017.043-.018.044-.02.043-.021.043-.023.043-.024.043-.026.043-.027.042-.029.042-.03.042-.032.042-.033.042-.034.041-.036.041-.037.041-.039.041-.04.041-.041.04-.043.04-.044.04-.045.04-.047.039-.048.039-.05.039-.051.039-.052.038-.053.038-.055.038-.055.038-.058.037-.058.037-.06.037-.06.036-.062.036-.064.036-.064.036-.066.035-.067.035-.068.035-.069.035-.07.034-.071.034-.073.033-.074.033-.15.066-.155.064-.16.063-.163.061-.168.06-.172.059-.175.057-.18.056-.183.054-.187.053-.191.051-.194.05-.198.048-.201.046-.205.045-.208.043-.211.041-.214.04-.217.038-.22.036-.223.034-.225.032-.229.031-.231.028-.233.027-.236.024-.239.023-.241.02-.242.019-.246.016-.247.015-.249.012-.251.01-.253.008-.255.005-.256.004-.258.001-.258-.001-.256-.004-.255-.005-.253-.008-.251-.01-.249-.012-.247-.015-.245-.016-.243-.019-.241-.02-.238-.023-.236-.024-.234-.027-.231-.028-.228-.031-.226-.032-.223-.034-.22-.036-.217-.038-.214-.04-.211-.041-.208-.043-.204-.045-.201-.046-.198-.048-.195-.05-.19-.051-.187-.053-.184-.054-.179-.056-.176-.057-.172-.059-.167-.06-.164-.061-.159-.063-.155-.064-.151-.066-.074-.033-.072-.033-.072-.034-.07-.034-.069-.035-.068-.035-.067-.035-.066-.035-.064-.036-.063-.036-.062-.036-.061-.036-.06-.037-.058-.037-.057-.037-.056-.038-.055-.038-.053-.038-.052-.038-.051-.039-.049-.039-.049-.039-.046-.039-.046-.04-.044-.04-.043-.04-.041-.04-.04-.041-.039-.041-.037-.041-.036-.041-.034-.041-.033-.042-.032-.042-.03-.042-.029-.042-.027-.042-.026-.043-.024-.043-.023-.043-.021-.043-.02-.043-.018-.044-.017-.043-.015-.044-.013-.044-.012-.044-.011-.045-.009-.044-.007-.045-.006-.045-.004-.045-.002-.045-.001-.045v-17l.001-.045.002-.045.004-.045.006-.045.007-.045.009-.044.011-.045.012-.044.013-.044.015-.044.017-.043.018-.044.02-.043.021-.043.023-.043.024-.043.026-.043.027-.042.029-.042.03-.042.032-.042.033-.042.034-.041.036-.041.037-.041.039-.041.04-.041.041-.04.043-.04.044-.04.046-.04.046-.039.049-.039.049-.039.051-.039.052-.038.053-.038.055-.038.056-.038.057-.037.058-.037.06-.037.061-.036.062-.036.063-.036.064-.036.066-.035.067-.035.068-.035.069-.035.07-.034.072-.034.072-.033.074-.033.151-.066.155-.064.159-.063.164-.061.167-.06.172-.059.176-.057.179-.056.184-.054.187-.053.19-.051.195-.05.198-.048.201-.046.204-.045.208-.043.211-.041.214-.04.217-.038.22-.036.223-.034.226-.032.228-.031.231-.028.234-.027.236-.024.238-.023.241-.02.243-.019.245-.016.247-.015.249-.012.251-.01.253-.008.255-.005.256-.004.258-.001.258.001zm-9.258 20.499v.01l.001.021.003.021.004.022.005.021.006.022.007.022.009.023.01.022.011.023.012.023.013.023.015.023.016.024.017.023.018.024.019.024.021.024.022.025.023.024.024.025.052.049.056.05.061.051.066.051.07.051.075.051.079.052.084.052.088.052.092.052.097.052.102.051.105.052.11.052.114.051.119.051.123.051.127.05.131.05.135.05.139.048.144.049.147.047.152.047.155.047.16.045.163.045.167.043.171.043.176.041.178.041.183.039.187.039.19.037.194.035.197.035.202.033.204.031.209.03.212.029.216.027.219.025.222.024.226.021.23.02.233.018.236.016.24.015.243.012.246.01.249.008.253.005.256.004.259.001.26-.001.257-.004.254-.005.25-.008.247-.011.244-.012.241-.014.237-.016.233-.018.231-.021.226-.021.224-.024.22-.026.216-.027.212-.028.21-.031.205-.031.202-.034.198-.034.194-.036.191-.037.187-.039.183-.04.179-.04.175-.042.172-.043.168-.044.163-.045.16-.046.155-.046.152-.047.148-.048.143-.049.139-.049.136-.05.131-.05.126-.05.123-.051.118-.052.114-.051.11-.052.106-.052.101-.052.096-.052.092-.052.088-.053.083-.051.079-.052.074-.052.07-.051.065-.051.06-.051.056-.05.051-.05.023-.024.023-.025.021-.024.02-.024.019-.024.018-.024.017-.024.015-.023.014-.024.013-.023.012-.023.01-.023.01-.022.008-.022.006-.022.006-.022.004-.022.004-.021.001-.021.001-.021v-4.127l-.077.055-.08.053-.083.054-.085.053-.087.052-.09.052-.093.051-.095.05-.097.05-.1.049-.102.049-.105.048-.106.047-.109.047-.111.046-.114.045-.115.045-.118.044-.12.043-.122.042-.124.042-.126.041-.128.04-.13.04-.132.038-.134.038-.135.037-.138.037-.139.035-.142.035-.143.034-.144.033-.147.032-.148.031-.15.03-.151.03-.153.029-.154.027-.156.027-.158.026-.159.025-.161.024-.162.023-.163.022-.165.021-.166.02-.167.019-.169.018-.169.017-.171.016-.173.015-.173.014-.175.013-.175.012-.177.011-.178.01-.179.008-.179.008-.181.006-.182.005-.182.004-.184.003-.184.002h-.37l-.184-.002-.184-.003-.182-.004-.182-.005-.181-.006-.179-.008-.179-.008-.178-.01-.176-.011-.176-.012-.175-.013-.173-.014-.172-.015-.171-.016-.17-.017-.169-.018-.167-.019-.166-.02-.165-.021-.163-.022-.162-.023-.161-.024-.159-.025-.157-.026-.156-.027-.155-.027-.153-.029-.151-.03-.15-.03-.148-.031-.146-.032-.145-.033-.143-.034-.141-.035-.14-.035-.137-.037-.136-.037-.134-.038-.132-.038-.13-.04-.128-.04-.126-.041-.124-.042-.122-.042-.12-.044-.117-.043-.116-.045-.113-.045-.112-.046-.109-.047-.106-.047-.105-.048-.102-.049-.1-.049-.097-.05-.095-.05-.093-.052-.09-.051-.087-.052-.085-.053-.083-.054-.08-.054-.077-.054v4.127zm0-5.654v.011l.001.021.003.021.004.021.005.022.006.022.007.022.009.022.01.022.011.023.012.023.013.023.015.024.016.023.017.024.018.024.019.024.021.024.022.024.023.025.024.024.052.05.056.05.061.05.066.051.07.051.075.052.079.051.084.052.088.052.092.052.097.052.102.052.105.052.11.051.114.051.119.052.123.05.127.051.131.05.135.049.139.049.144.048.147.048.152.047.155.046.16.045.163.045.167.044.171.042.176.042.178.04.183.04.187.038.19.037.194.036.197.034.202.033.204.032.209.03.212.028.216.027.219.025.222.024.226.022.23.02.233.018.236.016.24.014.243.012.246.01.249.008.253.006.256.003.259.001.26-.001.257-.003.254-.006.25-.008.247-.01.244-.012.241-.015.237-.016.233-.018.231-.02.226-.022.224-.024.22-.025.216-.027.212-.029.21-.03.205-.032.202-.033.198-.035.194-.036.191-.037.187-.039.183-.039.179-.041.175-.042.172-.043.168-.044.163-.045.16-.045.155-.047.152-.047.148-.048.143-.048.139-.05.136-.049.131-.05.126-.051.123-.051.118-.051.114-.052.11-.052.106-.052.101-.052.096-.052.092-.052.088-.052.083-.052.079-.052.074-.051.07-.052.065-.051.06-.05.056-.051.051-.049.023-.025.023-.024.021-.025.02-.024.019-.024.018-.024.017-.024.015-.023.014-.023.013-.024.012-.022.01-.023.01-.023.008-.022.006-.022.006-.022.004-.021.004-.022.001-.021.001-.021v-4.139l-.077.054-.08.054-.083.054-.085.052-.087.053-.09.051-.093.051-.095.051-.097.05-.1.049-.102.049-.105.048-.106.047-.109.047-.111.046-.114.045-.115.044-.118.044-.12.044-.122.042-.124.042-.126.041-.128.04-.13.039-.132.039-.134.038-.135.037-.138.036-.139.036-.142.035-.143.033-.144.033-.147.033-.148.031-.15.03-.151.03-.153.028-.154.028-.156.027-.158.026-.159.025-.161.024-.162.023-.163.022-.165.021-.166.02-.167.019-.169.018-.169.017-.171.016-.173.015-.173.014-.175.013-.175.012-.177.011-.178.009-.179.009-.179.007-.181.007-.182.005-.182.004-.184.003-.184.002h-.37l-.184-.002-.184-.003-.182-.004-.182-.005-.181-.007-.179-.007-.179-.009-.178-.009-.176-.011-.176-.012-.175-.013-.173-.014-.172-.015-.171-.016-.17-.017-.169-.018-.167-.019-.166-.02-.165-.021-.163-.022-.162-.023-.161-.024-.159-.025-.157-.026-.156-.027-.155-.028-.153-.028-.151-.03-.15-.03-.148-.031-.146-.033-.145-.033-.143-.033-.141-.035-.14-.036-.137-.036-.136-.037-.134-.038-.132-.039-.13-.039-.128-.04-.126-.041-.124-.042-.122-.043-.12-.043-.117-.044-.116-.044-.113-.046-.112-.046-.109-.046-.106-.047-.105-.048-.102-.049-.1-.049-.097-.05-.095-.051-.093-.051-.09-.051-.087-.053-.085-.052-.083-.054-.08-.054-.077-.054v4.139zm0-5.666v.011l.001.02.003.022.004.021.005.022.006.021.007.022.009.023.01.022.011.023.012.023.013.023.015.023.016.024.017.024.018.023.019.024.021.025.022.024.023.024.024.025.052.05.056.05.061.05.066.051.07.051.075.052.079.051.084.052.088.052.092.052.097.052.102.052.105.051.11.052.114.051.119.051.123.051.127.05.131.05.135.05.139.049.144.048.147.048.152.047.155.046.16.045.163.045.167.043.171.043.176.042.178.04.183.04.187.038.19.037.194.036.197.034.202.033.204.032.209.03.212.028.216.027.219.025.222.024.226.021.23.02.233.018.236.017.24.014.243.012.246.01.249.008.253.006.256.003.259.001.26-.001.257-.003.254-.006.25-.008.247-.01.244-.013.241-.014.237-.016.233-.018.231-.02.226-.022.224-.024.22-.025.216-.027.212-.029.21-.03.205-.032.202-.033.198-.035.194-.036.191-.037.187-.039.183-.039.179-.041.175-.042.172-.043.168-.044.163-.045.16-.045.155-.047.152-.047.148-.048.143-.049.139-.049.136-.049.131-.051.126-.05.123-.051.118-.052.114-.051.11-.052.106-.052.101-.052.096-.052.092-.052.088-.052.083-.052.079-.052.074-.052.07-.051.065-.051.06-.051.056-.05.051-.049.023-.025.023-.025.021-.024.02-.024.019-.024.018-.024.017-.024.015-.023.014-.024.013-.023.012-.023.01-.022.01-.023.008-.022.006-.022.006-.022.004-.022.004-.021.001-.021.001-.021v-4.153l-.077.054-.08.054-.083.053-.085.053-.087.053-.09.051-.093.051-.095.051-.097.05-.1.049-.102.048-.105.048-.106.048-.109.046-.111.046-.114.046-.115.044-.118.044-.12.043-.122.043-.124.042-.126.041-.128.04-.13.039-.132.039-.134.038-.135.037-.138.036-.139.036-.142.034-.143.034-.144.033-.147.032-.148.032-.15.03-.151.03-.153.028-.154.028-.156.027-.158.026-.159.024-.161.024-.162.023-.163.023-.165.021-.166.02-.167.019-.169.018-.169.017-.171.016-.173.015-.173.014-.175.013-.175.012-.177.01-.178.01-.179.009-.179.007-.181.006-.182.006-.182.004-.184.003-.184.001-.185.001-.185-.001-.184-.001-.184-.003-.182-.004-.182-.006-.181-.006-.179-.007-.179-.009-.178-.01-.176-.01-.176-.012-.175-.013-.173-.014-.172-.015-.171-.016-.17-.017-.169-.018-.167-.019-.166-.02-.165-.021-.163-.023-.162-.023-.161-.024-.159-.024-.157-.026-.156-.027-.155-.028-.153-.028-.151-.03-.15-.03-.148-.032-.146-.032-.145-.033-.143-.034-.141-.034-.14-.036-.137-.036-.136-.037-.134-.038-.132-.039-.13-.039-.128-.041-.126-.041-.124-.041-.122-.043-.12-.043-.117-.044-.116-.044-.113-.046-.112-.046-.109-.046-.106-.048-.105-.048-.102-.048-.1-.05-.097-.049-.095-.051-.093-.051-.09-.052-.087-.052-.085-.053-.083-.053-.08-.054-.077-.054v4.153zm8.74-8.179l-.257.004-.254.005-.25.008-.247.011-.244.012-.241.014-.237.016-.233.018-.231.021-.226.022-.224.023-.22.026-.216.027-.212.028-.21.031-.205.032-.202.033-.198.034-.194.036-.191.038-.187.038-.183.04-.179.041-.175.042-.172.043-.168.043-.163.045-.16.046-.155.046-.152.048-.148.048-.143.048-.139.049-.136.05-.131.05-.126.051-.123.051-.118.051-.114.052-.11.052-.106.052-.101.052-.096.052-.092.052-.088.052-.083.052-.079.052-.074.051-.07.052-.065.051-.06.05-.056.05-.051.05-.023.025-.023.024-.021.024-.02.025-.019.024-.018.024-.017.023-.015.024-.014.023-.013.023-.012.023-.01.023-.01.022-.008.022-.006.023-.006.021-.004.022-.004.021-.001.021-.001.021.001.021.001.021.004.021.004.022.006.021.006.023.008.022.01.022.01.023.012.023.013.023.014.023.015.024.017.023.018.024.019.024.02.025.021.024.023.024.023.025.051.05.056.05.06.05.065.051.07.052.074.051.079.052.083.052.088.052.092.052.096.052.101.052.106.052.11.052.114.052.118.051.123.051.126.051.131.05.136.05.139.049.143.048.148.048.152.048.155.046.16.046.163.045.168.043.172.043.175.042.179.041.183.04.187.038.191.038.194.036.198.034.202.033.205.032.21.031.212.028.216.027.22.026.224.023.226.022.231.021.233.018.237.016.241.014.244.012.247.011.25.008.254.005.257.004.26.001.26-.001.257-.004.254-.005.25-.008.247-.011.244-.012.241-.014.237-.016.233-.018.231-.021.226-.022.224-.023.22-.026.216-.027.212-.028.21-.031.205-.032.202-.033.198-.034.194-.036.191-.038.187-.038.183-.04.179-.041.175-.042.172-.043.168-.043.163-.045.16-.046.155-.046.152-.048.148-.048.143-.048.139-.049.136-.05.131-.05.126-.051.123-.051.118-.051.114-.052.11-.052.106-.052.101-.052.096-.052.092-.052.088-.052.083-.052.079-.052.074-.051.07-.052.065-.051.06-.05.056-.05.051-.05.023-.025.023-.024.021-.024.02-.025.019-.024.018-.024.017-.023.015-.024.014-.023.013-.023.012-.023.01-.023.01-.022.008-.022.006-.023.006-.021.004-.022.004-.021.001-.021.001-.021-.001-.021-.001-.021-.004-.021-.004-.022-.006-.021-.006-.023-.008-.022-.01-.022-.01-.023-.012-.023-.013-.023-.014-.023-.015-.024-.017-.023-.018-.024-.019-.024-.02-.025-.021-.024-.023-.024-.023-.025-.051-.05-.056-.05-.06-.05-.065-.051-.07-.052-.074-.051-.079-.052-.083-.052-.088-.052-.092-.052-.096-.052-.101-.052-.106-.052-.11-.052-.114-.052-.118-.051-.123-.051-.126-.051-.131-.05-.136-.05-.139-.049-.143-.048-.148-.048-.152-.048-.155-.046-.16-.046-.163-.045-.168-.043-.172-.043-.175-.042-.179-.041-.183-.04-.187-.038-.191-.038-.194-.036-.198-.034-.202-.033-.205-.032-.21-.031-.212-.028-.216-.027-.22-.026-.224-.023-.226-.022-.231-.021-.233-.018-.237-.016-.241-.014-.244-.012-.247-.011-.25-.008-.254-.005-.257-.004-.26-.001-.26.001z"></path></symbol></defs><defs><symbol id="qrex-7b7ca8038e284f9a-clock" width="24" height="24"><path transform="scale(.5)" d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.848 12.459c.202.038.202.333.001.372-1.907.361-6.045 1.111-6.547 1.111-.719 0-1.301-.582-1.301-1.301 0-.512.77-5.447 1.125-7.445.034-.192.312-.181.343.014l.985 6.238 5.394 1.011z"></path></symbol></defs><defs><marker id="qrex-7b7ca8038e284f9a-arrowhead" refX="7.9" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M -1 0 L 10 5 L 0 10 z"></path></marker></defs><defs><marker id="qrex-7b7ca8038e284f9a-crosshead" markerWidth="15" markerHeight="8" orient="auto" refX="4" refY="4.5"><path fill="none" stroke="#000000" stroke-width="1pt" d="M 1,2 L 6,7 M 6,2 L 1,7" style="stroke-dasharray: 0, 0;"></path></marker></defs><defs><marker id="qrex-7b7ca8038e284f9a-filled-head" refX="15.5" refY="7" markerWidth="20" markerHeight="28" orient="auto"><path d="M 18,7 L9,13 L14,7 L9,1 Z"></path></marker></defs><defs><marker id="qrex-7b7ca8038e284f9a-sequencenumber" refX="15" refY="15" markerWidth="60" markerHeight="40" orient="auto"><circle cx="15" cy="15" r="6"></circle></marker></defs><defs><marker id="qrex-7b7ca8038e284f9a-solidTopArrowHead" refX="7.9" refY="7.25" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M 0 0 L 10 8 L 0 8 z"></path></marker></defs><defs><marker id="qrex-7b7ca8038e284f9a-solidBottomArrowHead" refX="7.9" refY="0.75" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M 0 0 L 10 0 L 0 8 z"></path></marker></defs><defs><marker id="qrex-7b7ca8038e284f9a-stickTopArrowHead" refX="7.5" refY="7" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M 0 0 L 7 7" stroke="black" stroke-width="1.5" fill="none"></path></marker></defs><defs><marker id="qrex-7b7ca8038e284f9a-stickBottomArrowHead" refX="7.5" refY="0" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M 0 7 L 7 0" stroke="black" stroke-width="1.5" fill="none"></path></marker></defs><defs><filter id="qrex-7b7ca8038e284f9a-drop-shadow" height="130%" width="130%"><feDropShadow dx="4" dy="4" stdDeviation="0" flood-opacity="0.06" flood-color="#FFFFFF"></feDropShadow></filter></defs><text x="170" y="89" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">open /admin/leads</text><line x1="82" y1="120" x2="264" y2="120" class="messageLine0" data-et="message" data-id="i1" data-from="U" data-to="M" stroke-width="2" stroke="none" marker-end="url(#qrex-7b7ca8038e284f9a-arrowhead)" style="fill: none;"></line><line x1="75" y1="120" x2="75" y2="120" stroke-width="0" marker-start="url(#qrex-7b7ca8038e284f9a-sequencenumber)"></line><text x="75" y="124" font-family="sans-serif" font-size="12px" text-anchor="middle" class="sequenceNumber">1</text><text x="473" y="135" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">can('leads.view')</text><line x1="278" y1="166" x2="673" y2="166" class="messageLine0" data-et="message" data-id="i2" data-from="M" data-to="H" stroke-width="2" stroke="none" marker-end="url(#qrex-7b7ca8038e284f9a-arrowhead)" style="fill: none;"></line><line x1="271" y1="166" x2="271" y2="166" stroke-width="0" marker-start="url(#qrex-7b7ca8038e284f9a-sequencenumber)"></line><text x="271" y="170" font-family="sans-serif" font-size="12px" text-anchor="middle" class="sequenceNumber">2</text><text x="479" y="181" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">true</text><line x1="685" y1="210" x2="278" y2="210" class="messageLine1" data-et="message" data-id="i3" data-from="H" data-to="M" stroke-width="2" stroke="none" marker-end="url(#qrex-7b7ca8038e284f9a-arrowhead)" style="stroke-dasharray: 3, 3; fill: none;"></line><line x1="680" y1="210" x2="680" y2="210" stroke-width="0" marker-start="url(#qrex-7b7ca8038e284f9a-sequencenumber)"></line><text x="680" y="214" font-family="sans-serif" font-size="12px" text-anchor="middle" class="sequenceNumber">3</text><text x="366" y="225" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">forward the request</text><line x1="278" y1="256" x2="460" y2="256" class="messageLine0" data-et="message" data-id="i4" data-from="M" data-to="C" stroke-width="2" stroke="none" marker-end="url(#qrex-7b7ca8038e284f9a-arrowhead)" style="fill: none;"></line><line x1="271" y1="256" x2="271" y2="256" stroke-width="0" marker-start="url(#qrex-7b7ca8038e284f9a-sequencenumber)"></line><text x="271" y="260" font-family="sans-serif" font-size="12px" text-anchor="middle" class="sequenceNumber">4</text><text x="571" y="271" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">can('leads.edit.budget')</text><line x1="474" y1="302" x2="673" y2="302" class="messageLine0" data-et="message" data-id="i5" data-from="C" data-to="H" stroke-width="2" stroke="none" marker-end="url(#qrex-7b7ca8038e284f9a-arrowhead)" style="fill: none;"></line><line x1="467" y1="302" x2="467" y2="302" stroke-width="0" marker-start="url(#qrex-7b7ca8038e284f9a-sequencenumber)"></line><text x="467" y="306" font-family="sans-serif" font-size="12px" text-anchor="middle" class="sequenceNumber">5</text><text x="577" y="317" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">false</text><line x1="685" y1="346" x2="474" y2="346" class="messageLine1" data-et="message" data-id="i6" data-from="H" data-to="C" stroke-width="2" stroke="none" marker-end="url(#qrex-7b7ca8038e284f9a-arrowhead)" style="stroke-dasharray: 3, 3; fill: none;"></line><line x1="680" y1="346" x2="680" y2="346" stroke-width="0" marker-start="url(#qrex-7b7ca8038e284f9a-sequencenumber)"></line><text x="680" y="350" font-family="sans-serif" font-size="12px" text-anchor="middle" class="sequenceNumber">6</text><text x="274" y="361" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">Budget renders read-only</text><line x1="472" y1="392" x2="82" y2="392" class="messageLine1" data-et="message" data-id="i7" data-from="C" data-to="U" stroke-width="2" stroke="none" marker-end="url(#qrex-7b7ca8038e284f9a-arrowhead)" style="stroke-dasharray: 3, 3; fill: none;"></line><line x1="467" y1="392" x2="467" y2="392" stroke-width="0" marker-start="url(#qrex-7b7ca8038e284f9a-sequencenumber)"></line><text x="467" y="396" font-family="sans-serif" font-size="12px" text-anchor="middle" class="sequenceNumber">7</text></svg><figcaption>How a permission is enforced on the way in.</figcaption></figure>
+<p>Three levels of enforcement, from broadest to narrowest:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Where</th>
+<th>What it stops</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Navigation</strong></td>
+<td>The sidebar is built from the user&#39;s permissions</td>
+<td>A menu item you cannot use never appears</td>
+</tr>
+<tr>
+<td><strong>Route</strong></td>
+<td>Middleware on the route</td>
+<td>Directly typing the URL gets you a 403, not a blank page</td>
+</tr>
+<tr>
+<td><strong>Field</strong></td>
+<td>The edit form checks each field</td>
+<td>An input you may not change renders read-only instead of disappearing</td>
+</tr>
+</tbody></table>
+<p>A user with no permissions at all still reaches the dashboard, which explains the empty state rather than showing an error — the dashboard simply reports nothing, because it only reports what you are allowed to see.</p>
+<hr>
+<h2 id="46-changing-a-role">4.6 Changing a role</h2>
+<p>Roles are edited on the <strong>Roles</strong> page, where each role lists every module as a row of checkboxes — one per action — plus the field permissions underneath.</p>
+<figure class="figure diagram"><svg id="qrex-0c328690e416de9f" xmlns="http://www.w3.org/2000/svg" class="flowchart" viewBox="4 4 220.140625 585" role="graphics-document document" aria-roledescription="flowchart-v2" width="221" height="585" style="max-width:100%;height:auto"><style>#qrex-0c328690e416de9f{font-family:Inter,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;fill:#1f2733;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#qrex-0c328690e416de9f .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#qrex-0c328690e416de9f .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#qrex-0c328690e416de9f .error-icon{fill:#fbfcfd;}#qrex-0c328690e416de9f .error-text{fill:#040302;stroke:#040302;}#qrex-0c328690e416de9f .edge-thickness-normal{stroke-width:1px;}#qrex-0c328690e416de9f .edge-thickness-thick{stroke-width:3.5px;}#qrex-0c328690e416de9f .edge-pattern-solid{stroke-dasharray:0;}#qrex-0c328690e416de9f .edge-thickness-invisible{stroke-width:0;fill:none;}#qrex-0c328690e416de9f .edge-pattern-dashed{stroke-dasharray:3;}#qrex-0c328690e416de9f .edge-pattern-dotted{stroke-dasharray:2;}#qrex-0c328690e416de9f .marker{fill:#5b6472;stroke:#5b6472;}#qrex-0c328690e416de9f .marker.cross{stroke:#5b6472;}#qrex-0c328690e416de9f svg{font-family:Inter,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;}#qrex-0c328690e416de9f p{margin:0;}#qrex-0c328690e416de9f .label{font-family:Inter,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1f2733;}#qrex-0c328690e416de9f .cluster-label text{fill:#0f5c4e;}#qrex-0c328690e416de9f .cluster-label span{color:#0f5c4e;}#qrex-0c328690e416de9f .cluster-label span p{background-color:transparent;}#qrex-0c328690e416de9f .label text,#qrex-0c328690e416de9f span{fill:#1f2733;color:#1f2733;}#qrex-0c328690e416de9f .node rect,#qrex-0c328690e416de9f .node circle,#qrex-0c328690e416de9f .node ellipse,#qrex-0c328690e416de9f .node polygon,#qrex-0c328690e416de9f .node path{fill:#e8f1ee;stroke:#0f5c4e;stroke-width:1px;}#qrex-0c328690e416de9f .rough-node .label text,#qrex-0c328690e416de9f .node .label text,#qrex-0c328690e416de9f .image-shape .label,#qrex-0c328690e416de9f .icon-shape .label{text-anchor:middle;}#qrex-0c328690e416de9f .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#qrex-0c328690e416de9f .rough-node .label,#qrex-0c328690e416de9f .node .label,#qrex-0c328690e416de9f .image-shape .label,#qrex-0c328690e416de9f .icon-shape .label{text-align:center;}#qrex-0c328690e416de9f .node.clickable{cursor:pointer;}#qrex-0c328690e416de9f .root .anchor path{fill:#5b6472!important;stroke-width:0;stroke:#5b6472;}#qrex-0c328690e416de9f .arrowheadPath{fill:#0b0b0b;}#qrex-0c328690e416de9f .edgePaths .path{stroke:#5b6472;stroke-width:1px;}#qrex-0c328690e416de9f .flowchart-link{stroke:#5b6472;fill:none;}#qrex-0c328690e416de9f .edgeLabel{background-color:#ffffff;text-align:center;}#qrex-0c328690e416de9f .edgeLabel p{background-color:#ffffff;}#qrex-0c328690e416de9f .edgeLabel rect{opacity:0.5;background-color:#ffffff;fill:#ffffff;}#qrex-0c328690e416de9f .labelBkg{background-color:rgba(255, 255, 255, 0.5);}#qrex-0c328690e416de9f .cluster rect{fill:#f2f4f7;stroke:#c9d2dd;stroke-width:1px;}#qrex-0c328690e416de9f .cluster text{fill:#0f5c4e;}#qrex-0c328690e416de9f .cluster span{color:#0f5c4e;}#qrex-0c328690e416de9f .node .collapsed-indicator{fill:#c9d2dd;stroke:none;opacity:0.6;}#qrex-0c328690e416de9f .node .collapsed-separator{stroke:#c9d2dd;stroke-width:0.75px;}#qrex-0c328690e416de9f div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:Inter,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:12px;background:#fbfcfd;border:1px solid hsl(210, 0%, 88.8235294118%);border-radius:2px;pointer-events:none;z-index:100;}#qrex-0c328690e416de9f .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#1f2733;}#qrex-0c328690e416de9f rect.text{fill:none;stroke-width:0;}#qrex-0c328690e416de9f .icon-shape,#qrex-0c328690e416de9f .image-shape{background-color:#ffffff;text-align:center;}#qrex-0c328690e416de9f .icon-shape p,#qrex-0c328690e416de9f .image-shape p{background-color:#ffffff;padding:2px;}#qrex-0c328690e416de9f .icon-shape .label rect,#qrex-0c328690e416de9f .image-shape .label rect{opacity:0.5;background-color:#ffffff;fill:#ffffff;}#qrex-0c328690e416de9f .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#qrex-0c328690e416de9f .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#qrex-0c328690e416de9f .node .neo-node{stroke:#0f5c4e;}#qrex-0c328690e416de9f [data-look="neo"].node rect,#qrex-0c328690e416de9f [data-look="neo"].cluster rect,#qrex-0c328690e416de9f [data-look="neo"].node polygon{stroke:url(#qrex-0c328690e416de9f-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-0c328690e416de9f [data-look="neo"].swimlane.cluster rect{filter:none;}#qrex-0c328690e416de9f [data-look="neo"].node path{stroke:url(#qrex-0c328690e416de9f-gradient);stroke-width:1px;}#qrex-0c328690e416de9f [data-look="neo"].node .outer-path{filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-0c328690e416de9f [data-look="neo"].node .neo-line path{stroke:#0f5c4e;filter:none;}#qrex-0c328690e416de9f [data-look="neo"].node circle{stroke:url(#qrex-0c328690e416de9f-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-0c328690e416de9f [data-look="neo"].node circle .state-start{fill:#000000;}#qrex-0c328690e416de9f [data-look="neo"].icon-shape .icon{fill:url(#qrex-0c328690e416de9f-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-0c328690e416de9f [data-look="neo"].icon-shape .icon-neo path{stroke:url(#qrex-0c328690e416de9f-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-0c328690e416de9f :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g><marker id="qrex-0c328690e416de9f_flowchart-v2-pointEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-0c328690e416de9f_flowchart-v2-pointStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-0c328690e416de9f_flowchart-v2-pointEnd-margin" class="marker flowchart-v2" viewBox="0 0 11.5 14" refX="11.5" refY="7" markerUnits="userSpaceOnUse" markerWidth="10.5" markerHeight="14" orient="auto"><path d="M 0 0 L 11.5 7 L 0 14 z" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-0c328690e416de9f_flowchart-v2-pointStart-margin" class="marker flowchart-v2" viewBox="0 0 11.5 14" refX="1" refY="7" markerUnits="userSpaceOnUse" markerWidth="11.5" markerHeight="14" orient="auto"><polygon points="0,7 11.5,14 11.5,0" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></polygon></marker><marker id="qrex-0c328690e416de9f_flowchart-v2-circleEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="qrex-0c328690e416de9f_flowchart-v2-circleStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="qrex-0c328690e416de9f_flowchart-v2-circleEnd-margin" class="marker flowchart-v2" viewBox="0 0 10 10" refY="5" refX="12.25" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></circle></marker><marker id="qrex-0c328690e416de9f_flowchart-v2-circleStart-margin" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-2" refY="5" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></circle></marker><marker id="qrex-0c328690e416de9f_flowchart-v2-crossEnd" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-0c328690e416de9f_flowchart-v2-crossStart" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-0c328690e416de9f_flowchart-v2-crossEnd-margin" class="marker cross flowchart-v2" viewBox="0 0 15 15" refX="17.7" refY="7.5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M 1,1 L 14,14 M 1,14 L 14,1" class="arrowMarkerPath" style="stroke-width: 2.5;"></path></marker><marker id="qrex-0c328690e416de9f_flowchart-v2-crossStart-margin" class="marker cross flowchart-v2" viewBox="0 0 15 15" refX="-3.5" refY="7.5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M 1,1 L 14,14 M 1,14 L 14,1" class="arrowMarkerPath" style="stroke-width: 2.5; stroke-dasharray: 1, 0;"></path></marker><g class="root"><g class="clusters"></g><g class="edges edgePaths"><path d="M114.0703125,58.5L114.0703125,94.5" id="qrex-0c328690e416de9f-L_L_C_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style="stroke-dasharray: 0 0 32 4; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_L_C_0" data-points="W3sieCI6MTE0LjA3MDMxMjUsInkiOjU4LjV9LHsieCI6MTE0LjA3MDMxMjUsInkiOjk4LjV9XQ==" data-look="neo" marker-end="url(#qrex-0c328690e416de9f_flowchart-v2-pointEnd-margin)"></path><path d="M114.0703125,167.5L114.0703125,203.5" id="qrex-0c328690e416de9f-L_C_F_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style="stroke-dasharray: 0 0 32 4; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_C_F_0" data-points="W3sieCI6MTE0LjA3MDMxMjUsInkiOjE2Ny41fSx7IngiOjExNC4wNzAzMTI1LCJ5IjoyMDcuNX1d" data-look="neo" marker-end="url(#qrex-0c328690e416de9f_flowchart-v2-pointEnd-margin)"></path><path d="M114.0703125,276.5L114.0703125,312.5" id="qrex-0c328690e416de9f-L_F_S_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style="stroke-dasharray: 0 0 32 4; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_F_S_0" data-points="W3sieCI6MTE0LjA3MDMxMjUsInkiOjI3Ni41fSx7IngiOjExNC4wNzAzMTI1LCJ5IjozMTYuNX1d" data-look="neo" marker-end="url(#qrex-0c328690e416de9f_flowchart-v2-pointEnd-margin)"></path><path d="M114.0703125,363L114.0703125,399" id="qrex-0c328690e416de9f-L_S_I_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style="stroke-dasharray: 0 0 32 4; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_S_I_0" data-points="W3sieCI6MTE0LjA3MDMxMjUsInkiOjM2M30seyJ4IjoxMTQuMDcwMzEyNSwieSI6NDAzfV0=" data-look="neo" marker-end="url(#qrex-0c328690e416de9f_flowchart-v2-pointEnd-margin)"></path><path d="M114.0703125,472L114.0703125,508" id="qrex-0c328690e416de9f-L_I_N_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style="stroke-dasharray: 0 0 32 4; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_I_N_0" data-points="W3sieCI6MTE0LjA3MDMxMjUsInkiOjQ3Mn0seyJ4IjoxMTQuMDcwMzEyNSwieSI6NTEyfV0=" data-look="neo" marker-end="url(#qrex-0c328690e416de9f_flowchart-v2-pointEnd-margin)"></path></g><g class="edgeLabels"></g><g class="nodes"><g class="node default" id="qrex-0c328690e416de9f-flowchart-L-0" data-look="neo" transform="translate(114.0703125, 35.25)"><rect class="basic label-container" style="" x="-76" y="-23.25" width="152" height="46.5"></rect><g class="label" style="" transform="translate(-60, -11.25)"><rect></rect><foreignObject width="120" height="22.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>Choose a role</p></span></div></foreignObject></g></g><g class="node default" id="qrex-0c328690e416de9f-flowchart-C-1" data-look="neo" transform="translate(114.0703125, 133)"><rect class="basic label-container" style="" x="-76" y="-34.5" width="152" height="69"></rect><g class="label" style="" transform="translate(-60, -22.5)"><rect></rect><foreignObject width="120" height="45"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>Tick the actions<br>you want to grant</p></span></div></foreignObject></g></g><g class="node default" id="qrex-0c328690e416de9f-flowchart-F-3" data-look="neo" transform="translate(114.0703125, 242)"><rect class="basic label-container" style="" x="-78.125" y="-34.5" width="156.25" height="69"></rect><g class="label" style="" transform="translate(-62.125, -22.5)"><rect></rect><foreignObject width="124.25" height="45"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center;"><span class="nodeLabel"><p>Tick the fields<br>you want to unlock</p></span></div></foreignObject></g></g><g class="node default" id="qrex-0c328690e416de9f-flowchart-S-5" data-look="neo" transform="translate(114.0703125, 339.75)"><rect class="basic label-container" style="fill:#e8f1ee !important;stroke:#0f5c4e !important" x="-76" y="-23.25" width="152" height="46.5"></rect><g class="label" style="" transform="translate(-60, -11.25)"><rect></rect><foreignObject width="120" height="22.5"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>Save</p></span></div></foreignObject></g></g><g class="node default" id="qrex-0c328690e416de9f-flowchart-I-7" data-look="neo" transform="translate(114.0703125, 437.5)"><rect class="basic label-container" style="" x="-93.1328125" y="-34.5" width="186.265625" height="69"></rect><g class="label" style="" transform="translate(-77.1328125, -22.5)"><rect></rect><foreignObject width="154.265625" height="45"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center;"><span class="nodeLabel"><p>The role's permissions<br>are replaced wholesale</p></span></div></foreignObject></g></g><g class="node default" id="qrex-0c328690e416de9f-flowchart-N-9" data-look="neo" transform="translate(114.0703125, 546.5)"><rect class="basic label-container" style="" x="-102.0703125" y="-34.5" width="204.140625" height="69"></rect><g class="label" style="" transform="translate(-86.0703125, -22.5)"><rect></rect><foreignObject width="172.140625" height="45"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center;"><span class="nodeLabel"><p>The change applies<br>on the user's next request</p></span></div></foreignObject></g></g></g></g></g><defs><filter id="qrex-0c328690e416de9f-drop-shadow" height="130%" width="130%"><feDropShadow dx="4" dy="4" stdDeviation="0" flood-opacity="0.06" flood-color="#000000"></feDropShadow></filter></defs><defs><filter id="qrex-0c328690e416de9f-drop-shadow-small" height="150%" width="150%"><feDropShadow dx="2" dy="2" stdDeviation="0" flood-opacity="0.06" flood-color="#000000"></feDropShadow></filter></defs><linearGradient id="qrex-0c328690e416de9f-gradient" gradientUnits="objectBoundingBox" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#0f5c4e" stop-opacity="1"></stop><stop offset="100%" stop-color="hsl(214.2857142857, 0%, 84.7058823529%)" stop-opacity="1"></stop></linearGradient></svg><figcaption>Changing a role replaces its permission set.</figcaption></figure>
+<p>Two behaviours worth knowing:</p>
+<ul>
+<li>Saving <strong>replaces</strong> the role&#39;s permission set rather than merging into it. Whatever you untick is gone the moment you save.</li>
+<li>The four system roles — Super Admin, Admin, Sales Executive and Senior Agent — are seeded with <code>is_system = true</code>. They can be edited, but they are re-created from the seeder on every deployment, so a hand-made change to a system role does not survive a deploy. <strong>Custom roles</strong> created from the Roles page are yours and are not touched by the seeder.</li>
+</ul>
+<hr>
+<p><strong>Next:</strong> <a href="explain-05-screen-designs.html">05 — Screen Designs</a></p>
+
+<div class="pager"><a href="explain-03-data-model.html">← 03. Data Model</a><a href="explain-05-screen-designs.html">05. Screen Designs →</a></div>
+<div class="site-footer">QREX documentation · generated from the Markdown sources in <code>docs/</code> · build with <code>npm run docs:html</code></div>
+</main>
+</div>
+
+<script>
+function filterDocs(q){
+  q=(q||'').trim().toLowerCase();
+  document.querySelectorAll('#doc-nav .nav-group').forEach(function(g){
+    var visible=0;
+    g.querySelectorAll('a').forEach(function(a){
+      var hit=!q||a.getAttribute('data-title').indexOf(q)>-1;
+      a.classList.toggle('nav-hidden',!hit);
+      if(hit)visible++;
+    });
+    g.classList.toggle('nav-hidden',visible===0);
+    if(q)g.open=true;
+  });
+}
+document.querySelectorAll('.table-wrap').forEach(function(wrap){
+  var input=wrap.querySelector('.table-filter');
+  var table=wrap.querySelector('table');
+  var count=wrap.querySelector('.table-count');
+  if(!input||!table)return;
+  input.addEventListener('input',function(){
+    var q=input.value.trim().toLowerCase();
+    var shown=0,total=0;
+    table.querySelectorAll('tbody tr').forEach(function(row){
+      total++;
+      var hit=!q||row.textContent.toLowerCase().indexOf(q)>-1;
+      row.style.display=hit?'':'none';
+      if(hit)shown++;
+    });
+    if(count)count.textContent=q?shown+' of '+total+' rows':' '+total+' rows';
+  });
+});
+</script>
+</body>
+</html>

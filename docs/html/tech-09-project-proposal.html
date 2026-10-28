@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project Proposal: QREX – Qodeigence Real Estate Experience · QREX</title>
+<style>
+:root{--bg:#f7f8fa;--panel:#fff;--ink:#1f2733;--muted:#5b6472;--line:#e3e7ee;--accent:#0f5c4e;--accent2:#b5893b;--code:#f2f4f7;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65;font-size:16px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.layout{display:flex;min-height:100vh}
+aside{width:280px;flex:0 0 280px;background:var(--panel);border-right:1px solid var(--line);padding:24px 20px;position:sticky;top:0;height:100vh;overflow-y:auto}
+aside h2{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:18px 0 8px}
+aside a{display:block;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.9rem}
+aside a:hover{background:var(--bg);text-decoration:none}
+aside a.active{background:var(--accent);color:#fff}
+aside .brand{font-weight:700;font-size:1.05rem;color:var(--accent);margin-bottom:4px}
+main{flex:1;min-width:0;padding:40px 56px;max-width:960px;margin:0 auto}
+main h1{font-size:2rem;line-height:1.25;margin:0 0 .5em;padding-bottom:.35em;border-bottom:2px solid var(--line)}
+main h2{font-size:1.45rem;margin:2em 0 .6em;padding-bottom:.25em;border-bottom:1px solid var(--line)}
+main h3{font-size:1.15rem;margin:1.6em 0 .5em}
+main h4{font-size:1rem;margin:1.3em 0 .4em}
+main p,main li{color:#2b3542}
+table{border-collapse:collapse;width:100%;margin:1.1em 0;font-size:.92rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+th{background:#eef1f5;font-weight:600}
+tr:nth-child(even) td{background:#fbfcfd}
+code{background:var(--code);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em}
+pre{background:#1e2530;color:#e6e9ef;padding:16px 18px;border-radius:8px;overflow-x:auto}
+pre code{background:none;color:inherit;padding:0}
+blockquote{margin:1.2em 0;padding:.6em 1.1em;background:#fff8e8;border-left:4px solid var(--accent2);color:#5b4a22;border-radius:0 6px 6px 0}
+blockquote p{margin:.4em 0}
+hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
+img{max-width:100%}
+.crumbs{font-size:.82rem;color:var(--muted);margin-bottom:18px}
+.pager{display:flex;justify-content:space-between;gap:16px;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{font-size:.9rem}
+.site-footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:24px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.card h3{margin:.2em 0 .4em;font-size:1.02rem}
+.card p{margin:.2em 0;font-size:.88rem;color:var(--muted)}
+/* --- Figures: diagrams and screen wireframes --- */
+.figure{margin:1.8em 0}
+.figure>svg{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px}
+.figure.diagram{overflow-x:auto}
+.figure.diagram.wide>svg{max-width:none;margin:0}
+.figure.wireframe>svg{border-color:#dbe2ea}
+figcaption{margin-top:.7em;font-size:.82rem;color:var(--muted);text-align:center;line-height:1.45}
+.art-missing{border-left:3px solid #c0392b}
+/* --- Long reference tables --- */
+.table-wrap{margin:1.1em 0}
+.table-filter{width:100%;max-width:300px;padding:7px 11px;margin-bottom:.55em;border:1px solid var(--line);border-radius:8px;font-size:.86rem;background:#fff;color:var(--ink);font-family:inherit}
+.table-filter:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.table-count{font-size:.78rem;color:var(--muted);margin-left:8px;vertical-align:middle}
+/* --- Documentation menu (sidebar) --- */
+.side-search{width:100%;padding:8px 10px;margin:10px 0 4px;border:1px solid var(--line);border-radius:8px;font-size:.85rem;background:var(--bg);color:var(--ink)}
+.side-search:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.home-link{display:block;font-size:.8rem;font-weight:600;color:var(--accent);margin-bottom:14px;padding:4px 0}
+.nav-group{border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:6px}
+.nav-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:10px 4px 6px;font-weight:700;user-select:none}
+.nav-group>summary::-webkit-details-marker{display:none}
+.nav-group>summary .chev{transition:transform .15s ease;font-size:.7rem;color:var(--muted)}
+.nav-group[open]>summary .chev{transform:rotate(90deg)}
+.nav-group .count{color:var(--muted);font-weight:400;margin-left:auto;font-size:.68rem}
+.nav-group a{display:flex;gap:8px;align-items:baseline;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.88rem;line-height:1.35}
+.nav-group a:hover{background:var(--bg);text-decoration:none}
+.nav-group a.active{background:var(--accent);color:#fff}
+.nav-group a.active .num{color:#d9ece7}
+.nav-group a .num{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.75rem;min-width:1.4em}
+.nav-hidden{display:none!important}
+.menu-toggle{display:none;position:fixed;top:12px;left:12px;z-index:50;width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:1.2rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.menu-backdrop{display:none}
+@media(max-width:900px){
+  .layout{flex-direction:column}
+  .menu-toggle{display:flex}
+  aside{position:fixed;top:0;left:0;z-index:60;width:290px;height:100vh;overflow-y:auto;border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .2s ease;box-shadow:0 0 24px rgba(0,0,0,.12)}
+  body.menu-open aside{transform:translateX(0)}
+  body.menu-open .menu-backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:55}
+  main{padding:64px 20px 24px}
+}
+@media print{
+  aside,.crumbs,.pager,.menu-toggle,.menu-backdrop{display:none}
+  body{background:#fff;font-size:11pt}
+  main{max-width:none;padding:0}
+  a{color:var(--ink)}
+  pre{background:#f2f4f7;color:#1f2733;border:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<button class="menu-toggle" aria-label="Open documentation menu" onclick="document.body.classList.toggle('menu-open')">☰</button>
+<div class="menu-backdrop" onclick="document.body.classList.remove('menu-open')"></div>
+<aside>
+  <a class="home-link" href="index.html">⌂ All documentation</a>
+  <div class="brand">QREX Documentation</div>
+  <div style="font-size:.78rem;color:var(--muted)">Qodeigence Infocircle Pvt. Ltd.</div>
+  <input class="side-search" type="search" placeholder="Search documents…" aria-label="Search documents" oninput="filterDocs(this.value)">
+  <nav id="doc-nav">
+    <details class="nav-group">
+<summary><span>User Manual</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="manual-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="overview and getting started" href="manual-01-overview-and-getting-started.html"><span class="num">01</span><span>Overview And Getting Started</span></a><a class="" data-title="roles and access" href="manual-02-roles-and-access.html"><span class="num">02</span><span>Roles And Access</span></a><a class="" data-title="sales lifecycle" href="manual-03-sales-lifecycle.html"><span class="num">03</span><span>Sales Lifecycle</span></a><a class="" data-title="modules sales" href="manual-04-modules-sales.html"><span class="num">04</span><span>Modules Sales</span></a><a class="" data-title="modules operations" href="manual-05-modules-operations.html"><span class="num">05</span><span>Modules Operations</span></a><a class="" data-title="modules marketing and admin" href="manual-06-modules-marketing-and-admin.html"><span class="num">06</span><span>Modules Marketing And Admin</span></a><a class="" data-title="public website" href="manual-07-public-website.html"><span class="num">07</span><span>Public Website</span></a><a class="" data-title="reference" href="manual-08-reference.html"><span class="num">08</span><span>Reference</span></a><a class="" data-title="troubleshooting and faq" href="manual-09-troubleshooting-and-faq.html"><span class="num">09</span><span>Troubleshooting And Faq</span></a></details><details class="nav-group">
+<summary><span>How QREX Works</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="explain-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="system at a glance" href="explain-01-system-at-a-glance.html"><span class="num">01</span><span>System At A Glance</span></a><a class="" data-title="sales lifecycle" href="explain-02-sales-lifecycle.html"><span class="num">02</span><span>Sales Lifecycle</span></a><a class="" data-title="data model" href="explain-03-data-model.html"><span class="num">03</span><span>Data Model</span></a><a class="" data-title="roles and permissions" href="explain-04-roles-and-permissions.html"><span class="num">04</span><span>Roles And Permissions</span></a><a class="" data-title="screen designs" href="explain-05-screen-designs.html"><span class="num">05</span><span>Screen Designs</span></a><a class="" data-title="operations and automation" href="explain-06-operations-and-automation.html"><span class="num">06</span><span>Operations And Automation</span></a></details><details class="nav-group" open>
+<summary><span>Technical Documentation</span><span class="chev">▶</span></summary>
+<a class="" data-title="project scope" href="tech-01-project-scope.html"><span class="num">01</span><span>Project Scope</span></a><a class="" data-title="architecture" href="tech-02-architecture.html"><span class="num">02</span><span>Architecture</span></a><a class="" data-title="operations modules" href="tech-03-operations-modules.html"><span class="num">03</span><span>Operations Modules</span></a><a class="" data-title="roles permissions" href="tech-04-roles-permissions.html"><span class="num">04</span><span>Roles Permissions</span></a><a class="" data-title="database schema" href="tech-05-database-schema.html"><span class="num">05</span><span>Database Schema</span></a><a class="" data-title="operations" href="tech-06-operations.html"><span class="num">06</span><span>Operations</span></a><a class="" data-title="security hardening" href="tech-07-security-hardening.html"><span class="num">07</span><span>Security Hardening</span></a><a class="" data-title="glossary" href="tech-08-glossary.html"><span class="num">08</span><span>Glossary</span></a><a class="active" data-title="project proposal" href="tech-09-project-proposal.html"><span class="num">09</span><span>Project Proposal</span></a><a class="" data-title="budget pricing mumbai" href="tech-10-budget-pricing-mumbai.html"><span class="num">10</span><span>Budget Pricing Mumbai</span></a></details>
+  </nav>
+  <details class="nav-group"><summary><span>Downloads</span><span class="chev">▶</span></summary>
+    <a href="../word/QREX-User-Manual.docx"><span class="num"></span><span>User Manual (.docx)</span></a>
+    <a href="../word/QREX-User-Manual.doc"><span class="num"></span><span>User Manual (.doc)</span></a>
+    <a href="../word/QREX-How-It-Works.docx"><span class="num"></span><span>How QREX Works (.docx)</span></a>
+    <a href="../word/QREX-How-It-Works.doc"><span class="num"></span><span>How QREX Works (.doc)</span></a>
+    <a href="../word/QREX-Technical-Documentation.docx"><span class="num"></span><span>Technical Docs (.docx)</span></a>
+    <a href="../word/QREX-Technical-Documentation.doc"><span class="num"></span><span>Technical Docs (.doc)</span></a>
+  </details>
+</aside>
+<main>
+<div class="crumbs">QREX Technical Documentation</div>
+<h1 id="project-proposal-qrex-qodeigence-real-estate-experience">Project Proposal: QREX – Qodeigence Real Estate Experience</h1>
+<p><strong>Prepared by:</strong> Qodeigence Inc.
+<strong>Project name:</strong> QREX — Qodeigence Real Estate Experience
+<strong>Audience:</strong> Real estate agencies, brokerages, and developers
+<strong>Version:</strong> 1.0
+<strong>Status:</strong> Proposal for discussion</p>
+<blockquote>
+<p>This proposal combines an independent market research summary with a technical and commercial description of QREX, a complete real estate marketing + sales CRM platform. All market figures cite their sources; commercial terms are indicative and open for discussion.</p>
+</blockquote>
+<hr>
+<h2 id="1-executive-summary">1. Executive Summary</h2>
+<p>Real estate is an increasingly value-driven, competitive, and digital-first industry. In India alone, the sector is valued at roughly <strong>₹23.5 lakh crore (7.1% of GDP)</strong>, and 2025 primary housing sales crossed <strong>₹8.46 lakh crore, up 16% year-on-year</strong> (CREDAI–Liases Foras). Yet the teams that win these deals run on fragmented tools. The global real estate CRM market is growing at <strong>12–13% CAGR</strong> (see §4.1), pushed by exactly this gap.</p>
+<p>The industry research is blunt:</p>
+<ul>
+<li>Agents take an average of <strong>15 hours</strong> to respond to a new lead, but leads contacted within <strong>5 minutes are 21× more likely to qualify</strong> — and <strong>78% of buyers work with the first agent who responds</strong> (Inman; MIT/InsideSales; NAR).</li>
+<li><strong>87% of real estate deals are lost because follow-up fades</strong> after the first touch (SureSend).</li>
+<li>Only ~<strong>30–45% of agents use a CRM consistently</strong>; the rest juggle spreadsheets, email folders, or nothing (NAR; Inside Real Estate).</li>
+<li><strong>68% of brokerages report CRM adoption below 50%</strong>, driven by tool fragmentation and data-entry burden (T3 Sixty / TotalBrokerage; Salesforce).</li>
+</ul>
+<p><strong>QREX (Qodeigence Real Estate Experience)</strong> is the answer we built. It is a single, integrated platform that combines:</p>
+<ol>
+<li>a <strong>public-facing property website</strong> that turns visitors into leads automatically,</li>
+<li>a <strong>full sales CRM</strong> with lead lifecycle, activity history, and a Kanban deal pipeline,</li>
+<li><strong>sales operations</strong> for properties, customers, site visits, bookings, and payments,</li>
+<li><strong>productivity automation</strong> (follow-up tasks, reminders, notifications) that attacks the <em>real</em> reason deals die — slow, inconsistent follow-up,</li>
+<li><strong>management reporting</strong> with CSV/PDF exports to measure what actually works.</li>
+</ol>
+<p>QREX was purpose-built for <strong>Indian agencies</strong>: INR-native value formatting (₹L/₹Cr), Indian phone/contact workflows, Mumbai-first demo market coverage, and team/role security that scales from a 3-person office to multi-branch enterprises.</p>
+<p>We propose partnering with your agency to deploy QREX — from setup and data migration through team enablement and ongoing optimization.</p>
+<hr>
+<h2 id="2-about-qodeigence-inc">2. About Qodeigence Inc.</h2>
+<p><strong>Qodeigence Inc.</strong> is a software company specializing in digital products for real estate and sales-driven industries. QREX — <strong>Qodeigence Real Estate Experience</strong> — is our flagship product, a production real estate marketing and CRM platform.</p>
+<p>Our approach is partnership, not hand-off:</p>
+<ul>
+<li>We bring domain knowledge of the agency sales process (leads → site visits → bookings → payments).</li>
+<li>We ship a <strong>complete, working product</strong> rather than a template.</li>
+<li>We support deployment, data import, training, and ongoing operation.</li>
+<li>We are open to localizing QREX for your city, your property portfolio, and your branding.</li>
+</ul>
+<hr>
+<h2 id="3-methodology-note">3. Methodology Note</h2>
+<p>This proposal was informed by:</p>
+<ol>
+<li><strong>Independent market research</strong> — global &amp; India real estate CRM/sector reports (see §4 and Appendix A for sources).</li>
+<li><strong>Primary product evidence</strong> — the QREX codebase (routes, controllers, models, migrations, services, frontend), documented separately in the companion project documents (<code>docs/01</code>–<code>docs/08</code>).</li>
+<li><strong>Industry adoption research</strong> — NAR Technology Surveys, brokerage technology surveys (T3 Sixty, TotalBrokerage), CRM sales research (Salesforce, HubSpot, SugarCRM), and academic response-time studies (MIT/InsideSales).</li>
+</ol>
+<p>Every statistic below carries its source. Nothing is fabricated.</p>
+<hr>
+<h2 id="4-market-research">4. Market Research</h2>
+<h3 id="41-global-real-estate-crm-market">4.1 Global Real Estate CRM Market</h3>
+<table>
+<thead>
+<tr>
+<th>Indicator</th>
+<th>Value</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Global real estate CRM software market, 2026</td>
+<td><strong>US$ 5.58 B</strong> (est. US$ 5.31 B)</td>
+<td>Morgan Reed Insights; Business Research Insights</td>
+</tr>
+<tr>
+<td>Forecast, 2035</td>
+<td><strong>US$ 14.98–16.51 B</strong></td>
+<td>Business Research Insights; Morgan Reed Insights</td>
+</tr>
+<tr>
+<td>CAGR (2026–2035)</td>
+<td><strong>12.2–12.8%</strong></td>
+<td>Same sources</td>
+</tr>
+</tbody></table>
+<p>The fastest-growing real estate software segment is disorganized — a handful of fragmented specialists (US-centric) and generic enterprise CRMs that real-estate agents don&#39;t use. Our research review found <strong>no India-native, end-to-end website + CRM + operations platform</strong> that addresses the industry&#39;s core adoption problem (see §4.3), which is a market gap QREX targets directly.</p>
+<h3 id="42-india-market-context">4.2 India Market Context</h3>
+<table>
+<thead>
+<tr>
+<th>Indicator</th>
+<th>Value</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>India real estate sector size</td>
+<td><strong>~₹23.5 lakh crore</strong>, <strong>7.1% of GDP</strong></td>
+<td>CREDAI–Liases Foras, CY2025 Report</td>
+</tr>
+<tr>
+<td>Primary developer-market sales (2025)</td>
+<td><strong>₹8.46 lakh crore</strong>, <strong>+16% YoY</strong>; 6,14,218 units</td>
+<td>CREDAI–Liases Foras</td>
+</tr>
+<tr>
+<td>Premium segment share of sales value (₹1 Cr+)</td>
+<td><strong>78%</strong></td>
+<td>CREDAI–Liases Foras</td>
+</tr>
+<tr>
+<td>India real estate market (2026 → 2031)</td>
+<td><strong>US$ 585 B → US$ 927 B</strong>, 9.63% CAGR</td>
+<td>Mordor Intelligence</td>
+</tr>
+<tr>
+<td>Residential share of market</td>
+<td><strong>70.1%</strong></td>
+<td>Mordor Intelligence</td>
+</tr>
+<tr>
+<td>Mumbai Metropolitan Region revenue share</td>
+<td><strong>28.4%</strong> (largest)</td>
+<td>Mordor Intelligence</td>
+</tr>
+<tr>
+<td>Registered residential transactions 2025</td>
+<td><strong>5.45 lakh units</strong> (−5% vol), <strong>₹4.46 lakh crore</strong> (+11% value), avg deal <strong>₹0.81 Cr</strong> (+22%)</td>
+<td>SquareYards, 2025 Recap / 2026 Outlook</td>
+</tr>
+</tbody></table>
+<p><strong>Outlook:</strong> 2026 spending is shifting to the <strong>mid-segment (₹80 L–₹1.5 Cr)</strong>, with sales volumes steadying but ticket sizes and total value still rising. Agencies that respond fast, follow-up systematically, and prove their ROI with data will capture the value-led demand — exactly what QREX enables.</p>
+<h3 id="43-the-agency-problem-why-deals-are-lost">4.3 The Agency Problem (Why Deals Are Lost)</h3>
+<p>The market research consistently identifies <strong>four structural reasons</strong> agencies leak revenue:</p>
+<p><strong>1. Slow response to leads.</strong> Lead-response speed is the single highest-leverage metric in real estate.</p>
+<ul>
+<li>Average agent response to a new lead: <strong>~15 hours</strong> (Inman, 2025 Real Estate Technology Survey).</li>
+<li>Contact within <strong>5 minutes</strong> → leads are <strong>21× more likely to qualify</strong>; within 1 minute → <strong>391% better contact rate</strong> than at 2 minutes (MIT/InsideSales.com; Velocify).</li>
+<li><strong>78% of buyers work with the first agent who responds</strong> (NAR Profile of Home Buyers &amp; Sellers).</li>
+<li>Delta for an agency generating ~50 paid leads/month: <strong>₹– … lakh to ₹– lakh per year in lost commissions</strong> (see ROI model, §12).</li>
+</ul>
+<p><strong>2. CRM underuse.</strong> The tools exist; the habit doesn&#39;t.</p>
+<ul>
+<li>Only ~<strong>30% of agents use a CRM consistently</strong>; <strong>72.5% of companies own one</strong> (NAR 2025 Tech Survey; Software Advice 2024).</li>
+<li>Of agents, <strong>45%</strong> manage leads in a CRM consistently; <strong>26%</strong> use spreadsheets, <strong>15%</strong> email folders, <strong>14%</strong> no system (Inside Real Estate, Agent Technology Report 2024).</li>
+<li><strong>83% of executives</strong> call staff CRM adoption their biggest technology challenge (Really Simple Systems).</li>
+</ul>
+<p><strong>3. Friction &amp; fragmentation.</strong> Agents abandon tools that demand effort and don&#39;t return value.</p>
+<ul>
+<li>CRM data entry consumes <strong>~4.5 hours/week</strong>; salespeople spend only <strong>28–30% of their week selling</strong> (Salesforce, 2024 State of Sales).</li>
+<li><strong>76%</strong> of CRM users cite complexity as their primary frustration (SugarCRM).</li>
+<li><strong>68% of sellers</strong> call data entry their most time-consuming task; only <strong>2% trust the data they enter</strong> (2024 industry survey).</li>
+<li><strong>68% of brokerages</strong> have CRM adoption <strong>below 50%</strong>; the average brokerage runs <strong>20+ disconnected tools</strong> (T3 Sixty / TotalBrokerage 2023–24).</li>
+</ul>
+<p><strong>4. Follow-up dies.</strong> The pipeline doesn&#39;t leak at the top — it leaks at the follow-up.</p>
+<ul>
+<li><strong>87% of deals are lost to follow-up that fades</strong> (SureSend 2026).</li>
+<li><strong>80% of new leads never convert without ongoing nurturing</strong>; most need <strong>8–12 touchpoints</strong> (MarketingSherpa).</li>
+<li>The average buyer researches for <strong>~10 weeks</strong> and <strong>97% start online</strong> (NAR), so a tool that tracks and reminds follow-ups is worth more than a tool that only stores contacts.</li>
+</ul>
+<h3 id="44-what-agencies-actually-need">4.4 What Agencies Actually Need</h3>
+<p>Most-used → most-skipped CRM features (Capterra CRM User Behavior Survey 2024):</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Contact management</td>
+<td>94%</td>
+</tr>
+<tr>
+<td>Email integration</td>
+<td>89%</td>
+</tr>
+<tr>
+<td>Task management</td>
+<td>82%</td>
+</tr>
+<tr>
+<td>Pipeline tracking</td>
+<td>78%</td>
+</tr>
+<tr>
+<td>Automated workflows</td>
+<td>61%</td>
+</tr>
+<tr>
+<td><strong>Reporting / analytics</strong></td>
+<td><strong>48%</strong> (least used, most valuable)</td>
+</tr>
+</tbody></table>
+<p>The most-requested features in real-estate CRMs: <strong>MLS/IDX-style listing integration, automated drip/follow-up, transaction management</strong> — the operational layer, not just a contact book (industry feature-request research).</p>
+<h3 id="45-competitive-landscape">4.5 Competitive Landscape</h3>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Type</th>
+<th>Strengths</th>
+<th>Gaps for a modern Indian agency</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Salesforce / HubSpot / Zoho</strong></td>
+<td>General-purpose CRM</td>
+<td>Power, integrations, ecosystem</td>
+<td>Enterprise complexity (76% cite complexity), RE-specific flows absent, high setup effort, weak India/INR convention</td>
+</tr>
+<tr>
+<td><strong>Follow Up Boss / kvCORE / BoomTown / LionDesk</strong></td>
+<td>US real-estate CRMs</td>
+<td>RE-native pipelines, portal lead import</td>
+<td>North-America/MLS-centric, $50–300+/agent/mo, no INR formatting, no site-visit/booking/payment ops</td>
+</tr>
+<tr>
+<td><strong>Propertybase / Top Producer</strong></td>
+<td>Transaction + marketing</td>
+<td>Deeper listings/transaction mgmt</td>
+<td>US-centric, expensive, integration-heavy</td>
+</tr>
+<tr>
+<td><strong>Zillow Premier Agent / portal tools</strong></td>
+<td>Lead portals</td>
+<td>High lead volume</td>
+<td>Not a CRM; leads must be captured elsewhere</td>
+</tr>
+<tr>
+<td><strong>Spreadsheets / Notion</strong></td>
+<td>Manual</td>
+<td>Free, flexible</td>
+<td>Cause the problem: no follow-up automation, no speed-to-lead, no reporting</td>
+</tr>
+<tr>
+<td><strong>QREX (this proposal)</strong></td>
+<td>All-in-one website + CRM + operations, India-native</td>
+<td>Website, leads, pipeline, site visits, bookings, payments, tasks, automation, reports — one system</td>
+<td>Younger product (mitigated by custom deployment &amp; managed service)</td>
+</tr>
+</tbody></table>
+<h3 id="46-qrex-positioning">4.6 QREX Positioning</h3>
+<p><strong>A single, India-native platform where the agency&#39;s entire sale-to-settlement journey lives</strong> — from the public website that captures a lead to the follow-up task that wins it, the site visit, the booking, the payment, and the report that proves the ROI. No 4–6 disconnected tools, no 14-field intake forms, no enterprise-bloat interface.</p>
+<hr>
+<h2 id="5-project-vision-objectives">5. Project Vision & Objectives</h2>
+<p>QREX exists to give real-estate agencies:</p>
+<ol>
+<li><strong>Speed to lead</strong> — enquiries from the website land in the CRM instantly as leads (no manual entry).</li>
+<li><strong>No dropped follow-up</strong> — scheduled follow-up tasks, overdue detection, and in-app notifications ensure no lead is forgotten.</li>
+<li><strong>One source of truth</strong> — property inventory, customers, visits, bookings, and payments in one system.</li>
+<li><strong>Accountable teams</strong> — role-based and field-level permissions; every agent sees and manages their own pipeline.</li>
+<li><strong>Data-driven decisions</strong> — dashboards and CSV/PDF reports that show lead source ROI, agent performance, pipeline funnel, and revenue.</li>
+</ol>
+<hr>
+<h2 id="6-solution-overview-scope">6. Solution Overview & Scope</h2>
+<p>QREX is fully built (production Laravel application) and ready to deploy. The complete working details are documented in companion files (<code>docs/03-operations-modules.md</code>, etc.); a summary follows.</p>
+<h3 id="61-public-website-marketing-surface">6.1 Public Website (Marketing Surface)</h3>
+<ul>
+<li>Searchable, filterable property listings (type, status, bedrooms, price range, sort).</li>
+<li>Property detail pages with image galleries and related properties.</li>
+<li>About &amp; contact pages with the agency&#39;s branding (CMS-managed content).</li>
+<li><strong>Enquiry forms that auto-create CRM leads</strong> (rate-limited against spam).</li>
+</ul>
+<h3 id="62-lead-management">6.2 Lead Management</h3>
+<ul>
+<li>Full status lifecycle: <code>New → Contacted → Qualified → Site Visit Scheduled → Site Visit Completed → Negotiation → Converted / Lost</code>.</li>
+<li><strong>Activity timeline</strong> — every call, email, note, and meeting logged with outcome &amp; follow-up.</li>
+<li><strong>Handovers &amp; reassignment</strong> between agents with reason/notes and audit history.</li>
+<li><strong>Bulk CSV import</strong> with downloadable template, header aliasing, duplicate detection, and per-row error reports.</li>
+<li><strong>One-click conversion</strong> of a lead into a pipeline deal (concurrency-safe).</li>
+</ul>
+<h3 id="63-sales-pipeline">6.3 Sales Pipeline</h3>
+<ul>
+<li>Kanban-style deal board with configurable stages (<code>New Lead → Contacted → Qualified → Property Shortlisted → Site Visit Scheduled → Site Visit Completed → Negotiation → Booking → Agreement → Payment → Closed Won / Lost</code>).</li>
+<li>Days-in-stage tracking, close probability, assigned agent.</li>
+</ul>
+<h3 id="64-sales-operations">6.4 Sales Operations</h3>
+<ul>
+<li><strong>Properties</strong> — full CRUD with multiple images per property, featured &amp; website-visibility toggles, SEO fields.</li>
+<li><strong>Customers</strong> — record, view, manage customer details.</li>
+<li><strong>Site Visits</strong> — schedule and manage visits (Scheduled/Confirmed/Completed/Cancelled/Rescheduled) with feedback.</li>
+<li><strong>Bookings</strong> — booking amount plus agreement &amp; possession tracks.</li>
+<li><strong>Payments</strong> — track amounts, modes, due/paid dates, statuses (Pending/Paid/Overdue/Partially Paid).</li>
+</ul>
+<h3 id="65-productivity-automation">6.5 Productivity & Automation</h3>
+<ul>
+<li><strong>Tasks</strong> — follow-ups and to-dos with due dates, priorities, assignments.</li>
+<li><strong>Notifications</strong> — in-app read/unread.</li>
+<li><strong>Follow-up automation</strong> — a scheduled check (<code>php artisan leads:check-followups</code>) flags overdue/due-today follow-ups and notifies the responsible agent, automatically.</li>
+</ul>
+<h3 id="66-marketing-reporting">6.6 Marketing & Reporting</h3>
+<ul>
+<li><strong>Campaigns</strong> — budget, spend, leads, conversions, revenue, ROI, with campaign attribution on leads.</li>
+<li><strong>Media center</strong> — centralized file management.</li>
+<li><strong>Reports</strong> — dashboard KPIs, revenue-by-month, lead sources, pipeline funnel, agent performance, monthly bookings, payment collection, property performance, site-visit &amp; lost-lead reports; <strong>CSV and PDF export</strong> (with spreadsheet-formula-injection protection).</li>
+</ul>
+<h3 id="67-cms-settings">6.7 CMS & Settings</h3>
+<ul>
+<li>Manage public-site content sections and featured properties.</li>
+<li>Application/site settings (branding, contact info, SEO, feature toggles).</li>
+<li><strong>SMTP mail configuration</strong> (super-admin) with a test-mail feature — emails work from the dashboard, no developer needed.</li>
+</ul>
+<h3 id="68-team-roles-security">6.8 Team, Roles & Security</h3>
+<ul>
+<li>User management, custom <strong>role-based authorization with granular field-level permissions</strong>.</li>
+<li>Six built-in roles (Super Admin, Admin, Sales Executive, Senior Agent, Marketing User, Accountant) that map to an agency&#39;s org chart.</li>
+<li>Agent-scoped data visibility — agents see only their own leads.</li>
+<li>Email OTP verification for profile changes, password reset, login rate-limiting.</li>
+</ul>
+<h3 id="69-api-for-scale">6.9 API (for scale)</h3>
+<p>A Sanctum-secured JSON API mirrors all admin modules — for mobile clients, partner integrations, and automation.</p>
+<hr>
+<h2 id="7-how-qrex-works-key-workflows">7. How QREX Works (Key Workflows)</h2>
+<h3 id="enquiry-lead">Enquiry → Lead</h3>
+<p>Visitor submits the enquiry on the website → a <code>New</code> lead (source = Website) is created instantly and an activity is logged → assigned agent is notified. No manual data entry.</p>
+<h3 id="lead-site-visit-booking-payment">Lead → Site Visit → Booking → Payment</h3>
+<p>Agent updates lead status → moving a lead to <em>Site Visit Scheduled</em> <strong>auto-creates the site visit</strong> and notifies the agent → converting the lead creates a deal → booking captures agreement &amp; possession tracks → payments are recorded and reported.</p>
+<h3 id="follow-up-automation">Follow-up Automation</h3>
+<p>Agent sets a next follow-up date on a lead → a follow-up task is auto-created for that agent → on the due date, <code>leads:check-followups</code> flags it → if missed, the task becomes <strong>Overdue</strong> and the agent is notified → nothing slips.</p>
+<h3 id="reporting">Reporting</h3>
+<p>Management filters by date range / agent / property → exports leads, deals, payments, agent performance, site visits, campaigns, bookings as <strong>CSV or branded PDF</strong> for weekly reviews and board reporting.</p>
+<hr>
+<h2 id="8-technology-architecture">8. Technology & Architecture</h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Technology</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Backend</td>
+<td><strong>Laravel 13</strong> (PHP ^8.3), Eloquent ORM, Inertia 3, Laravel Sanctum, DomPDF</td>
+</tr>
+<tr>
+<td>Frontend</td>
+<td><strong>React 19</strong>, <strong>TypeScript</strong>, <strong>Tailwind CSS 4</strong>, <strong>Vite 8</strong>, Recharts</td>
+</tr>
+<tr>
+<td>Data</td>
+<td>Relational DB (SQLite for local, MySQL/Postgres for production), soft deletes, indexed hot paths</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>Role + field-level permissions, agent-scoped data, login throttling, rate-limited forms, hashed passwords, email OTP verification, CSV injection protection</td>
+</tr>
+</tbody></table>
+<p><strong>Why this stack:</strong> server-rendered React pages are fast and SEO-friendly for the public site; a single PHP codebase keeps the platform inexpensive to host and maintain; the API keeps the platform ready for mobile &amp; partner integrations.</p>
+<hr>
+<h2 id="9-deployment-operations-model">9. Deployment & Operations Model</h2>
+<ul>
+<li><strong>Cloud-ready</strong> deployment (production server or your own infra), with a documented operations guide: install, migrate, seed, scheduled automation, backup, and SMTP setup (all in <code>docs/06-operations.md</code>).</li>
+<li><strong>Scheduled automation</strong> runs daily (follow-up checker).</li>
+<li><strong>Managed migration</strong> of your existing leads/properties from spreadsheets or a legacy CRM via the CSV import pipeline.</li>
+<li>Optional <strong>on-premise</strong> deployment for enterprises with strict data-residency needs.</li>
+</ul>
+<hr>
+<h2 id="10-implementation-roadmap">10. Implementation Roadmap</h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Activities</th>
+<th>Indicative duration</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>1. Setup &amp; configuration</strong></td>
+<td>Provision hosting, configure application &amp; SMTP, brand site (logo, colors, contact info)</td>
+<td>1 week</td>
+</tr>
+<tr>
+<td><strong>2. Data migration &amp; inventory</strong></td>
+<td>Import property catalog, leads, customers from CSV; clean duplicates</td>
+<td>1–2 weeks</td>
+</tr>
+<tr>
+<td><strong>3. Team enablement</strong></td>
+<td>Configure roles/permissions to the org chart; train super-admins &amp; agents; import template walkthrough</td>
+<td>1 week</td>
+</tr>
+<tr>
+<td><strong>4. Launch</strong></td>
+<td>Go-live on public site + CRM; verify enquiries → leads end-to-end</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>5. Optimization</strong></td>
+<td>Monthly reporting reviews, workflow tuning, additional fields/modules as needed</td>
+<td>Ongoing</td>
+</tr>
+</tbody></table>
+<p>Total typical ramp: <strong>3–4 weeks</strong> from contract to full operation.</p>
+<hr>
+<h2 id="11-commercial-proposal-indicative">11. Commercial Proposal (Indicative)</h2>
+<p>Three engagement tiers. Pricing is indicative (INR, ex-GST) and open for negotiation; seat counts are per-license.</p>
+<div class="table-wrap">
+<input class="table-filter" type="search" placeholder="Filter rows…" aria-label="Filter table rows">
+<span class="table-count"></span>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>Starter</strong></th>
+<th><strong>Growth</strong></th>
+<th><strong>Enterprise</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Target</strong></td>
+<td>1–5 users, single branch</td>
+<td>up to 15 users, growing team</td>
+<td>15+ users, multi-branch / developer</td>
+</tr>
+<tr>
+<td><strong>Public website</strong></td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td><strong>Leads &amp; pipeline</strong></td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td><strong>Tasks &amp; follow-ups</strong></td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td><strong>Properties &amp; customers</strong></td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td><strong>Site visits, bookings, payments</strong></td>
+<td>—</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td><strong>Marketing campaigns &amp; media</strong></td>
+<td>—</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td><strong>Reports (CSV)</strong></td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td><strong>Reports (PDF)</strong></td>
+<td>—</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td><strong>CMS &amp; settings</strong></td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td><strong>SMTP/test-mail (super-admin)</strong></td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td><strong>API access &amp; integrations</strong></td>
+<td>—</td>
+<td>—</td>
+<td>✔</td>
+</tr>
+<tr>
+<td><strong>On-premise option</strong></td>
+<td>—</td>
+<td>—</td>
+<td>✔</td>
+</tr>
+<tr>
+<td><strong>Implementation &amp; data migration</strong></td>
+<td>Standard</td>
+<td>Standard</td>
+<td>Dedicated project manager</td>
+</tr>
+<tr>
+<td><strong>Support</strong></td>
+<td>Standard (email)</td>
+<td>Priority (email + chat)</td>
+<td>Dedicated SLA</td>
+</tr>
+<tr>
+<td><strong>Indicative subscription</strong></td>
+<td><strong>₹4,999/mo</strong></td>
+<td><strong>₹9,999/mo</strong></td>
+<td><strong>Custom</strong></td>
+</tr>
+</tbody></table>
+</div>
+
+<p><strong>One-time onboarding</strong>: ₹25,000 (Starter), ₹50,000 (Growth), custom (Enterprise) — includes setup, data import, branding, training.</p>
+<p><strong>PaaS layer (&quot;Platform as a Service,&quot; stackable add-ons):</strong> the subscription above is the software license (Layer A). Optionally, agencies add a managed platform layer (Layer B) — from hosted operations through fully managed/on-prem platform delivery:</p>
+<table>
+<thead>
+<tr>
+<th>PaaS tier</th>
+<th>Indicative ₹/mo</th>
+<th>Included</th>
+<th>Best for</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>B1 · Core Ops</strong></td>
+<td>2,500</td>
+<td>Managed hosting, backups, monitoring, security patches, scheduled automation, storage</td>
+<td>Small offices that want it to &quot;just run&quot;</td>
+</tr>
+<tr>
+<td><strong>B2 · Pro / Managed</strong></td>
+<td>9,999</td>
+<td>B1 + API access, custom integrations, data-migration retainers, SMTP/deliverability management, priority support, dedicated engineer</td>
+<td>Channel-partner firms &amp; scaling teams</td>
+</tr>
+<tr>
+<td><strong>B3 · Private / On-prem</strong></td>
+<td>Custom (est. ₹25,000–60,000)</td>
+<td>Dedicated/on-prem deployment, white-label, custom dev days, DPDP/data-residency compliance, custom SLA</td>
+<td>Developers, multi-branch corporates</td>
+</tr>
+</tbody></table>
+<p><strong>Licensing terms (indicative):</strong></p>
+<ul>
+<li>Annual (2 months free) or quarterly billing; per-user upgrade increments.</li>
+<li>Base hosting, backups, and scheduled automation included in subscription (B1+ upgrades available).</li>
+<li>No long-term lock-in: your data is exportable (CSV) at any time.</li>
+</ul>
+<blockquote>
+<p><strong>Full commercial detail — including the complete SaaS + PaaS pricing tables, revenue projections, and a year-1 Mumbai launch budget — is in <a href="tech-10-budget-pricing-mumbai.html"><code>10-budget-pricing-mumbai.md</code></a>.</strong></p>
+</blockquote>
+<hr>
+<h2 id="12-roi-business-benefits">12. ROI & Business Benefits</h2>
+<p>An illustrative financial model using industry benchmarks — figures are directional, not guarantees:</p>
+<table>
+<thead>
+<tr>
+<th>Lever</th>
+<th>Industry evidence</th>
+<th>Implication for an agency</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Responsiveness</td>
+<td>5-min response = 21× qualification; 78% of buyers pick the first responder</td>
+<td>Leads captured &amp; assigned instantly by the website = more qualified conversations</td>
+</tr>
+<tr>
+<td>Conversion</td>
+<td>Consistent CRM use → <strong>47% more deals closed/year</strong> (T3 Sixty/WAV Group)</td>
+<td>Even half that delta on an existing pipeline is material</td>
+</tr>
+<tr>
+<td>Nurturing</td>
+<td>Nurtured leads → <strong>+20% opportunities</strong>, <strong>47% larger purchases</strong> (DemandGen)</td>
+<td>Systematic follow-up (QREX automation) converts the 80% who aren&#39;t ready today</td>
+</tr>
+<tr>
+<td>ROI of CRM</td>
+<td><strong>$8.71 returned per $1 invested</strong> (industry ROI benchmark)</td>
+<td>A ₹9,999/mo platform recovering one extra closing/year pays for itself many times over</td>
+</tr>
+<tr>
+<td>Data entry</td>
+<td>CRM admin = ~4.5 hrs/week/rep (Salesforce)</td>
+<td>Auto-created leads &amp; tasks free agent time for selling</td>
+</tr>
+</tbody></table>
+<p><strong>Example (illustrative):</strong> An agency doing 200 leads/month with one extra closing per agent per year — at an average registered deal value of <strong>₹0.81 Cr</strong> and a typical <strong>1–2%</strong> agency commission (~₹81,000–₹1,62,000/close) — recovers tens of lakhs annually against a subscription cost in the low thousands of rupees per month.</p>
+<p><strong>Non-financial benefits:</strong> complete audit trail per lead, agent accountability, brand-consistent public site, and a defensible, exportable data asset for the agency.</p>
+<hr>
+<h2 id="13-risks-mitigations">13. Risks & Mitigations</h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Adoption stalls</strong> (the industry&#39;s #1 failure)</td>
+<td>Minimal-field lead intake (name + phone + source) mirrors what high-adoption tools do; automation removes manual step that causes drop-off; training is included</td>
+</tr>
+<tr>
+<td><strong>Data migration quality</strong></td>
+<td>CSV import with header aliasing, duplicate detection, and per-row error reports; cleanup phase in roadmap</td>
+</tr>
+<tr>
+<td><strong>Feature gaps vs. US tools (MLS/IDX)</strong></td>
+<td>Virtual Scout/scout-free model fits India (no MLS); QREX links leads to the in-app property catalog; API available for portal integrations</td>
+</tr>
+<tr>
+<td><strong>Team roster changes</strong></td>
+<td>Handovers &amp; reassignment flows, activity audit trail, role/field permissions adjustable per user</td>
+</tr>
+<tr>
+<td><strong>Vendor lock-in</strong></td>
+<td>Full CSV export; on-premise option for enterprise tier</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="14-next-steps">14. Next Steps</h2>
+<ol>
+<li><strong>Discovery call</strong> — 45 minutes to map your agency&#39;s team size, branches, property portfolio, and current tools.</li>
+<li><strong>Live demo &amp; pilot</strong> — we configure a pilot with your branding and sample data so your team can evaluate it hands-on.</li>
+<li><strong>Proposal lock</strong> — finalize tier, seat count, onboarding scope, and SLA.</li>
+</ol>
+<p>We are ready to begin.</p>
+<hr>
+<h2 id="appendix-a-sources-methodology">Appendix A: Sources & Methodology</h2>
+<p>Market statistics cited above are sourced from publicly reported research:</p>
+<div class="table-wrap">
+<input class="table-filter" type="search" placeholder="Filter rows…" aria-label="Filter table rows">
+<span class="table-count"></span>
+<table>
+<thead>
+<tr>
+<th>Statistic</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Global RE CRM market size/CAGR (2026→2035)</td>
+<td>Morgan Reed Insights; Business Research Insights (public summaries)</td>
+</tr>
+<tr>
+<td>India sector value, ₹8.46 lakh crore sales, premium share</td>
+<td>CREDAI–Liases Foras, <em>Indian Real Estate CY2025 Report</em></td>
+</tr>
+<tr>
+<td>India market size/CAGR, residential/sales shares, MMR</td>
+<td>Mordor Intelligence, <em>India Real Estate Market</em> &amp; <em>Residential Real Estate</em> reports</td>
+</tr>
+<tr>
+<td>Registered transactions/value, avg deal size, 2026 mid-segment outlook</td>
+<td>SquareYards, <em>2025 Recap, 2026 Outlook: Residential Real Estate</em></td>
+</tr>
+<tr>
+<td>CRM as lead source, daily usage, adoption rates, buyer behavior (78% first responder, 10-week search, 97% online)</td>
+<td>NAR (2024/2025) Technology Survey and <em>Profile of Home Buyers &amp; Sellers</em></td>
+</tr>
+<tr>
+<td>15-hour response time</td>
+<td>Inman, 2025 Real Estate Technology Survey</td>
+</tr>
+<tr>
+<td>5-minute 21×; 1-minute 391%</td>
+<td>MIT/InsideSales.com Lead Response Management Study; Velocify</td>
+</tr>
+<tr>
+<td>87% deals lost to follow-up fade</td>
+<td>SureSend (2026)</td>
+</tr>
+<tr>
+<td>CRM admin 4.5h/wk; 28–30% selling time</td>
+<td>Salesforce, 2024 State of Sales</td>
+</tr>
+<tr>
+<td>76% complexity frustration; data-entry complaints</td>
+<td>SugarCRM; HubSpot, 2025 State of CRM</td>
+</tr>
+<tr>
+<td>Brokerage adoption &lt;50% (68%); 20+ tools; satisfaction drop</td>
+<td>TotalBrokerage × T3 Sixty, 2023 &amp; 2024 Surveys</td>
+</tr>
+<tr>
+<td>83% executive adoption challenge</td>
+<td>Really Simple Systems (research compilation)</td>
+</tr>
+<tr>
+<td>Feature usage (94% contact mgmt → 48% reporting)</td>
+<td>Capterra, CRM User Behavior Survey 2024</td>
+</tr>
+<tr>
+<td>Nurtured leads +20%/47% larger; 80% never convert; 8–12 touchpoints; 25% ready now</td>
+<td>DemandGen; MarketingSherpa Lead Gen Benchmark; industry compilations</td>
+</tr>
+<tr>
+<td>Consistent CRM use → 47% more closings</td>
+<td>WAV Group / T3 Sixty, Technology Effectiveness Study 2024</td>
+</tr>
+<tr>
+<td>$8.71 per $1 CRM ROI</td>
+<td>Industry CRM ROI benchmark compilation</td>
+</tr>
+</tbody></table>
+</div>
+
+<blockquote>
+<p>Figures marked (est.) vary by research house; we use rounded ranges and name the source for each. Full source titles and links are available on request.</p>
+</blockquote>
+<p><em>End of proposal — QREX, by Qodeigence Inc. Let&#39;s build your agency&#39;s next 10 years.</em></p>
+
+<div class="pager"><a href="tech-08-glossary.html">← 08. Glossary</a><a href="tech-10-budget-pricing-mumbai.html">10. Budget Pricing Mumbai →</a></div>
+<div class="site-footer">QREX documentation · generated from the Markdown sources in <code>docs/</code> · build with <code>npm run docs:html</code></div>
+</main>
+</div>
+
+<script>
+function filterDocs(q){
+  q=(q||'').trim().toLowerCase();
+  document.querySelectorAll('#doc-nav .nav-group').forEach(function(g){
+    var visible=0;
+    g.querySelectorAll('a').forEach(function(a){
+      var hit=!q||a.getAttribute('data-title').indexOf(q)>-1;
+      a.classList.toggle('nav-hidden',!hit);
+      if(hit)visible++;
+    });
+    g.classList.toggle('nav-hidden',visible===0);
+    if(q)g.open=true;
+  });
+}
+document.querySelectorAll('.table-wrap').forEach(function(wrap){
+  var input=wrap.querySelector('.table-filter');
+  var table=wrap.querySelector('table');
+  var count=wrap.querySelector('.table-count');
+  if(!input||!table)return;
+  input.addEventListener('input',function(){
+    var q=input.value.trim().toLowerCase();
+    var shown=0,total=0;
+    table.querySelectorAll('tbody tr').forEach(function(row){
+      total++;
+      var hit=!q||row.textContent.toLowerCase().indexOf(q)>-1;
+      row.style.display=hit?'':'none';
+      if(hit)shown++;
+    });
+    if(count)count.textContent=q?shown+' of '+total+' rows':' '+total+' rows';
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3. The Sales Lifecycle · QREX</title>
+<style>
+:root{--bg:#f7f8fa;--panel:#fff;--ink:#1f2733;--muted:#5b6472;--line:#e3e7ee;--accent:#0f5c4e;--accent2:#b5893b;--code:#f2f4f7;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65;font-size:16px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.layout{display:flex;min-height:100vh}
+aside{width:280px;flex:0 0 280px;background:var(--panel);border-right:1px solid var(--line);padding:24px 20px;position:sticky;top:0;height:100vh;overflow-y:auto}
+aside h2{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:18px 0 8px}
+aside a{display:block;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.9rem}
+aside a:hover{background:var(--bg);text-decoration:none}
+aside a.active{background:var(--accent);color:#fff}
+aside .brand{font-weight:700;font-size:1.05rem;color:var(--accent);margin-bottom:4px}
+main{flex:1;min-width:0;padding:40px 56px;max-width:960px;margin:0 auto}
+main h1{font-size:2rem;line-height:1.25;margin:0 0 .5em;padding-bottom:.35em;border-bottom:2px solid var(--line)}
+main h2{font-size:1.45rem;margin:2em 0 .6em;padding-bottom:.25em;border-bottom:1px solid var(--line)}
+main h3{font-size:1.15rem;margin:1.6em 0 .5em}
+main h4{font-size:1rem;margin:1.3em 0 .4em}
+main p,main li{color:#2b3542}
+table{border-collapse:collapse;width:100%;margin:1.1em 0;font-size:.92rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+th{background:#eef1f5;font-weight:600}
+tr:nth-child(even) td{background:#fbfcfd}
+code{background:var(--code);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em}
+pre{background:#1e2530;color:#e6e9ef;padding:16px 18px;border-radius:8px;overflow-x:auto}
+pre code{background:none;color:inherit;padding:0}
+blockquote{margin:1.2em 0;padding:.6em 1.1em;background:#fff8e8;border-left:4px solid var(--accent2);color:#5b4a22;border-radius:0 6px 6px 0}
+blockquote p{margin:.4em 0}
+hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
+img{max-width:100%}
+.crumbs{font-size:.82rem;color:var(--muted);margin-bottom:18px}
+.pager{display:flex;justify-content:space-between;gap:16px;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{font-size:.9rem}
+.site-footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:24px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.card h3{margin:.2em 0 .4em;font-size:1.02rem}
+.card p{margin:.2em 0;font-size:.88rem;color:var(--muted)}
+/* --- Figures: diagrams and screen wireframes --- */
+.figure{margin:1.8em 0}
+.figure>svg{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px}
+.figure.diagram{overflow-x:auto}
+.figure.diagram.wide>svg{max-width:none;margin:0}
+.figure.wireframe>svg{border-color:#dbe2ea}
+figcaption{margin-top:.7em;font-size:.82rem;color:var(--muted);text-align:center;line-height:1.45}
+.art-missing{border-left:3px solid #c0392b}
+/* --- Long reference tables --- */
+.table-wrap{margin:1.1em 0}
+.table-filter{width:100%;max-width:300px;padding:7px 11px;margin-bottom:.55em;border:1px solid var(--line);border-radius:8px;font-size:.86rem;background:#fff;color:var(--ink);font-family:inherit}
+.table-filter:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.table-count{font-size:.78rem;color:var(--muted);margin-left:8px;vertical-align:middle}
+/* --- Documentation menu (sidebar) --- */
+.side-search{width:100%;padding:8px 10px;margin:10px 0 4px;border:1px solid var(--line);border-radius:8px;font-size:.85rem;background:var(--bg);color:var(--ink)}
+.side-search:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.home-link{display:block;font-size:.8rem;font-weight:600;color:var(--accent);margin-bottom:14px;padding:4px 0}
+.nav-group{border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:6px}
+.nav-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:10px 4px 6px;font-weight:700;user-select:none}
+.nav-group>summary::-webkit-details-marker{display:none}
+.nav-group>summary .chev{transition:transform .15s ease;font-size:.7rem;color:var(--muted)}
+.nav-group[open]>summary .chev{transform:rotate(90deg)}
+.nav-group .count{color:var(--muted);font-weight:400;margin-left:auto;font-size:.68rem}
+.nav-group a{display:flex;gap:8px;align-items:baseline;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.88rem;line-height:1.35}
+.nav-group a:hover{background:var(--bg);text-decoration:none}
+.nav-group a.active{background:var(--accent);color:#fff}
+.nav-group a.active .num{color:#d9ece7}
+.nav-group a .num{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.75rem;min-width:1.4em}
+.nav-hidden{display:none!important}
+.menu-toggle{display:none;position:fixed;top:12px;left:12px;z-index:50;width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:1.2rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.menu-backdrop{display:none}
+@media(max-width:900px){
+  .layout{flex-direction:column}
+  .menu-toggle{display:flex}
+  aside{position:fixed;top:0;left:0;z-index:60;width:290px;height:100vh;overflow-y:auto;border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .2s ease;box-shadow:0 0 24px rgba(0,0,0,.12)}
+  body.menu-open aside{transform:translateX(0)}
+  body.menu-open .menu-backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:55}
+  main{padding:64px 20px 24px}
+}
+@media print{
+  aside,.crumbs,.pager,.menu-toggle,.menu-backdrop{display:none}
+  body{background:#fff;font-size:11pt}
+  main{max-width:none;padding:0}
+  a{color:var(--ink)}
+  pre{background:#f2f4f7;color:#1f2733;border:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<button class="menu-toggle" aria-label="Open documentation menu" onclick="document.body.classList.toggle('menu-open')">☰</button>
+<div class="menu-backdrop" onclick="document.body.classList.remove('menu-open')"></div>
+<aside>
+  <a class="home-link" href="index.html">⌂ All documentation</a>
+  <div class="brand">QREX Documentation</div>
+  <div style="font-size:.78rem;color:var(--muted)">Qodeigence Infocircle Pvt. Ltd.</div>
+  <input class="side-search" type="search" placeholder="Search documents…" aria-label="Search documents" oninput="filterDocs(this.value)">
+  <nav id="doc-nav">
+    <details class="nav-group" open>
+<summary><span>User Manual</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="manual-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="overview and getting started" href="manual-01-overview-and-getting-started.html"><span class="num">01</span><span>Overview And Getting Started</span></a><a class="" data-title="roles and access" href="manual-02-roles-and-access.html"><span class="num">02</span><span>Roles And Access</span></a><a class="active" data-title="sales lifecycle" href="manual-03-sales-lifecycle.html"><span class="num">03</span><span>Sales Lifecycle</span></a><a class="" data-title="modules sales" href="manual-04-modules-sales.html"><span class="num">04</span><span>Modules Sales</span></a><a class="" data-title="modules operations" href="manual-05-modules-operations.html"><span class="num">05</span><span>Modules Operations</span></a><a class="" data-title="modules marketing and admin" href="manual-06-modules-marketing-and-admin.html"><span class="num">06</span><span>Modules Marketing And Admin</span></a><a class="" data-title="public website" href="manual-07-public-website.html"><span class="num">07</span><span>Public Website</span></a><a class="" data-title="reference" href="manual-08-reference.html"><span class="num">08</span><span>Reference</span></a><a class="" data-title="troubleshooting and faq" href="manual-09-troubleshooting-and-faq.html"><span class="num">09</span><span>Troubleshooting And Faq</span></a></details><details class="nav-group">
+<summary><span>How QREX Works</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="explain-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="system at a glance" href="explain-01-system-at-a-glance.html"><span class="num">01</span><span>System At A Glance</span></a><a class="" data-title="sales lifecycle" href="explain-02-sales-lifecycle.html"><span class="num">02</span><span>Sales Lifecycle</span></a><a class="" data-title="data model" href="explain-03-data-model.html"><span class="num">03</span><span>Data Model</span></a><a class="" data-title="roles and permissions" href="explain-04-roles-and-permissions.html"><span class="num">04</span><span>Roles And Permissions</span></a><a class="" data-title="screen designs" href="explain-05-screen-designs.html"><span class="num">05</span><span>Screen Designs</span></a><a class="" data-title="operations and automation" href="explain-06-operations-and-automation.html"><span class="num">06</span><span>Operations And Automation</span></a></details><details class="nav-group">
+<summary><span>Technical Documentation</span><span class="chev">▶</span></summary>
+<a class="" data-title="project scope" href="tech-01-project-scope.html"><span class="num">01</span><span>Project Scope</span></a><a class="" data-title="architecture" href="tech-02-architecture.html"><span class="num">02</span><span>Architecture</span></a><a class="" data-title="operations modules" href="tech-03-operations-modules.html"><span class="num">03</span><span>Operations Modules</span></a><a class="" data-title="roles permissions" href="tech-04-roles-permissions.html"><span class="num">04</span><span>Roles Permissions</span></a><a class="" data-title="database schema" href="tech-05-database-schema.html"><span class="num">05</span><span>Database Schema</span></a><a class="" data-title="operations" href="tech-06-operations.html"><span class="num">06</span><span>Operations</span></a><a class="" data-title="security hardening" href="tech-07-security-hardening.html"><span class="num">07</span><span>Security Hardening</span></a><a class="" data-title="glossary" href="tech-08-glossary.html"><span class="num">08</span><span>Glossary</span></a><a class="" data-title="project proposal" href="tech-09-project-proposal.html"><span class="num">09</span><span>Project Proposal</span></a><a class="" data-title="budget pricing mumbai" href="tech-10-budget-pricing-mumbai.html"><span class="num">10</span><span>Budget Pricing Mumbai</span></a></details>
+  </nav>
+  <details class="nav-group"><summary><span>Downloads</span><span class="chev">▶</span></summary>
+    <a href="../word/QREX-User-Manual.docx"><span class="num"></span><span>User Manual (.docx)</span></a>
+    <a href="../word/QREX-User-Manual.doc"><span class="num"></span><span>User Manual (.doc)</span></a>
+    <a href="../word/QREX-How-It-Works.docx"><span class="num"></span><span>How QREX Works (.docx)</span></a>
+    <a href="../word/QREX-How-It-Works.doc"><span class="num"></span><span>How QREX Works (.doc)</span></a>
+    <a href="../word/QREX-Technical-Documentation.docx"><span class="num"></span><span>Technical Docs (.docx)</span></a>
+    <a href="../word/QREX-Technical-Documentation.doc"><span class="num"></span><span>Technical Docs (.doc)</span></a>
+  </details>
+</aside>
+<main>
+<div class="crumbs">QREX User Manual</div>
+<h1 id="3-the-sales-lifecycle">3. The Sales Lifecycle</h1>
+<p>This is the story of one sale, from a stranger filling in a form to the money landing in the bank. It is the single most important thing to understand about QREX, because every module in the system exists to serve one of these steps.</p>
+<p><strong>Who should read this:</strong> Sales Executives, Senior Agents, Accountants, Managers.</p>
+<hr>
+<h2 id="31-the-nine-steps">3.1 The Nine Steps</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Step</th>
+<th>Where it happens</th>
+<th>Who</th>
+<th>Module</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Enquiry arrives</td>
+<td>Public website</td>
+<td>Visitor</td>
+<td>Public site</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Lead created</td>
+<td>Automatic</td>
+<td>System</td>
+<td>Leads</td>
+</tr>
+<tr>
+<td>3</td>
+<td>First contact &amp; activity logging</td>
+<td>Lead detail page</td>
+<td>Agent</td>
+<td>Leads</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Status progression</td>
+<td>Lead detail page</td>
+<td>Agent</td>
+<td>Leads</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Site visit</td>
+<td>Auto-created on status change</td>
+<td>System + Agent</td>
+<td>Site Visits</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Convert to deal</td>
+<td>Lead detail page</td>
+<td>Senior Agent</td>
+<td>Leads → Sales Pipeline</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Deal moves across the board</td>
+<td>Pipeline board</td>
+<td>Senior Agent</td>
+<td>Sales Pipeline</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Booking raised</td>
+<td>Bookings</td>
+<td>Agent / Accountant</td>
+<td>Bookings</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Payment recorded</td>
+<td>Booking detail or Payments</td>
+<td>Accountant</td>
+<td>Payments</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="32-step-12-a-visitor-becomes-a-lead">3.2 Step 1–2 — A visitor becomes a lead</h2>
+<p>A visitor submits the <strong>Contact</strong> form, or the enquiry form on a property page. The system, with no human involvement:</p>
+<ol>
+<li>Creates a <strong>Lead</strong> with:<ul>
+<li><code>source</code> = <strong>Website</strong></li>
+<li><code>status</code> = <strong>New</strong></li>
+<li><code>score</code> = 0</li>
+<li>the visitor&#39;s name, phone and email</li>
+<li>their message saved into the lead&#39;s requirements</li>
+</ul>
+</li>
+<li>Logs a <strong>Note</strong> activity on the lead: <em>&quot;Website enquiry submitted&quot;</em>.</li>
+<li>If the enquiry came from a property page, links the lead to that property (<code>interested_property_id</code>).</li>
+</ol>
+<p>The lead appears at the top of <strong>Leads</strong> with status <code>New</code>, and it appears on the Dashboard&#39;s <em>Recent Leads</em> panel.</p>
+<blockquote>
+<p><strong>What you must do:</strong> the system does not assign an agent or start a follow-up on its own. Pick the lead up, assign it to an agent, and set the next follow-up.</p>
+</blockquote>
+<p><strong>Limitation worth knowing:</strong> each visitor can submit at most <strong>5 enquiries per 10 minutes</strong>. That is an anti-spam guard, not a quota.</p>
+<hr>
+<h2 id="33-step-3-make-contact-and-log-it">3.3 Step 3 — Make contact, and log it</h2>
+<p>Open the lead. Two things happen here, and both matter.</p>
+<h3 id="331-the-activity-timeline">3.3.1 The activity timeline</h3>
+<p>Every meaningful contact is logged as an <strong>activity</strong> on the lead, and the timeline is the permanent record of the relationship. It is what a colleague sees when they take over, and what management reads in the lead report.</p>
+<table>
+<thead>
+<tr>
+<th>Activity type</th>
+<th>When to use it</th>
+<th>Outcome options</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Call</strong></td>
+<td>You phoned them</td>
+<td>Connected · No Answer · Busy · Voicemail · Callback Requested · Not Interested</td>
+</tr>
+<tr>
+<td><strong>WhatsApp</strong></td>
+<td>You messaged them</td>
+<td>Replied · Pending · Read</td>
+</tr>
+<tr>
+<td><strong>SMS</strong></td>
+<td>You texted them</td>
+<td>Sent · Delivered · Pending</td>
+</tr>
+<tr>
+<td><strong>Email</strong></td>
+<td>You emailed them</td>
+<td>Sent · Opened · Replied · Bounced</td>
+</tr>
+<tr>
+<td><strong>Site Visit</strong></td>
+<td>You arranged a visit</td>
+<td>Scheduled · Completed · Cancelled · Rescheduled</td>
+</tr>
+<tr>
+<td><strong>Meeting</strong></td>
+<td>You met them</td>
+<td>Scheduled · Completed · Cancelled · Rescheduled</td>
+</tr>
+<tr>
+<td><strong>Note</strong></td>
+<td>Anything else worth recording</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<p>You can also record: <strong>duration</strong> (how long the call was), <strong>contact number</strong> used, <strong>email subject</strong>, <strong>location</strong>, and — critically — the <strong>next follow-up date and time</strong>.</p>
+<p>The system also generates four activity types on its own:</p>
+<table>
+<thead>
+<tr>
+<th>Auto-generated activity</th>
+<th>Triggered by</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><em>Lead Imported</em></td>
+<td>A CSV import</td>
+</tr>
+<tr>
+<td><em>Status Change</em></td>
+<td>Any status change you make</td>
+</tr>
+<tr>
+<td><em>Reassignment</em></td>
+<td>Handing the lead to another agent</td>
+</tr>
+<tr>
+<td><em>Conversion</em></td>
+<td>Converting the lead to a deal</td>
+</tr>
+</tbody></table>
+<h3 id="332-the-next-follow-up-date-is-the-engine-of-the-whole-system">3.3.2 The next follow-up date is the engine of the whole system</h3>
+<p>Setting a <strong>next follow-up date</strong> (either on the edit form or inside an activity) does three things:</p>
+<ol>
+<li>Saves the date on the lead.</li>
+<li>Creates or updates a <strong>Follow-up task</strong> (<code>TSK-###</code>) assigned to the lead&#39;s agent — titled <em>&quot;Follow-up: {lead name}&quot;</em>, priority <strong>High</strong>, status <strong>Pending</strong> (or <strong>Overdue</strong> if the date is in the past).</li>
+<li>Stamps the lead&#39;s <strong>last contact</strong> timestamp to now.</li>
+</ol>
+<p>Clearing the next-follow-up date <strong>completes</strong> the open follow-up task rather than deleting it, so there is a clean audit trail.</p>
+<p><strong>Accepted date formats:</strong> <code>2026-10-21</code>, <code>2026/10/21</code>, <code>21-10-2026</code>, <code>21/10/2026</code>. Times: <code>10:00 AM</code>, <code>17:30</code>. If no date can be parsed, the system falls back to <strong>tomorrow</strong> — so a typo in the format silently pushes the follow-up a day out rather than failing.</p>
+<blockquote>
+<p><strong>Daily automation.</strong> At <strong>09:00 every day</strong>, the scheduler runs a sweep that flips any past-due follow-up task to <strong>Overdue</strong> and notifies the assigned agent (&quot;Follow-up due today&quot; or &quot;Follow-up overdue&quot;). It will not send a second unread notice for the same lead within <strong>12 hours</strong>. If a task has no assignee, it is flagged but no notification is sent.</p>
+</blockquote>
+<hr>
+<h2 id="34-step-4-move-the-status-along">3.4 Step 4 — Move the status along</h2>
+<p>The lead&#39;s <strong>status</strong> is the headline. It drives the dashboard, the reports and the &quot;next action&quot; logic.</p>
+<pre><code>New ──▶ Contacted ──▶ Qualified ──▶ Site Visit Scheduled ──▶ Site Visit Completed ──▶ Negotiation ──▶ Converted
+                                                                                              └──▶ Lost
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Means</th>
+<th>Typical next action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>New</strong></td>
+<td>Just arrived, nobody has touched it</td>
+<td>Assign an agent, make first contact</td>
+</tr>
+<tr>
+<td><strong>Contacted</strong></td>
+<td>You have spoken to them</td>
+<td>Log the outcome, set a follow-up</td>
+</tr>
+<tr>
+<td><strong>Qualified</strong></td>
+<td>Real budget, real intent, real requirement</td>
+<td>Shortlist properties, schedule a visit</td>
+</tr>
+<tr>
+<td><strong>Site Visit Scheduled</strong></td>
+<td>A visit is on the calendar</td>
+<td>Confirm and run the visit</td>
+</tr>
+<tr>
+<td><strong>Site Visit Completed</strong></td>
+<td>They have seen the property</td>
+<td>Record feedback, negotiate</td>
+</tr>
+<tr>
+<td><strong>Negotiation</strong></td>
+<td>Discussing terms</td>
+<td>Agree the deal, convert it</td>
+</tr>
+<tr>
+<td><strong>Converted</strong></td>
+<td>Became a deal. <strong>Terminal</strong></td>
+<td>Work the deal on the pipeline board</td>
+</tr>
+<tr>
+<td><strong>Lost</strong></td>
+<td>Not going ahead. <strong>Terminal</strong></td>
+<td>Record the reason; consider re-approaching later</td>
+</tr>
+</tbody></table>
+<p><strong>Every status change is logged</strong> as a <em>Status Change</em> activity, so the timeline shows the full history of where the lead has been.</p>
+<p><strong>Important:</strong> the two terminal statuses are the only place where conversion is blocked. See step 6.</p>
+<hr>
+<h2 id="35-step-5-the-site-visit-happens-itself">3.5 Step 5 — The site visit happens itself</h2>
+<p>The moment you set a lead&#39;s status to <strong>Site Visit Scheduled</strong>, the system:</p>
+<ol>
+<li><strong>Creates a Site Visit</strong> (<code>SV-###</code>) for that lead — <em>once only</em>. If a visit already exists for the lead, no duplicate is created.</li>
+<li>Sets the visit date from the lead&#39;s next-follow-up date, defaulting to <strong>tomorrow</strong>, and the time to <strong>10:00 AM</strong> if none is set.</li>
+<li>Names the property from the lead&#39;s interested property, or the preferred location if there is none.</li>
+<li><strong>Notifies the assigned agent</strong>: <em>&quot;Site visit scheduled&quot;</em>.</li>
+</ol>
+<p>You can also create a visit by hand from <strong>Site Visits</strong> → <strong>New visit</strong> — useful when the customer walks in and there is no lead yet.</p>
+<p>Visit statuses: <strong>Scheduled → Confirmed → Completed</strong>, with <strong>Rescheduled</strong> and <strong>Cancelled</strong> as the alternatives.</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Scheduled</strong></td>
+<td>Created, not yet confirmed with the customer</td>
+</tr>
+<tr>
+<td><strong>Confirmed</strong></td>
+<td>The customer has agreed to the slot</td>
+</tr>
+<tr>
+<td><strong>Completed</strong></td>
+<td>The visit happened</td>
+</tr>
+<tr>
+<td><strong>Rescheduled</strong></td>
+<td>Moved to another date/time</td>
+</tr>
+<tr>
+<td><strong>Cancelled</strong></td>
+<td>It will not happen</td>
+</tr>
+</tbody></table>
+<p>Record the visit&#39;s <strong>feedback</strong> and <strong>notes</strong> on the visit — this is the material for negotiating with the customer.</p>
+<hr>
+<h2 id="36-step-6-convert-the-lead-into-a-deal">3.6 Step 6 — Convert the lead into a deal</h2>
+<p>When the buyer is serious, convert the lead. Open the lead and use <strong>Convert to Deal</strong> (visible to Senior Agents and above, and to anyone holding <code>sales.create</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>What to enter</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Deal value</strong></td>
+<td>The agreed or expected property value</td>
+<td>— (required)</td>
+</tr>
+<tr>
+<td><strong>Property</strong></td>
+<td>The property being bought</td>
+<td>Falls back to the lead&#39;s interested property</td>
+</tr>
+<tr>
+<td><strong>Stage</strong></td>
+<td>Where the deal starts</td>
+<td><strong>Qualified</strong>, probability 30</td>
+</tr>
+</tbody></table>
+<p>What happens:</p>
+<ol>
+<li>A <strong>Deal</strong> is created with ID <code>DL-###</code>, customer name copied from the lead, and the assigned agent carried over.</li>
+<li>The lead&#39;s status becomes <strong>Converted</strong>.</li>
+<li>A <em>Conversion</em> activity is logged: <em>&quot;Created deal DL-012 worth ₹1.85 Cr&quot;</em>.</li>
+<li>The assigned agent is notified: <em>&quot;Lead converted to deal&quot;</em>.</li>
+</ol>
+<p><strong>Two guards:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Guard</th>
+<th>Message</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>The lead is already <code>Converted</code> or <code>Lost</code></td>
+<td><em>&quot;This lead cannot be converted in its current status.&quot;</em></td>
+</tr>
+<tr>
+<td>Two people convert at the same moment</td>
+<td>The second is blocked — the lead row is locked during conversion, so you can never create two deals from one lead</td>
+</tr>
+</tbody></table>
+<p><strong>You can also create a deal directly</strong> on the <strong>Sales Pipeline</strong> board without a lead — useful for referral business that never generated an enquiry. A direct deal starts at stage <strong>New Lead</strong> with probability <strong>10</strong>; a converted deal starts at <strong>Qualified</strong> with probability <strong>30</strong>.</p>
+<hr>
+<h2 id="37-step-7-work-the-pipeline">3.7 Step 7 — Work the pipeline</h2>
+<p>Open <strong>Sales Pipeline</strong>. It is a Kanban board with <strong>12 columns</strong>, in this fixed order:</p>
+<pre><code>New Lead ▸ Contacted ▸ Qualified ▸ Property Shortlisted ▸ Site Visit Scheduled
+▸ Site Visit Completed ▸ Negotiation ▸ Booking ▸ Agreement ▸ Payment
+▸ Closed Won  |  Closed Lost
+</code></pre>
+<p><strong>Moving a card:</strong> drag it to another column (or use the card&#39;s stage control). The system updates the stage, resets the <em>days in stage</em> counter, and confirms with a toast: <em>&quot;Deal moved to Booking&quot;</em>.</p>
+<p><strong>The board&#39;s summary bar</strong> tells you at a glance:</p>
+<table>
+<thead>
+<tr>
+<th>Figure</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Total</strong></td>
+<td>All deals ever</td>
+</tr>
+<tr>
+<td><strong>Pipeline Value</strong></td>
+<td>Sum of the value of every <strong>active</strong> deal (not Closed Won / Closed Lost)</td>
+</tr>
+<tr>
+<td><strong>Active Count</strong></td>
+<td>How many deals are live</td>
+</tr>
+<tr>
+<td><strong>Expected Revenue</strong></td>
+<td>Value × probability, summed — a weighted forecast</td>
+</tr>
+<tr>
+<td><strong>Won Value / Won Count</strong></td>
+<td>Total and number of <strong>Closed Won</strong> deals</td>
+</tr>
+<tr>
+<td><strong>Lost Value</strong></td>
+<td>Total value of <strong>Closed Lost</strong> deals</td>
+</tr>
+<tr>
+<td><strong>Conversion Rate</strong></td>
+<td>Won count ÷ total count, to one decimal place</td>
+</tr>
+</tbody></table>
+<p><strong>Practical guidance on stages.</strong> <code>Booking</code>, <code>Agreement</code> and <code>Payment</code> in the pipeline are <em>milestones</em>, and the same three things are tracked properly in the <strong>Bookings</strong> and <strong>Payments</strong> modules. Use the pipeline to show progress; use Bookings and Payments to record what actually happened.</p>
+<hr>
+<h2 id="38-step-8-raise-the-booking">3.8 Step 8 — Raise the booking</h2>
+<p>A <strong>booking</strong> captures the commercial commitment: who, which property, which agent, when, for how much.</p>
+<p><strong>Bookings</strong> → <strong>New booking</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Customer name</strong></td>
+<td>The buyer</td>
+</tr>
+<tr>
+<td><strong>Property name</strong></td>
+<td>What they are buying</td>
+</tr>
+<tr>
+<td><strong>Agent name</strong></td>
+<td>Who is handling it</td>
+</tr>
+<tr>
+<td><strong>Booking date</strong></td>
+<td>When the booking was made</td>
+</tr>
+<tr>
+<td><strong>Deal value</strong></td>
+<td>Full property value</td>
+</tr>
+<tr>
+<td><strong>Booking amount</strong></td>
+<td>The amount actually booked (often the token/advance)</td>
+</tr>
+</tbody></table>
+<p>A booking is created with ID <code>B-###</code> and status <strong>Booking Pending</strong>. The creator receives a <em>Booking created</em> notification.</p>
+<h3 id="the-booking-tracks-three-things-at-once">The booking tracks three things at once</h3>
+<p>This is the part people get wrong, so read it carefully. A booking has <strong>three independent status tracks</strong> that progress separately:</p>
+<table>
+<thead>
+<tr>
+<th>Track</th>
+<th>Values</th>
+<th>What it describes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Booking status</strong></td>
+<td>Booking Pending → Booking Confirmed → Under Agreement → Agreement Signed → Cancelled</td>
+<td>Where the booking itself stands</td>
+</tr>
+<tr>
+<td><strong>Agreement status</strong></td>
+<td>Pending → Under Review → Signed</td>
+<td>The legal paperwork</td>
+</tr>
+<tr>
+<td><strong>Possession status</strong></td>
+<td>Pending → In Process → Handed Over</td>
+<td>When the buyer gets the keys</td>
+</tr>
+</tbody></table>
+<p>A realistic path: booking <strong>Booking Confirmed</strong> while the agreement is still <strong>Under Review</strong> and possession is still <strong>Pending</strong>. All three move on the booking&#39;s detail page, each independently.</p>
+<p>The booking detail page shows a <strong>Booking → Agreement → Possession</strong> timeline so the whole state is visible on one screen.</p>
+<hr>
+<h2 id="39-step-9-record-the-money">3.9 Step 9 — Record the money</h2>
+<p>Two ways to record a payment.</p>
+<h3 id="from-the-booking-fastest">From the booking (fastest)</h3>
+<p>On the booking detail page, use <strong>Record Payment</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Payment amount</strong></td>
+<td>— (required to record)</td>
+</tr>
+<tr>
+<td><strong>Payment mode</strong></td>
+<td><strong>Bank Transfer</strong></td>
+</tr>
+</tbody></table>
+<p>This creates a <strong>Payment</strong> (<code>PAY-###</code>) with status <strong>Paid</strong>, today&#39;s date as both the due and paid date, and a transaction reference of <code>—</code>. The customer is notified: <em>&quot;₹ amount received&quot;</em>.</p>
+<h3 id="from-the-payments-module-for-instalments">From the Payments module (for instalments)</h3>
+<p><strong>Payments</strong> → <strong>New payment</strong>, for when money is due over time or has been promised but not yet received.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Customer name</strong></td>
+<td>Required</td>
+</tr>
+<tr>
+<td><strong>Property name</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Amount</strong></td>
+<td>The instalment or sum due</td>
+</tr>
+<tr>
+<td><strong>Mode</strong></td>
+<td>RTGS · NEFT · IMPS · UPI · Cheque · Bank Transfer · Cash</td>
+</tr>
+<tr>
+<td><strong>Due date</strong></td>
+<td>When it is expected</td>
+</tr>
+<tr>
+<td><strong>Status</strong></td>
+<td>Pending · Partially Paid · Paid · Overdue</td>
+</tr>
+</tbody></table>
+<p>Payment statuses: <strong>Pending → Partially Paid → Paid</strong>, with <strong>Overdue</strong> (due date passed, not received) and <strong>Cancelled</strong>.</p>
+<p>The Payments module opens with four collection figures: <strong>Receivable</strong>, <strong>Received</strong>, <strong>Pending</strong>, <strong>Overdue</strong>.</p>
+<blockquote>
+<p><strong>There is no payment gateway.</strong> QREX records money that has actually moved (or is expected to). It does not charge cards, and it does not collect anything. If money is not received, do not mark the payment <code>Paid</code>.</p>
+</blockquote>
+<hr>
+<h2 id="310-what-the-manager-sees">3.10 What the Manager Sees</h2>
+<p>Everything above rolls up automatically — nobody has to &quot;report&quot; anything.</p>
+<div class="table-wrap">
+<input class="table-filter" type="search" placeholder="Filter rows…" aria-label="Filter table rows">
+<span class="table-count"></span>
+<table>
+<thead>
+<tr>
+<th>Dashboard / Report figure</th>
+<th>Where it comes from</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Active Leads, New Leads</td>
+<td>Leads not closed</td>
+</tr>
+<tr>
+<td>Active Deals</td>
+<td>Deals not Closed Won or Closed Lost</td>
+</tr>
+<tr>
+<td>Revenue Won</td>
+<td>Sum of <code>deal_value</code> across <strong>Closed Won</strong> deals</td>
+</tr>
+<tr>
+<td>Pipeline Value</td>
+<td>Sum of active deal values</td>
+</tr>
+<tr>
+<td>Expected Revenue</td>
+<td>Deal value × probability</td>
+</tr>
+<tr>
+<td>Pending Payments</td>
+<td>Payments not <code>Paid</code> or <code>Cancelled</code></td>
+</tr>
+<tr>
+<td>Lead sources</td>
+<td>Grouped by the lead&#39;s <code>source</code> field</td>
+</tr>
+<tr>
+<td>Pipeline funnel</td>
+<td>Deal count and value per stage</td>
+</tr>
+<tr>
+<td>Agent performance</td>
+<td>Closed-won deals and revenue per agent</td>
+</tr>
+<tr>
+<td>Conversion rate</td>
+<td>Won ÷ total</td>
+</tr>
+<tr>
+<td>Lost leads</td>
+<td>Leads that ended in <code>Lost</code>, broken down by source</td>
+</tr>
+<tr>
+<td>Site-visit report</td>
+<td>Scheduled, completed, cancelled, rescheduled totals</td>
+</tr>
+<tr>
+<td>Campaign performance</td>
+<td>Budget, spend, leads, conversions, ROI per campaign</td>
+</tr>
+</tbody></table>
+</div>
+
+<p><strong>The most important report for a sales manager</strong> is the <strong>Lost Leads</strong> tab — it shows <em>where</em> leads are being lost, which tells you whether the problem is the channel, the response time, or the price.</p>
+<hr>
+<h2 id="311-common-mistakes-and-how-to-avoid-them">3.11 Common Mistakes and How to Avoid Them</h2>
+<table>
+<thead>
+<tr>
+<th>Mistake</th>
+<th>Consequence</th>
+<th>What to do instead</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Never setting a next follow-up date</td>
+<td>No task is created, so no reminder reaches you, and the lead goes cold</td>
+<td>Set the next follow-up date on <strong>every</strong> activity you log</td>
+</tr>
+<tr>
+<td>Logging a call but not the outcome</td>
+<td>The timeline has no signal for the conversion report</td>
+<td>Always pick an outcome</td>
+</tr>
+<tr>
+<td>Converting a lead before the visit</td>
+<td>A deal on the board with no site-visit history behind it</td>
+<td>Convert at <code>Qualified</code>/<code>Negotiation</code>, once the buyer has seen the property</td>
+</tr>
+<tr>
+<td>Marking a payment <code>Paid</code> before the money arrives</td>
+<td>The receivable, the agent&#39;s performance and the booking all read too healthy</td>
+<td>Use <code>Pending</code> until it lands; use <code>Partially Paid</code> for part-payments</td>
+</tr>
+<tr>
+<td>Booking before the deal is Closed Won</td>
+<td>Reports show a booking for a lost deal</td>
+<td>Move the deal to <code>Closed Won</code> first, then book</td>
+</tr>
+<tr>
+<td>Handing over a lead without recording a reason</td>
+<td>The handover history has no explanation</td>
+<td>Always choose a reason when you reassign</td>
+</tr>
+<tr>
+<td>Not setting the lead&#39;s <em>source</em></td>
+<td>Campaign attribution and the lead-source report are wrong</td>
+<td>Set the source when you create the lead, or correct it later if you have <code>leads.edit.source</code></td>
+</tr>
+<tr>
+<td>Deleting a lead instead of marking it <code>Lost</code></td>
+<td>The lost-lead report is incomplete and the history is destroyed</td>
+<td>Set the status to <code>Lost</code></td>
+</tr>
+</tbody></table>
+<hr>
+<p><strong>Next:</strong> the module-by-module how-to guides — <a href="manual-04-modules-sales.html"><code>04-modules-sales.md</code></a> (Dashboard, Properties, Amenities, Leads, Customers, Site Visits) and <a href="manual-05-modules-operations.html"><code>05-modules-operations.md</code></a> (Pipeline, Tasks, Bookings, Payments, Notifications).</p>
+
+<div class="pager"><a href="manual-02-roles-and-access.html">← 02. Roles And Access</a><a href="manual-04-modules-sales.html">04. Modules Sales →</a></div>
+<div class="site-footer">QREX documentation · generated from the Markdown sources in <code>docs/</code> · build with <code>npm run docs:html</code></div>
+</main>
+</div>
+
+<script>
+function filterDocs(q){
+  q=(q||'').trim().toLowerCase();
+  document.querySelectorAll('#doc-nav .nav-group').forEach(function(g){
+    var visible=0;
+    g.querySelectorAll('a').forEach(function(a){
+      var hit=!q||a.getAttribute('data-title').indexOf(q)>-1;
+      a.classList.toggle('nav-hidden',!hit);
+      if(hit)visible++;
+    });
+    g.classList.toggle('nav-hidden',visible===0);
+    if(q)g.open=true;
+  });
+}
+document.querySelectorAll('.table-wrap').forEach(function(wrap){
+  var input=wrap.querySelector('.table-filter');
+  var table=wrap.querySelector('table');
+  var count=wrap.querySelector('.table-count');
+  if(!input||!table)return;
+  input.addEventListener('input',function(){
+    var q=input.value.trim().toLowerCase();
+    var shown=0,total=0;
+    table.querySelectorAll('tbody tr').forEach(function(row){
+      total++;
+      var hit=!q||row.textContent.toLowerCase().indexOf(q)>-1;
+      row.style.display=hit?'':'none';
+      if(hit)shown++;
+    });
+    if(count)count.textContent=q?shown+' of '+total+' rows':' '+total+' rows';
+  });
+});
+</script>
+</body>
+</html>

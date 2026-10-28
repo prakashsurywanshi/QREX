@@ -5,6 +5,7 @@ import PageHeader from '@/components/shared/PageHeader';
 import Modal from '@/components/ui/Modal';
 import { Globe, Star, Eye, EyeOff, ChevronRight, Plus, X } from 'lucide-react';
 import type { PageProps } from '@/types';
+import { PLACEHOLDER_IMAGE } from '@/lib/utils';
 
 interface Props extends PageProps {
     featuredProperties: any[];
@@ -102,7 +103,7 @@ export default function CMS(props: Props) {
                         <div className="space-y-3">
                             {featuredProperties.map((p) => (
                                 <div key={p.id} className="flex items-center gap-3 bg-[#F7F9FC] rounded-lg p-2.5">
-                                    <img src={p.image} alt="" className="w-14 h-12 rounded-lg object-cover" />
+                                    <img src={p.image || PLACEHOLDER_IMAGE} alt="" className="w-14 h-12 rounded-lg object-cover" />
                                     <div className="flex-1 min-w-0">
                                         <div className="font-medium text-[#0D1B3E] text-sm truncate">{p.title}</div>
                                         <div className="text-gray-400 text-xs">{p.price_label}</div>
@@ -149,7 +150,7 @@ export default function CMS(props: Props) {
                                 onClick={() => toggleFeatured(p.id)}
                                 className={`flex items-center gap-3 rounded-lg border p-2.5 text-left transition-colors ${isFeatured ? 'border-gold-300 bg-gold-50/60 ring-1 ring-gold-300' : 'border-[#E1E8F0] bg-white hover:bg-[#FAFBFD]'}`}
                             >
-                                <img src={p.image} alt="" className="w-12 h-10 rounded-lg object-cover" />
+                                <img src={p.image || PLACEHOLDER_IMAGE} alt="" className="w-12 h-10 rounded-lg object-cover" />
                                 <div className="flex-1 min-w-0">
                                     <div className="font-medium text-[#0D1B3E] text-xs truncate">{p.title}</div>
                                     <div className="text-gray-400 text-[11px]">{p.price_label}</div>

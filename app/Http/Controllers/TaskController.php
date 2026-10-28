@@ -6,6 +6,7 @@ use App\Models\Lead;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class TaskController extends Controller
@@ -51,7 +52,7 @@ class TaskController extends Controller
                 'role' => $u->role,
                 'initials' => $u->initials,
             ]),
-            'leads' => Lead::orderBy('created_at', 'desc')->limit(20)->get(['id', 'name']),
+            'leads' => Lead::visibleTo(Auth::user())->orderBy('created_at', 'desc')->limit(20)->get(['id', 'name']),
             'statuses' => ['Pending', 'In Progress', 'Overdue', 'Completed'],
             'types' => ['Follow-up', 'Call', 'Meeting', 'Site Visit', 'Email', 'Document', 'Task', 'Other'],
             'priorities' => ['Low', 'Medium', 'High', 'Urgent'],

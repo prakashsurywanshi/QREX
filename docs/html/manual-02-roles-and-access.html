@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2. Roles & Access · QREX</title>
+<style>
+:root{--bg:#f7f8fa;--panel:#fff;--ink:#1f2733;--muted:#5b6472;--line:#e3e7ee;--accent:#0f5c4e;--accent2:#b5893b;--code:#f2f4f7;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65;font-size:16px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.layout{display:flex;min-height:100vh}
+aside{width:280px;flex:0 0 280px;background:var(--panel);border-right:1px solid var(--line);padding:24px 20px;position:sticky;top:0;height:100vh;overflow-y:auto}
+aside h2{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:18px 0 8px}
+aside a{display:block;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.9rem}
+aside a:hover{background:var(--bg);text-decoration:none}
+aside a.active{background:var(--accent);color:#fff}
+aside .brand{font-weight:700;font-size:1.05rem;color:var(--accent);margin-bottom:4px}
+main{flex:1;min-width:0;padding:40px 56px;max-width:960px;margin:0 auto}
+main h1{font-size:2rem;line-height:1.25;margin:0 0 .5em;padding-bottom:.35em;border-bottom:2px solid var(--line)}
+main h2{font-size:1.45rem;margin:2em 0 .6em;padding-bottom:.25em;border-bottom:1px solid var(--line)}
+main h3{font-size:1.15rem;margin:1.6em 0 .5em}
+main h4{font-size:1rem;margin:1.3em 0 .4em}
+main p,main li{color:#2b3542}
+table{border-collapse:collapse;width:100%;margin:1.1em 0;font-size:.92rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+th{background:#eef1f5;font-weight:600}
+tr:nth-child(even) td{background:#fbfcfd}
+code{background:var(--code);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em}
+pre{background:#1e2530;color:#e6e9ef;padding:16px 18px;border-radius:8px;overflow-x:auto}
+pre code{background:none;color:inherit;padding:0}
+blockquote{margin:1.2em 0;padding:.6em 1.1em;background:#fff8e8;border-left:4px solid var(--accent2);color:#5b4a22;border-radius:0 6px 6px 0}
+blockquote p{margin:.4em 0}
+hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
+img{max-width:100%}
+.crumbs{font-size:.82rem;color:var(--muted);margin-bottom:18px}
+.pager{display:flex;justify-content:space-between;gap:16px;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{font-size:.9rem}
+.site-footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:24px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.card h3{margin:.2em 0 .4em;font-size:1.02rem}
+.card p{margin:.2em 0;font-size:.88rem;color:var(--muted)}
+/* --- Figures: diagrams and screen wireframes --- */
+.figure{margin:1.8em 0}
+.figure>svg{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px}
+.figure.diagram{overflow-x:auto}
+.figure.diagram.wide>svg{max-width:none;margin:0}
+.figure.wireframe>svg{border-color:#dbe2ea}
+figcaption{margin-top:.7em;font-size:.82rem;color:var(--muted);text-align:center;line-height:1.45}
+.art-missing{border-left:3px solid #c0392b}
+/* --- Long reference tables --- */
+.table-wrap{margin:1.1em 0}
+.table-filter{width:100%;max-width:300px;padding:7px 11px;margin-bottom:.55em;border:1px solid var(--line);border-radius:8px;font-size:.86rem;background:#fff;color:var(--ink);font-family:inherit}
+.table-filter:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.table-count{font-size:.78rem;color:var(--muted);margin-left:8px;vertical-align:middle}
+/* --- Documentation menu (sidebar) --- */
+.side-search{width:100%;padding:8px 10px;margin:10px 0 4px;border:1px solid var(--line);border-radius:8px;font-size:.85rem;background:var(--bg);color:var(--ink)}
+.side-search:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.home-link{display:block;font-size:.8rem;font-weight:600;color:var(--accent);margin-bottom:14px;padding:4px 0}
+.nav-group{border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:6px}
+.nav-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:10px 4px 6px;font-weight:700;user-select:none}
+.nav-group>summary::-webkit-details-marker{display:none}
+.nav-group>summary .chev{transition:transform .15s ease;font-size:.7rem;color:var(--muted)}
+.nav-group[open]>summary .chev{transform:rotate(90deg)}
+.nav-group .count{color:var(--muted);font-weight:400;margin-left:auto;font-size:.68rem}
+.nav-group a{display:flex;gap:8px;align-items:baseline;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.88rem;line-height:1.35}
+.nav-group a:hover{background:var(--bg);text-decoration:none}
+.nav-group a.active{background:var(--accent);color:#fff}
+.nav-group a.active .num{color:#d9ece7}
+.nav-group a .num{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.75rem;min-width:1.4em}
+.nav-hidden{display:none!important}
+.menu-toggle{display:none;position:fixed;top:12px;left:12px;z-index:50;width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:1.2rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.menu-backdrop{display:none}
+@media(max-width:900px){
+  .layout{flex-direction:column}
+  .menu-toggle{display:flex}
+  aside{position:fixed;top:0;left:0;z-index:60;width:290px;height:100vh;overflow-y:auto;border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .2s ease;box-shadow:0 0 24px rgba(0,0,0,.12)}
+  body.menu-open aside{transform:translateX(0)}
+  body.menu-open .menu-backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:55}
+  main{padding:64px 20px 24px}
+}
+@media print{
+  aside,.crumbs,.pager,.menu-toggle,.menu-backdrop{display:none}
+  body{background:#fff;font-size:11pt}
+  main{max-width:none;padding:0}
+  a{color:var(--ink)}
+  pre{background:#f2f4f7;color:#1f2733;border:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<button class="menu-toggle" aria-label="Open documentation menu" onclick="document.body.classList.toggle('menu-open')">☰</button>
+<div class="menu-backdrop" onclick="document.body.classList.remove('menu-open')"></div>
+<aside>
+  <a class="home-link" href="index.html">⌂ All documentation</a>
+  <div class="brand">QREX Documentation</div>
+  <div style="font-size:.78rem;color:var(--muted)">Qodeigence Infocircle Pvt. Ltd.</div>
+  <input class="side-search" type="search" placeholder="Search documents…" aria-label="Search documents" oninput="filterDocs(this.value)">
+  <nav id="doc-nav">
+    <details class="nav-group" open>
+<summary><span>User Manual</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="manual-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="overview and getting started" href="manual-01-overview-and-getting-started.html"><span class="num">01</span><span>Overview And Getting Started</span></a><a class="active" data-title="roles and access" href="manual-02-roles-and-access.html"><span class="num">02</span><span>Roles And Access</span></a><a class="" data-title="sales lifecycle" href="manual-03-sales-lifecycle.html"><span class="num">03</span><span>Sales Lifecycle</span></a><a class="" data-title="modules sales" href="manual-04-modules-sales.html"><span class="num">04</span><span>Modules Sales</span></a><a class="" data-title="modules operations" href="manual-05-modules-operations.html"><span class="num">05</span><span>Modules Operations</span></a><a class="" data-title="modules marketing and admin" href="manual-06-modules-marketing-and-admin.html"><span class="num">06</span><span>Modules Marketing And Admin</span></a><a class="" data-title="public website" href="manual-07-public-website.html"><span class="num">07</span><span>Public Website</span></a><a class="" data-title="reference" href="manual-08-reference.html"><span class="num">08</span><span>Reference</span></a><a class="" data-title="troubleshooting and faq" href="manual-09-troubleshooting-and-faq.html"><span class="num">09</span><span>Troubleshooting And Faq</span></a></details><details class="nav-group">
+<summary><span>How QREX Works</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="explain-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="system at a glance" href="explain-01-system-at-a-glance.html"><span class="num">01</span><span>System At A Glance</span></a><a class="" data-title="sales lifecycle" href="explain-02-sales-lifecycle.html"><span class="num">02</span><span>Sales Lifecycle</span></a><a class="" data-title="data model" href="explain-03-data-model.html"><span class="num">03</span><span>Data Model</span></a><a class="" data-title="roles and permissions" href="explain-04-roles-and-permissions.html"><span class="num">04</span><span>Roles And Permissions</span></a><a class="" data-title="screen designs" href="explain-05-screen-designs.html"><span class="num">05</span><span>Screen Designs</span></a><a class="" data-title="operations and automation" href="explain-06-operations-and-automation.html"><span class="num">06</span><span>Operations And Automation</span></a></details><details class="nav-group">
+<summary><span>Technical Documentation</span><span class="chev">▶</span></summary>
+<a class="" data-title="project scope" href="tech-01-project-scope.html"><span class="num">01</span><span>Project Scope</span></a><a class="" data-title="architecture" href="tech-02-architecture.html"><span class="num">02</span><span>Architecture</span></a><a class="" data-title="operations modules" href="tech-03-operations-modules.html"><span class="num">03</span><span>Operations Modules</span></a><a class="" data-title="roles permissions" href="tech-04-roles-permissions.html"><span class="num">04</span><span>Roles Permissions</span></a><a class="" data-title="database schema" href="tech-05-database-schema.html"><span class="num">05</span><span>Database Schema</span></a><a class="" data-title="operations" href="tech-06-operations.html"><span class="num">06</span><span>Operations</span></a><a class="" data-title="security hardening" href="tech-07-security-hardening.html"><span class="num">07</span><span>Security Hardening</span></a><a class="" data-title="glossary" href="tech-08-glossary.html"><span class="num">08</span><span>Glossary</span></a><a class="" data-title="project proposal" href="tech-09-project-proposal.html"><span class="num">09</span><span>Project Proposal</span></a><a class="" data-title="budget pricing mumbai" href="tech-10-budget-pricing-mumbai.html"><span class="num">10</span><span>Budget Pricing Mumbai</span></a></details>
+  </nav>
+  <details class="nav-group"><summary><span>Downloads</span><span class="chev">▶</span></summary>
+    <a href="../word/QREX-User-Manual.docx"><span class="num"></span><span>User Manual (.docx)</span></a>
+    <a href="../word/QREX-User-Manual.doc"><span class="num"></span><span>User Manual (.doc)</span></a>
+    <a href="../word/QREX-How-It-Works.docx"><span class="num"></span><span>How QREX Works (.docx)</span></a>
+    <a href="../word/QREX-How-It-Works.doc"><span class="num"></span><span>How QREX Works (.doc)</span></a>
+    <a href="../word/QREX-Technical-Documentation.docx"><span class="num"></span><span>Technical Docs (.docx)</span></a>
+    <a href="../word/QREX-Technical-Documentation.doc"><span class="num"></span><span>Technical Docs (.doc)</span></a>
+  </details>
+</aside>
+<main>
+<div class="crumbs">QREX User Manual</div>
+<h1 id="2-roles-access">2. Roles & Access</h1>
+<h2 id="21-how-access-works-in-qrex">2.1 How Access Works in QREX</h2>
+<p>QREX uses a <strong>role-based access control (RBAC)</strong> system. Three ideas explain everything you will see:</p>
+<h3 id="idea-1-a-permission-is-a-small-named-ability">Idea 1 — A permission is a small, named ability</h3>
+<p>Permissions are written as <code>module.action</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Slug</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>leads.view</code></td>
+<td>Open and read the Leads module</td>
+</tr>
+<tr>
+<td><code>leads.create</code></td>
+<td>Add a new lead</td>
+</tr>
+<tr>
+<td><code>leads.edit</code></td>
+<td>Change an existing lead</td>
+</tr>
+<tr>
+<td><code>leads.delete</code></td>
+<td>Remove a lead</td>
+</tr>
+<tr>
+<td><code>leads.export</code></td>
+<td>Export leads to a file</td>
+</tr>
+</tbody></table>
+<p>Some modules add a fifth action — <code>bookings.approve</code> — and <code>reports</code> has only two (<code>view</code>, <code>export</code>).</p>
+<h3 id="idea-2-some-permissions-are-field-level">Idea 2 — Some permissions are *field-level*</h3>
+<p>For modules where you edit a record, QREX defines permission <strong>per field</strong> using <code>module.action.field</code>:</p>
+<pre><code>leads.edit.name        leads.edit.phone       leads.edit.email
+leads.edit.source      leads.edit.status      leads.edit.budget
+leads.edit.assigned_agent                    leads.edit.score
+</code></pre>
+<blockquote>
+<p><strong>Important — only <code>settings.edit.*</code> is enforced today.</strong> Field-level permissions are catalogued for eleven modules, but the application currently <em>checks</em> them in exactly one place: the <strong>Settings</strong> screen. There, a field you lack is refused by the server (this is how <code>settings.edit.project_name</code> is withheld from the Admin role).</p>
+<p>For every other module — <code>leads</code>, <code>properties</code>, <code>customers</code>, <code>tasks</code>, <code>site_visits</code>, <code>bookings</code>, <code>payments</code>, <code>marketing</code>, <code>cms</code>, <code>users</code> — the field permissions exist in the catalogue for planning purposes but are <strong>not yet read by any admin screen or controller</strong>. Holding <code>leads.edit</code> without <code>leads.edit.source</code> therefore does <strong>not</strong> currently stop you editing the source field, and the form does <strong>not</strong> hide it. Do not rely on field-level permissions to protect a field outside Settings.</p>
+</blockquote>
+<p>Field-level permissions exist in the catalogue for: <code>properties</code>, <code>leads</code>, <code>customers</code>, <code>tasks</code>, <code>site_visits</code>, <code>bookings</code>, <code>payments</code>, <code>marketing</code>, <code>cms</code>, <code>users</code>, <code>settings</code> — of which only <code>settings</code> is enforced.</p>
+<h3 id="idea-3-your-role-is-a-bundle-of-permissions">Idea 3 — Your role is a bundle of permissions</h3>
+<p>You never hold permissions directly. You hold a <strong>role</strong>, and the role carries the permissions. Six roles ship with the system:</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Slug</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Super Admin</td>
+<td><code>super-admin</code></td>
+<td>System</td>
+<td>Full access to everything</td>
+</tr>
+<tr>
+<td>Admin</td>
+<td><code>admin</code></td>
+<td>System</td>
+<td>Everything except two system-level permissions</td>
+</tr>
+<tr>
+<td>Sales Executive</td>
+<td><code>sales-executive</code></td>
+<td>Editable</td>
+<td>Front-line sales work</td>
+</tr>
+<tr>
+<td>Senior Agent</td>
+<td><code>senior-agent</code></td>
+<td>Editable</td>
+<td>Front-line sales work plus the deal pipeline</td>
+</tr>
+<tr>
+<td>Marketing User</td>
+<td><code>marketing-user</code></td>
+<td>Editable</td>
+<td>Campaigns, website content, media</td>
+</tr>
+<tr>
+<td>Accountant</td>
+<td><code>accountant</code></td>
+<td>Editable</td>
+<td>Bookings, payments, reporting</td>
+</tr>
+</tbody></table>
+<p>Admins can also create <strong>custom roles</strong> to fit how the agency is actually organised (for example &quot;Team Lead – North Mumbai&quot;). Custom roles are fully editable and deletable; the two system roles are not.</p>
+<hr>
+<h2 id="22-the-seven-personas">2.2 The Seven Personas</h2>
+<h3 id="persona-1-public-visitor">Persona 1 — Public visitor</h3>
+<p>No account, no password. Can browse the public site, filter listings, view photos and submit enquiry forms. Every enquiry becomes a <strong>Lead</strong> in the CRM. See <a href="manual-07-public-website.html"><code>07-public-website.md</code></a>.</p>
+<h3 id="persona-2-sales-executive">Persona 2 — Sales Executive</h3>
+<p><strong>The front-line relationship owner.</strong> Sees the sales side of the business and works their own book of business.</p>
+<table>
+<thead>
+<tr>
+<th>Can</th>
+<th>Cannot</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Open the Dashboard</td>
+<td>See leads belonging to other agents</td>
+</tr>
+<tr>
+<td>Browse, create and edit <strong>Properties</strong></td>
+<td>Delete properties</td>
+</tr>
+<tr>
+<td>Create, view and edit <strong>Leads</strong></td>
+<td>Edit a lead&#39;s <em>source</em> field</td>
+</tr>
+<tr>
+<td>Log activity, change status, hand over a lead</td>
+<td>Delete leads</td>
+</tr>
+<tr>
+<td>Create and edit <strong>Customers</strong></td>
+<td>Use the <strong>Sales Pipeline</strong></td>
+</tr>
+<tr>
+<td>Create and edit <strong>Site Visits</strong></td>
+<td>Create or edit <strong>Bookings</strong> or <strong>Payments</strong></td>
+</tr>
+<tr>
+<td>Create and edit <strong>Tasks</strong></td>
+<td>Delete tasks</td>
+</tr>
+<tr>
+<td>Upload <strong>Media</strong></td>
+<td>Export reports</td>
+</tr>
+<tr>
+<td>View <strong>Reports</strong></td>
+<td>Touch Marketing, CMS, Users, Roles, Settings</td>
+</tr>
+</tbody></table>
+<p><strong>Row-level scoping applies.</strong> A Sales Executive sees only leads where they are the assigned agent <strong>or</strong> the owner. Opening a lead you do not own returns a 403.</p>
+<h3 id="persona-3-senior-agent">Persona 3 — Senior Agent</h3>
+<p>Everything a Sales Executive can do, <strong>plus</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Extra</th>
+<th>Slug</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Open the <strong>Sales Pipeline</strong> board</td>
+<td><code>sales.view</code></td>
+</tr>
+<tr>
+<td>Create a <strong>deal</strong> directly on the board</td>
+<td><code>sales.create</code></td>
+</tr>
+<tr>
+<td>Move a deal between pipeline stages</td>
+<td><code>sales.edit</code></td>
+</tr>
+<tr>
+<td>Edit a lead&#39;s <strong>source</strong> field</td>
+<td><code>leads.edit.source</code></td>
+</tr>
+</tbody></table>
+<p>Still no bookings, no payments, no deletions, no administration.</p>
+<h3 id="persona-4-marketing-user">Persona 4 — Marketing User</h3>
+<p>Owns demand generation and the public-facing site.</p>
+<table>
+<thead>
+<tr>
+<th>Can</th>
+<th>Cannot</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Open the Dashboard</td>
+<td>Edit or delete leads (create and view only)</td>
+</tr>
+<tr>
+<td>View and create <strong>Leads</strong> (so campaigns can be attributed)</td>
+<td>Touch Properties, Customers, Site Visits, Tasks</td>
+</tr>
+<tr>
+<td>Create, view and edit <strong>Campaigns</strong></td>
+<td>Use the pipeline, bookings or payments</td>
+</tr>
+<tr>
+<td>View and edit <strong>CMS</strong> — homepage sections, featured properties, site copy</td>
+<td>Administer users, roles, settings</td>
+</tr>
+<tr>
+<td>Upload <strong>Media</strong></td>
+<td>Delete media</td>
+</tr>
+<tr>
+<td>View and <strong>export Reports</strong></td>
+<td>—</td>
+</tr>
+</tbody></table>
+<h3 id="persona-5-accountant">Persona 5 — Accountant</h3>
+<p>Owns the money, and can see the pipeline in order to reconcile bookings.</p>
+<table>
+<thead>
+<tr>
+<th>Can</th>
+<th>Cannot</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Open the Dashboard</td>
+<td>Create or edit leads</td>
+</tr>
+<tr>
+<td>View <strong>Customers</strong></td>
+<td>Touch properties, campaigns, CMS</td>
+</tr>
+<tr>
+<td>View the <strong>Sales Pipeline</strong> (read-only — cannot create or move deals)</td>
+<td>Create deals or move stages</td>
+</tr>
+<tr>
+<td>Create and edit <strong>Bookings</strong> — status, agreement, possession, record payment</td>
+<td>Delete anything</td>
+</tr>
+<tr>
+<td>Create and edit <strong>Payments</strong></td>
+<td>Administer users, roles, settings</td>
+</tr>
+<tr>
+<td>View and <strong>export Reports</strong></td>
+<td>—</td>
+</tr>
+<tr>
+<td>View <strong>Media</strong></td>
+<td>—</td>
+</tr>
+</tbody></table>
+<h3 id="persona-6-admin">Persona 6 — Admin</h3>
+<p>A near-complete operator. Holds <strong>every one of the 132 permissions</strong> except exactly two:</p>
+<table>
+<thead>
+<tr>
+<th>Withheld</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>settings.edit.project_name</code></td>
+<td>The Admin can change the agency name, contact details, tagline, colours and logo, but <strong>not</strong> the project&#39;s internal name — the Super Admin owns that.</td>
+</tr>
+<tr>
+<td><code>roles.delete</code></td>
+<td>The Admin can create and edit roles but cannot delete one.</td>
+</tr>
+</tbody></table>
+<p>On top of permissions, the <strong>SMTP configuration</strong>, <strong>test-mail</strong> and <strong>logo upload/delete</strong> endpoints are additionally gated behind the <code>super-admin</code> <em>role</em> — so an Admin cannot touch outgoing mail even though they hold <code>settings.edit</code>.</p>
+<h3 id="persona-7-super-admin">Persona 7 — Super Admin</h3>
+<p>Full access. Holds all 132 permissions and is the only role that passes the <code>role:super-admin</code> gate on SMTP, test mail and the logo.</p>
+<p>The Super Admin also has a <strong>universal bypass</strong>: the access-check middleware short-circuits for a Super Admin and lets the request through without re-checking permissions. In practice a Super Admin holds every permission anyway, so the bypass only matters in edge cases.</p>
+<p><strong>Super Admin is a real person, not a magic account.</strong> Guardrails that still apply:</p>
+<ul>
+<li>The <strong>Super Admin account itself cannot be deleted</strong> — the system refuses with <em>&quot;The Super Admin account cannot be deleted.&quot;</em></li>
+<li><strong>System roles cannot be modified or deleted</strong> — <em>&quot;System roles cannot be modified.&quot;</em> / <em>&quot;System roles cannot be deleted.&quot;</em></li>
+<li>A <strong>role that still has users assigned cannot be deleted</strong> — <em>&quot;Cannot delete role that is assigned to N user(s).&quot;</em></li>
+<li><strong>Only a Super Admin can grant the Super Admin role</strong> to a user — anyone else attempting it is refused with <em>&quot;Only a Super Admin can grant the Super Admin role.&quot;</em></li>
+</ul>
+<hr>
+<h2 id="23-capability-matrix">2.3 Capability Matrix</h2>
+<p>Read it as: <strong>✓ = the seeded role holds the permission; — = it does not.</strong> The 132-permission slug catalog is in <a href="manual-08-reference.html#6-permission-catalog"><code>08-reference.md</code></a>.</p>
+<h3 id="module-access">Module access</h3>
+<div class="table-wrap">
+<input class="table-filter" type="search" placeholder="Filter rows…" aria-label="Filter table rows">
+<span class="table-count"></span>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th align="center">Super Admin</th>
+<th align="center">Admin</th>
+<th align="center">Sales Exec</th>
+<th align="center">Senior Agent</th>
+<th align="center">Marketing</th>
+<th align="center">Accountant</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Dashboard</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td>Properties</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">—</td>
+<td align="center">—</td>
+</tr>
+<tr>
+<td>Leads</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓ (view, create)</td>
+<td align="center">—</td>
+</tr>
+<tr>
+<td>Customers</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">—</td>
+<td align="center">✓ (view)</td>
+</tr>
+<tr>
+<td>Sales Pipeline</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td align="center">—</td>
+<td align="center">✓ (view)</td>
+</tr>
+<tr>
+<td>Site Visits</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">—</td>
+<td align="center">—</td>
+</tr>
+<tr>
+<td>Tasks</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">—</td>
+<td align="center">—</td>
+</tr>
+<tr>
+<td>Bookings</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">—</td>
+<td align="center">—</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td>Payments</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">—</td>
+<td align="center">—</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td>Media</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓ (view, create)</td>
+<td align="center">✓ (view, create)</td>
+<td align="center">✓ (view, create)</td>
+<td align="center">✓ (view)</td>
+</tr>
+<tr>
+<td>Marketing</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">—</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td align="center">—</td>
+</tr>
+<tr>
+<td>Reports</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓ (view)</td>
+<td align="center">✓ (view)</td>
+<td align="center">✓ (view, export)</td>
+<td align="center">✓ (view, export)</td>
+</tr>
+<tr>
+<td>CMS</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">—</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td align="center">—</td>
+</tr>
+<tr>
+<td>Users</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">—</td>
+<td align="center">—</td>
+<td align="center">—</td>
+<td align="center">—</td>
+</tr>
+<tr>
+<td>Roles</td>
+<td align="center">✓</td>
+<td align="center">✓ (not delete)</td>
+<td align="center">—</td>
+<td align="center">—</td>
+<td align="center">—</td>
+<td align="center">—</td>
+</tr>
+<tr>
+<td>Amenities</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">—</td>
+<td align="center">—</td>
+<td align="center">—</td>
+<td align="center">—</td>
+</tr>
+<tr>
+<td>Settings</td>
+<td align="center">✓</td>
+<td align="center">✓ (not <code>project_name</code>)</td>
+<td align="center">—</td>
+<td align="center">—</td>
+<td align="center">—</td>
+<td align="center">—</td>
+</tr>
+</tbody></table>
+</div>
+
+<h3 id="action-level-detail">Action-level detail</h3>
+<div class="table-wrap">
+<input class="table-filter" type="search" placeholder="Filter rows…" aria-label="Filter table rows">
+<span class="table-count"></span>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Super Admin</th>
+<th>Admin</th>
+<th>Sales Exec</th>
+<th>Senior Agent</th>
+<th>Marketing</th>
+<th>Accountant</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Properties</td>
+<td>view create edit delete export</td>
+<td>same</td>
+<td>view create edit</td>
+<td>view create edit</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Leads</td>
+<td>view create edit delete export</td>
+<td>same</td>
+<td>view create edit</td>
+<td>view create edit</td>
+<td>view create</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Customers</td>
+<td>view create edit delete export</td>
+<td>same</td>
+<td>view create edit</td>
+<td>view create edit</td>
+<td>—</td>
+<td>view</td>
+</tr>
+<tr>
+<td>Sales</td>
+<td>view create edit delete export</td>
+<td>same</td>
+<td>—</td>
+<td>view create edit</td>
+<td>—</td>
+<td>view</td>
+</tr>
+<tr>
+<td>Tasks</td>
+<td>view create edit delete</td>
+<td>same</td>
+<td>view create edit</td>
+<td>view create edit</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Site Visits</td>
+<td>view create edit delete</td>
+<td>same</td>
+<td>view create edit</td>
+<td>view create edit</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Bookings</td>
+<td>view create edit delete approve</td>
+<td>same</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>view create edit</td>
+</tr>
+<tr>
+<td>Payments</td>
+<td>view create edit delete export</td>
+<td>same</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>view create edit</td>
+</tr>
+<tr>
+<td>Media</td>
+<td>view create delete</td>
+<td>same</td>
+<td>view create</td>
+<td>view create</td>
+<td>view create</td>
+<td>view</td>
+</tr>
+<tr>
+<td>Marketing</td>
+<td>view create edit delete export</td>
+<td>same</td>
+<td>—</td>
+<td>—</td>
+<td>view create edit</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Reports</td>
+<td>view export</td>
+<td>view export</td>
+<td>view</td>
+<td>view</td>
+<td>view export</td>
+<td>view export</td>
+</tr>
+<tr>
+<td>CMS</td>
+<td>view create edit delete</td>
+<td>same</td>
+<td>—</td>
+<td>—</td>
+<td>view create edit</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Users</td>
+<td>view create edit delete</td>
+<td>same</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Roles</td>
+<td>view create edit delete</td>
+<td>view create edit</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Amenities</td>
+<td>view create edit delete</td>
+<td>same</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Settings</td>
+<td>view edit</td>
+<td>view edit</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody></table>
+</div>
+
+<h3 id="field-level-detail">Field-level detail</h3>
+<p>Only the roles listed hold field-level permissions, and only for the fields named.</p>
+<blockquote>
+<p><strong>Remember:</strong> outside <strong>Settings</strong>, these field permissions are catalogued but not enforced. The table records what the seeder grants, not what the application checks. See the warning under <a href="#idea-2-some-permissions-are-field-level">Idea 2</a>.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Fields you can be granted</th>
+<th>Sales Exec</th>
+<th>Senior Agent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>properties.edit</code></td>
+<td>price, title, status, description, area, bedrooms, bathrooms, amenities, featured, agent</td>
+<td>all ten</td>
+<td>all ten</td>
+</tr>
+<tr>
+<td><code>leads.edit</code></td>
+<td>name, phone, email, source, status, budget, assigned_agent, score</td>
+<td>all <strong>except <code>source</code></strong></td>
+<td>all eight</td>
+</tr>
+<tr>
+<td><code>customers.edit</code></td>
+<td>name, phone, email, type, budget, notes</td>
+<td>all six</td>
+<td>all six</td>
+</tr>
+<tr>
+<td><code>tasks.edit</code></td>
+<td>title, status, priority, due_date, assigned_to</td>
+<td>all five</td>
+<td>all five</td>
+</tr>
+<tr>
+<td><code>site_visits.edit</code></td>
+<td>date, time, status, feedback, notes</td>
+<td>all five</td>
+<td>all five</td>
+</tr>
+<tr>
+<td><code>bookings.edit</code></td>
+<td>amount, status, payment_mode, notes</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>payments.edit</code></td>
+<td>amount, status, mode, date, notes</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>marketing.edit</code></td>
+<td>name, budget, status, channels, content</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>cms.edit</code></td>
+<td>content, featured, seo</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>users.edit</code></td>
+<td>name, email, phone, role, branch, status, password</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>settings.edit</code></td>
+<td>project_name, agency_name, contact_email, contact_phone, address, tagline, logo</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<p>Super Admin and Admin hold every field-level permission.</p>
+<hr>
+<h2 id="24-row-level-scoping-why-you-cannot-see-every-lead">2.4 Row-Level Scoping — Why You Cannot See Every Lead</h2>
+<p>Permissions answer <em>&quot;can I open the Leads module?&quot;</em>. Scoping answers <em>&quot;which leads inside it?&quot;</em>.</p>
+<table>
+<thead>
+<tr>
+<th>Your role</th>
+<th>Leads you can see</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Super Admin</td>
+<td><strong>All</strong> leads</td>
+</tr>
+<tr>
+<td>Admin</td>
+<td><strong>All</strong> leads</td>
+</tr>
+<tr>
+<td>Senior Agent</td>
+<td>Only leads where <strong>you are the assigned agent</strong> or <strong>you are the owner</strong></td>
+</tr>
+<tr>
+<td>Sales Executive</td>
+<td>Only leads where <strong>you are the assigned agent</strong> or <strong>you are the owner</strong></td>
+</tr>
+<tr>
+<td>Marketing User</td>
+<td>All leads (they need to see campaign attribution)</td>
+</tr>
+<tr>
+<td>Accountant</td>
+<td>All leads</td>
+</tr>
+</tbody></table>
+<p>The rule is enforced in two places:</p>
+<ol>
+<li><strong>The list.</strong> Leads are filtered as the list is drawn, so other agents&#39; leads simply are not in the page.</li>
+<li><strong>The record.</strong> Opening, editing, reassigning, changing the status of, logging activity against, or converting a lead you do not own is refused with <strong>403</strong> and the message <em>&quot;You do not have access to this lead.&quot;</em></li>
+</ol>
+<p><strong>What this means practically:</strong></p>
+<ul>
+<li>If a colleague tells you &quot;I sent you a lead&quot;, it may not be visible to you yet. Check that you are the <strong>assigned agent</strong> or the <strong>owner</strong> — the owner field is set automatically when the lead is created or handed over.</li>
+<li>Reports apply the same scoping, so a Sales Executive&#39;s report figures cover their own leads only.</li>
+<li>Handing a lead over to another agent (<code>assigned_agent_id</code> + <code>owner_id</code> are both moved together) is what makes it appear in that person&#39;s list.</li>
+</ul>
+<hr>
+<h2 id="25-what-happens-when-access-is-refused">2.5 What Happens When Access Is Refused</h2>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>What you see</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>You click something you cannot use, in the browser</td>
+<td>A <strong>red toast</strong>: <em>&quot;You do not have permission to perform this action.&quot;</em> You are returned to the page you came from and nothing is changed</td>
+</tr>
+<tr>
+<td>You reach a Super-Admin-only screen (SMTP, logo)</td>
+<td>A <strong>red toast</strong>: <em>&quot;You do not have the required role to access this page.&quot;</em></td>
+</tr>
+<tr>
+<td>You open a lead that is not yours</td>
+<td><strong>HTTP 403</strong> — <em>&quot;You do not have access to this lead.&quot;</em></td>
+</tr>
+<tr>
+<td>You open a Super-Admin user record as a non-Super-Admin</td>
+<td><strong>HTTP 404</strong> — the record is deliberately hidden, not merely forbidden</td>
+</tr>
+<tr>
+<td>An API/integration call</td>
+<td><strong>HTTP 403</strong> with a JSON body naming the permission that was required</td>
+</tr>
+</tbody></table>
+<p><strong>Why a 404 for Super Admin users?</strong> To avoid confirming that a privileged account exists. A non-Super-Admin asking for <code>/admin/users/{id}</code> of a Super Admin gets the same answer as asking for a user that does not exist.</p>
+<p><strong>What is hidden, and what is merely refused.</strong> The <strong>sidebar</strong> is permission-aware: a module you cannot <code>view</code> does not appear in the navigation at all. Beyond the sidebar, however, action buttons are <strong>not</strong> hidden — a <strong>Delete</strong> button will render for a role that lacks <code>properties.delete</code>, and the server refuses the request with the red toast when it is pressed. So:</p>
+<ul>
+<li>A <strong>missing menu item</strong> means you lack <code>module.view</code>.</li>
+<li>A <strong>visible control that refuses</strong> means you lack the specific action permission. That is expected behaviour, not a bug.</li>
+</ul>
+<hr>
+<h2 id="26-asking-for-more-access">2.6 Asking for More Access</h2>
+<p>Access is granted by changing a <strong>role</strong>, not an individual user. So the request is always: <em>&quot;please add X to the Sales Executive role&quot;</em> or <em>&quot;please create a new role for me&quot;</em>.</p>
+<p><strong>What to tell your administrator:</strong></p>
+<ol>
+<li>The <strong>module</strong> you need (Leads, Bookings, Reports…).</li>
+<li>The <strong>action</strong> you need (view, create, edit, delete, export, approve).</li>
+<li>If it is an edit action, the <strong>specific fields</strong> you need to change.</li>
+<li>Whether the access should be <strong>temporary</strong> — a temporary role can be created and deleted afterwards.</li>
+</ol>
+<p><strong>Typical requests and their permission names:</strong></p>
+<table>
+<thead>
+<tr>
+<th>&quot;I need to...&quot;</th>
+<th>Permission</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>See other agents&#39; leads</td>
+<td>Not a permission — a Super Admin or Admin must place the lead in your name, or give you a different role</td>
+</tr>
+<tr>
+<td>Download a report</td>
+<td><code>reports.export</code></td>
+</tr>
+<tr>
+<td>Move a deal across the pipeline</td>
+<td><code>sales.edit</code></td>
+</tr>
+<tr>
+<td>Delete a listing</td>
+<td><code>properties.delete</code></td>
+</tr>
+<tr>
+<td>Change a lead&#39;s source</td>
+<td><code>leads.edit.source</code></td>
+</tr>
+<tr>
+<td>Manage the website homepage</td>
+<td><code>cms.edit</code></td>
+</tr>
+<tr>
+<td>Change the agency&#39;s name and logo</td>
+<td><code>settings.edit.project_name</code> and the <code>super-admin</code> role (SMTP/logo)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="27-admin-procedures">2.7 Admin Procedures</h2>
+<p>These are covered in full in <a href="manual-06-modules-marketing-and-admin.html"><code>06-modules-marketing-and-admin.md</code></a>, but the shape is here.</p>
+<h3 id="changing-someones-role">Changing someone's role</h3>
+<p><strong>Users</strong> → click the user → change <strong>Role</strong> → save. The permission set follows the role immediately — the user does not need to sign out, but their sidebar will update on their next page load.</p>
+<h3 id="creating-a-custom-role">Creating a custom role</h3>
+<p><strong>Roles &amp; Permissions</strong> → <strong>Create Role</strong> → give it a name, a description, and tick the permissions in the matrix → save. The slug is generated from the name automatically (e.g. &quot;Team Lead - Mumbai&quot; becomes <code>team-lead-mumbai</code>).</p>
+<h3 id="guardrails-when-administering">Guardrails when administering</h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Guard</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Grant the <code>super-admin</code> role</td>
+<td>Super Admin only</td>
+</tr>
+<tr>
+<td>Delete a role that still has users</td>
+<td>Blocked</td>
+</tr>
+<tr>
+<td>Delete or edit a system role</td>
+<td>Blocked</td>
+</tr>
+<tr>
+<td>Delete the Super Admin account</td>
+<td>Blocked</td>
+</tr>
+<tr>
+<td>Delete your own account</td>
+<td>Blocked</td>
+</tr>
+<tr>
+<td>Set a user&#39;s status to <strong>Inactive</strong></td>
+<td>Allowed — and the recommended way to end access without deleting history</td>
+</tr>
+</tbody></table>
+<hr>
+<p><strong>Next:</strong> <a href="manual-03-sales-lifecycle.html"><code>03-sales-lifecycle.md</code></a> — how a lead becomes a closed, paid deal.</p>
+
+<div class="pager"><a href="manual-01-overview-and-getting-started.html">← 01. Overview And Getting Started</a><a href="manual-03-sales-lifecycle.html">03. Sales Lifecycle →</a></div>
+<div class="site-footer">QREX documentation · generated from the Markdown sources in <code>docs/</code> · build with <code>npm run docs:html</code></div>
+</main>
+</div>
+
+<script>
+function filterDocs(q){
+  q=(q||'').trim().toLowerCase();
+  document.querySelectorAll('#doc-nav .nav-group').forEach(function(g){
+    var visible=0;
+    g.querySelectorAll('a').forEach(function(a){
+      var hit=!q||a.getAttribute('data-title').indexOf(q)>-1;
+      a.classList.toggle('nav-hidden',!hit);
+      if(hit)visible++;
+    });
+    g.classList.toggle('nav-hidden',visible===0);
+    if(q)g.open=true;
+  });
+}
+document.querySelectorAll('.table-wrap').forEach(function(wrap){
+  var input=wrap.querySelector('.table-filter');
+  var table=wrap.querySelector('table');
+  var count=wrap.querySelector('.table-count');
+  if(!input||!table)return;
+  input.addEventListener('input',function(){
+    var q=input.value.trim().toLowerCase();
+    var shown=0,total=0;
+    table.querySelectorAll('tbody tr').forEach(function(row){
+      total++;
+      var hit=!q||row.textContent.toLowerCase().indexOf(q)>-1;
+      row.style.display=hit?'':'none';
+      if(hit)shown++;
+    });
+    if(count)count.textContent=q?shown+' of '+total+' rows':' '+total+' rows';
+  });
+});
+</script>
+</body>
+</html>

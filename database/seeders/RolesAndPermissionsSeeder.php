@@ -101,6 +101,10 @@ class RolesAndPermissionsSeeder extends Seeder
                 'actions' => ['view', 'create', 'edit', 'delete'],
                 'fields' => [],
             ],
+            'amenities' => [
+                'actions' => ['view', 'create', 'edit', 'delete'],
+                'fields' => [],
+            ],
         ];
 
         $allPermissions = [];

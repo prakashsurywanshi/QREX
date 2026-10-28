@@ -7,6 +7,8 @@ import StatCard from '@/components/shared/StatCard';
 import { Plus, Megaphone, TrendingUp, Users, IndianRupee, Percent, Star, Globe } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 import type { PageProps } from '@/types';
+import { PLACEHOLDER_IMAGE } from '@/lib/utils';
+import AmountInWords from '@/components/shared/AmountInWords';
 
 interface Props extends PageProps {
     campaigns: any[];
@@ -194,7 +196,7 @@ export default function Marketing(props: Props) {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {propertyPromotions.map((p) => (
                             <div key={p.id} className="flex items-center gap-3 border border-[#F0F4F8] rounded-lg p-2.5">
-                                <img src={p.image} alt="" className="w-14 h-12 rounded-lg object-cover" />
+                                <img src={p.image || PLACEHOLDER_IMAGE} alt="" className="w-14 h-12 rounded-lg object-cover" />
                                 <div className="flex-1 min-w-0">
                                     <div className="font-medium text-[#0D1B3E] text-xs truncate">{p.title}</div>
                                     <div className="text-gray-400 text-[11px] truncate">{p.address || p.status}</div>
@@ -255,6 +257,7 @@ export default function Marketing(props: Props) {
                         <div>
                             <label className="block text-xs font-medium text-gray-600 mb-1">Budget (₹) *</label>
                             <input type="number" value={data.budget} onChange={(e) => setData('budget', e.target.value)} required className="w-full px-3.5 py-2 border border-[#E1E8F0] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-400/30" />
+                            <AmountInWords value={data.budget} />
                             {errors.budget && <p className="text-red-500 text-xs mt-1">{errors.budget}</p>}
                         </div>
                         <div>

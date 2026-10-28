@@ -3,6 +3,7 @@ import { Link, useForm, router } from '@inertiajs/react';
 import AdminLayout from '@/components/layout/AdminLayout';
 import PageHeader from '@/components/shared/PageHeader';
 import Modal from '@/components/ui/Modal';
+import AmountInWords from '@/components/shared/AmountInWords';
 import { Plus, CalendarCheck, ShoppingCart, FileText, KeyRound } from 'lucide-react';
 import type { PageProps } from '@/types';
 
@@ -159,11 +160,13 @@ export default function Bookings(props: Props) {
                         <div>
                             <label className="block text-xs font-medium text-gray-600 mb-1">Deal Value (₹) *</label>
                             <input type="number" value={data.deal_value} onChange={(e) => setData('deal_value', e.target.value)} required className="w-full px-3.5 py-2 border border-[#E1E8F0] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-400/30" />
+                            <AmountInWords value={data.deal_value} />
                             {errors.deal_value && <p className="text-red-500 text-xs mt-1">{errors.deal_value}</p>}
                         </div>
                         <div>
                             <label className="block text-xs font-medium text-gray-600 mb-1">Booking Amount (₹) *</label>
                             <input type="number" value={data.booking_amount} onChange={(e) => setData('booking_amount', e.target.value)} required className="w-full px-3.5 py-2 border border-[#E1E8F0] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-400/30" />
+                            <AmountInWords value={data.booking_amount} />
                             {errors.booking_amount && <p className="text-red-500 text-xs mt-1">{errors.booking_amount}</p>}
                         </div>
                     </div>

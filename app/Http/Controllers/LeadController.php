@@ -24,6 +24,40 @@ class LeadController extends Controller
 
     protected array $validStatuses = ['New', 'Contacted', 'Qualified', 'Site Visit Scheduled', 'Site Visit Completed', 'Negotiation', 'Converted', 'Lost'];
 
+    protected array $agentRoles = ['sales-executive', 'senior-agent'];
+
+    protected function applyAgentScope($query): void
+    {
+        $user = Auth::user();
+
+        if ($user->isSuperAdmin() || $user->hasRole('admin')) {
+            return;
+        }
+
+        if ($user->hasAnyRole($this->agentRoles)) {
+            $query->where(fn ($q) => $q
+                ->where('assigned_agent_id', $user->id)
+                ->orWhere('owner_id', $user->id));
+        }
+    }
+
+    protected function authorizeLeadAccess(Lead $lead): void
+    {
+        $user = Auth::user();
+
+        if ($user->isSuperAdmin() || $user->hasRole('admin')) {
+            return;
+        }
+
+        if ($user->hasAnyRole($this->agentRoles)) {
+            abort_unless(
+                $lead->assigned_agent_id === $user->id || $lead->owner_id === $user->id,
+                403,
+                'You do not have access to this lead.'
+            );
+        }
+    }
+
     public function importTemplate()
     {
         $headers = [
@@ -44,6 +78,8 @@ class LeadController extends Controller
     public function index(Request $request)
     {
         $query = Lead::query()->with(['assignedAgent', 'interestedProperty', 'creator', 'campaign']);
+
+        $this->applyAgentScope($query);
 
         if ($request->filled('search')) {
             $query->where(fn ($q) => $q
@@ -78,6 +114,8 @@ class LeadController extends Controller
 
     public function show(Lead $lead)
     {
+        $this->authorizeLeadAccess($lead);
+
         $lead->load(['assignedAgent', 'interestedProperty', 'creator', 'campaign', 'owner', 'handovers.fromUser', 'handovers.toUser', 'activities.user']);
 
         return Inertia::render('admin/LeadDetail', [
@@ -87,6 +125,12 @@ class LeadController extends Controller
                 'type' => $a->type,
                 'title' => $a->title,
                 'description' => $a->description,
+                'duration' => $a->duration,
+                'outcome' => $a->outcome,
+                'contact_number' => $a->contact_number,
+                'email_subject' => $a->email_subject,
+                'next_followup' => $a->next_followup,
+                'location' => $a->location,
                 'user_name' => $a->user?->name ?? 'System',
                 'created_at' => $a->created_at->diffForHumans(),
             ]),
@@ -267,6 +311,8 @@ class LeadController extends Controller
 
     public function convertToDeal(Request $request, Lead $lead)
     {
+        $this->authorizeLeadAccess($lead);
+
         $request->validate([
             'deal_value' => ['required', 'numeric', 'min:0'],
             'property_id' => ['nullable', 'integer'],
@@ -466,6 +512,8 @@ class LeadController extends Controller
 
     public function update(Request $request, Lead $lead)
     {
+        $this->authorizeLeadAccess($lead);
+
         $data = $request->validate([
             'name' => 'required|string',
             'phone' => 'required|string',
@@ -498,6 +546,8 @@ class LeadController extends Controller
 
     public function reassign(Request $request, Lead $lead)
     {
+        $this->authorizeLeadAccess($lead);
+
         $request->validate([
             'assigned_agent_id' => ['nullable', 'integer'],
             'reason' => ['nullable', 'string'],
@@ -625,10 +675,18 @@ class LeadController extends Controller
 
     public function addActivity(Request $request, Lead $lead)
     {
+        $this->authorizeLeadAccess($lead);
+
         $data = $request->validate([
             'type' => 'required|string',
             'title' => 'required|string',
             'description' => 'nullable|string',
+            'duration' => 'nullable|string',
+            'outcome' => 'nullable|string',
+            'contact_number' => 'nullable|string',
+            'email_subject' => 'nullable|string',
+            'next_followup' => 'nullable|string',
+            'location' => 'nullable|string',
         ]);
 
         LeadActivity::create([
@@ -636,14 +694,29 @@ class LeadController extends Controller
             'type' => $data['type'],
             'title' => $data['title'],
             'description' => $data['description'] ?? null,
+            'duration' => $data['duration'] ?? null,
+            'outcome' => $data['outcome'] ?? null,
+            'contact_number' => $data['contact_number'] ?? null,
+            'email_subject' => $data['email_subject'] ?? null,
+            'next_followup' => $data['next_followup'] ?? null,
+            'location' => $data['location'] ?? null,
             'user_id' => Auth::id(),
         ]);
+
+        if (!empty($data['next_followup'])) {
+            $lead->update(['next_followup' => $data['next_followup']]);
+            $this->syncFollowupTask($lead, $data['next_followup']);
+        }
+
+        $lead->update(['last_contact' => now()]);
 
         return back()->with('success', 'Activity logged.');
     }
 
     public function changeStatus(Request $request, Lead $lead)
     {
+        $this->authorizeLeadAccess($lead);
+
         $request->validate([
             'status' => ['required', 'string', Rule::in($this->validStatuses)],
         ]);

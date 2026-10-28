@@ -4,7 +4,9 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "docs:html": "node scripts/build-docs.mjs",
+        "docs:doc": "node scripts/build-docs.mjs --word"
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",
@@ -14,6 +16,8 @@
         "@vitejs/plugin-react": "^6.1.0",
         "concurrently": "^10.0.3",
         "laravel-vite-plugin": "^3.1",
+        "marked": "^18.1.1",
+        "mermaid": "^12.2.0",
         "tailwindcss": "^4.0.0",
         "typescript": "^7.0.2",
         "vite": "^8.0.0"

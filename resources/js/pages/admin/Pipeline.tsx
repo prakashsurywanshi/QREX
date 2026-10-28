@@ -4,6 +4,7 @@ import AdminLayout from '@/components/layout/AdminLayout';
 import PageHeader from '@/components/shared/PageHeader';
 import StatCard from '@/components/shared/StatCard';
 import Modal from '@/components/ui/Modal';
+import AmountInWords from '@/components/shared/AmountInWords';
 import { TrendingUp, IndianRupee, Trophy, Percent, Users, Search, Plus, XCircle } from 'lucide-react';
 import type { PageProps } from '@/types';
 
@@ -253,6 +254,7 @@ export default function Pipeline(props: Props) {
                         <div>
                             <label className="block text-xs font-semibold text-gray-600 mb-1.5">Deal Value (₹) *</label>
                             <input type="number" value={data.deal_value} onChange={(e) => setData('deal_value', e.target.value)} required className={inputCls} placeholder="18500000" />
+                            <AmountInWords value={data.deal_value} />
                         </div>
                         <div>
                             <label className="block text-xs font-semibold text-gray-600 mb-1.5">Stage</label>

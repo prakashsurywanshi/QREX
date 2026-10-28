@@ -25,3 +25,8 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Docs build scratch
+/docs/html/_combined
+/docs/html/_lo-profile
+/docs/word/.~lock.*

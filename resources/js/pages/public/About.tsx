@@ -15,7 +15,7 @@ export default function About(props: Props) {
     const { agents, stats } = props;
 
     const milestones = [
-        { year: '2014', title: 'The Beginning', desc: 'NestPrime founded in Mumbai with a vision to bring transparency to Indian real estate.' },
+        { year: '2014', title: 'The Beginning', desc: 'QREX founded in Mumbai with a vision to bring transparency to Indian real estate.' },
         { year: '2017', title: 'Expansion to Bangalore', desc: 'Opened our second branch and launched commercial advisory services.' },
         { year: '2020', title: '1,000+ Clients Served', desc: 'Crossed a major milestone with a 4.9★ average client rating.' },
         { year: '2024', title: 'Pune & Gurugram', desc: 'Expanded operations to four cities with a team of 40+ experts.' },
@@ -37,7 +37,7 @@ export default function About(props: Props) {
             <section className="relative bg-[#0D1B3E] pt-20 pb-24 overflow-hidden">
                 <div className="absolute inset-0 opacity-15" style={{ backgroundImage: "url(https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1400&h=500&fit=crop&auto=format)" }} />
                 <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center">
-                    <div className="text-gold-400 text-sm font-semibold mb-3">About NestPrime</div>
+                    <div className="text-gold-400 text-sm font-semibold mb-3">About QREX</div>
                     <h1 className="font-serif text-4xl sm:text-5xl font-bold text-white leading-tight max-w-3xl mx-auto">
                         Building Trust in Real Estate, One <span className="text-gold-400">Successful Deal</span> at a Time
                     </h1>
@@ -68,7 +68,7 @@ export default function About(props: Props) {
                     <div className="text-gold-600 text-sm font-semibold mb-2">Our Story</div>
                     <h2 className="font-serif text-3xl font-bold text-[#0D1B3E] leading-tight mb-6">A Decade of Dedicated Real Estate Advisory</h2>
                     <p className="text-gray-600 leading-relaxed mb-4">
-                        Founded in 2014, NestPrime began with a simple mission: to make the complex, fragmented Indian real estate market simple, transparent, and trustworthy for every buyer and investor.
+                        Founded in 2014, QREX began with a simple mission: to make the complex, fragmented Indian real estate market simple, transparent, and trustworthy for every buyer and investor.
                     </p>
                     <p className="text-gray-600 leading-relaxed mb-4">
                         What started as a two-person advisory in Mumbai has grown into a full-service real estate firm spanning four major cities. Today, our team of 40+ specialists handles everything — residential, commercial, land, and investment advisory — with the same personal care we gave to our very first client.

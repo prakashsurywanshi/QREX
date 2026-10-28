@@ -11,6 +11,7 @@ use App\Models\SiteVisit;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -30,7 +31,8 @@ class DashboardController extends Controller
         $deals = Deal::query();
         $payments = Payment::query();
         $bookings = Booking::query();
-        $newLeads = Lead::query();
+        $user = Auth::user();
+        $newLeads = Lead::query()->visibleTo($user);
 
         if ($start) {
             $deals->where('created_at', '>=', $start);
@@ -47,7 +49,7 @@ class DashboardController extends Controller
         $availablePropertyCount = Property::where('status', 'Available')->count();
         $featuredProperties = Property::where('featured', true)->where('is_website_visible', true)
             ->orderByDesc('updated_at')->take(4)->get();
-        $leadCollection = Lead::select(['id', 'name', 'status', 'source', 'created_at'])->get();
+        $leadCollection = Lead::visibleTo($user)->select(['id', 'name', 'status', 'source', 'created_at'])->get();
         $recentLeads = $leadCollection->sortByDesc('created_at')->take(6)->values();
 
         return Inertia::render('admin/Dashboard', [
@@ -55,7 +57,7 @@ class DashboardController extends Controller
                 'totalProperties' => Property::count(),
                 'availableProperties' => $availablePropertyCount,
                 'soldProperties' => $soldPropertyCount,
-                'activeLeads' => Lead::whereNotIn('status', ['Converted', 'Lost'])->count(),
+                'activeLeads' => Lead::visibleTo($user)->whereNotIn('status', ['Converted', 'Lost'])->count(),
                 'newLeads' => (clone $newLeads)->count(),
                 'siteVisits' => SiteVisit::whereNotIn('status', ['Cancelled'])->count(),
                 'activeDeals' => Deal::whereNotIn('stage', ['Closed Won', 'Closed Lost'])->count(),
@@ -166,7 +168,8 @@ class DashboardController extends Controller
             ->groupBy(fn ($d) => (int) $d->created_at->format('n') - 1)
             ->map(fn ($g) => $g->sum('deal_value'));
 
-        $leadsByMonth = Lead::where('created_at', '>=', $yearStart)
+        $leadsByMonth = Lead::visibleTo(Auth::user())
+            ->where('created_at', '>=', $yearStart)
             ->get('created_at')
             ->groupBy(fn ($l) => (int) $l->created_at->format('n') - 1)
             ->map->count();

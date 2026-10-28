@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2. Architecture · QREX</title>
+<style>
+:root{--bg:#f7f8fa;--panel:#fff;--ink:#1f2733;--muted:#5b6472;--line:#e3e7ee;--accent:#0f5c4e;--accent2:#b5893b;--code:#f2f4f7;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65;font-size:16px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.layout{display:flex;min-height:100vh}
+aside{width:280px;flex:0 0 280px;background:var(--panel);border-right:1px solid var(--line);padding:24px 20px;position:sticky;top:0;height:100vh;overflow-y:auto}
+aside h2{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:18px 0 8px}
+aside a{display:block;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.9rem}
+aside a:hover{background:var(--bg);text-decoration:none}
+aside a.active{background:var(--accent);color:#fff}
+aside .brand{font-weight:700;font-size:1.05rem;color:var(--accent);margin-bottom:4px}
+main{flex:1;min-width:0;padding:40px 56px;max-width:960px;margin:0 auto}
+main h1{font-size:2rem;line-height:1.25;margin:0 0 .5em;padding-bottom:.35em;border-bottom:2px solid var(--line)}
+main h2{font-size:1.45rem;margin:2em 0 .6em;padding-bottom:.25em;border-bottom:1px solid var(--line)}
+main h3{font-size:1.15rem;margin:1.6em 0 .5em}
+main h4{font-size:1rem;margin:1.3em 0 .4em}
+main p,main li{color:#2b3542}
+table{border-collapse:collapse;width:100%;margin:1.1em 0;font-size:.92rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+th{background:#eef1f5;font-weight:600}
+tr:nth-child(even) td{background:#fbfcfd}
+code{background:var(--code);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em}
+pre{background:#1e2530;color:#e6e9ef;padding:16px 18px;border-radius:8px;overflow-x:auto}
+pre code{background:none;color:inherit;padding:0}
+blockquote{margin:1.2em 0;padding:.6em 1.1em;background:#fff8e8;border-left:4px solid var(--accent2);color:#5b4a22;border-radius:0 6px 6px 0}
+blockquote p{margin:.4em 0}
+hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
+img{max-width:100%}
+.crumbs{font-size:.82rem;color:var(--muted);margin-bottom:18px}
+.pager{display:flex;justify-content:space-between;gap:16px;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{font-size:.9rem}
+.site-footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:24px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.card h3{margin:.2em 0 .4em;font-size:1.02rem}
+.card p{margin:.2em 0;font-size:.88rem;color:var(--muted)}
+/* --- Figures: diagrams and screen wireframes --- */
+.figure{margin:1.8em 0}
+.figure>svg{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px}
+.figure.diagram{overflow-x:auto}
+.figure.diagram.wide>svg{max-width:none;margin:0}
+.figure.wireframe>svg{border-color:#dbe2ea}
+figcaption{margin-top:.7em;font-size:.82rem;color:var(--muted);text-align:center;line-height:1.45}
+.art-missing{border-left:3px solid #c0392b}
+/* --- Long reference tables --- */
+.table-wrap{margin:1.1em 0}
+.table-filter{width:100%;max-width:300px;padding:7px 11px;margin-bottom:.55em;border:1px solid var(--line);border-radius:8px;font-size:.86rem;background:#fff;color:var(--ink);font-family:inherit}
+.table-filter:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.table-count{font-size:.78rem;color:var(--muted);margin-left:8px;vertical-align:middle}
+/* --- Documentation menu (sidebar) --- */
+.side-search{width:100%;padding:8px 10px;margin:10px 0 4px;border:1px solid var(--line);border-radius:8px;font-size:.85rem;background:var(--bg);color:var(--ink)}
+.side-search:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.home-link{display:block;font-size:.8rem;font-weight:600;color:var(--accent);margin-bottom:14px;padding:4px 0}
+.nav-group{border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:6px}
+.nav-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:10px 4px 6px;font-weight:700;user-select:none}
+.nav-group>summary::-webkit-details-marker{display:none}
+.nav-group>summary .chev{transition:transform .15s ease;font-size:.7rem;color:var(--muted)}
+.nav-group[open]>summary .chev{transform:rotate(90deg)}
+.nav-group .count{color:var(--muted);font-weight:400;margin-left:auto;font-size:.68rem}
+.nav-group a{display:flex;gap:8px;align-items:baseline;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.88rem;line-height:1.35}
+.nav-group a:hover{background:var(--bg);text-decoration:none}
+.nav-group a.active{background:var(--accent);color:#fff}
+.nav-group a.active .num{color:#d9ece7}
+.nav-group a .num{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.75rem;min-width:1.4em}
+.nav-hidden{display:none!important}
+.menu-toggle{display:none;position:fixed;top:12px;left:12px;z-index:50;width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:1.2rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.menu-backdrop{display:none}
+@media(max-width:900px){
+  .layout{flex-direction:column}
+  .menu-toggle{display:flex}
+  aside{position:fixed;top:0;left:0;z-index:60;width:290px;height:100vh;overflow-y:auto;border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .2s ease;box-shadow:0 0 24px rgba(0,0,0,.12)}
+  body.menu-open aside{transform:translateX(0)}
+  body.menu-open .menu-backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:55}
+  main{padding:64px 20px 24px}
+}
+@media print{
+  aside,.crumbs,.pager,.menu-toggle,.menu-backdrop{display:none}
+  body{background:#fff;font-size:11pt}
+  main{max-width:none;padding:0}
+  a{color:var(--ink)}
+  pre{background:#f2f4f7;color:#1f2733;border:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<button class="menu-toggle" aria-label="Open documentation menu" onclick="document.body.classList.toggle('menu-open')">☰</button>
+<div class="menu-backdrop" onclick="document.body.classList.remove('menu-open')"></div>
+<aside>
+  <a class="home-link" href="index.html">⌂ All documentation</a>
+  <div class="brand">QREX Documentation</div>
+  <div style="font-size:.78rem;color:var(--muted)">Qodeigence Infocircle Pvt. Ltd.</div>
+  <input class="side-search" type="search" placeholder="Search documents…" aria-label="Search documents" oninput="filterDocs(this.value)">
+  <nav id="doc-nav">
+    <details class="nav-group">
+<summary><span>User Manual</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="manual-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="overview and getting started" href="manual-01-overview-and-getting-started.html"><span class="num">01</span><span>Overview And Getting Started</span></a><a class="" data-title="roles and access" href="manual-02-roles-and-access.html"><span class="num">02</span><span>Roles And Access</span></a><a class="" data-title="sales lifecycle" href="manual-03-sales-lifecycle.html"><span class="num">03</span><span>Sales Lifecycle</span></a><a class="" data-title="modules sales" href="manual-04-modules-sales.html"><span class="num">04</span><span>Modules Sales</span></a><a class="" data-title="modules operations" href="manual-05-modules-operations.html"><span class="num">05</span><span>Modules Operations</span></a><a class="" data-title="modules marketing and admin" href="manual-06-modules-marketing-and-admin.html"><span class="num">06</span><span>Modules Marketing And Admin</span></a><a class="" data-title="public website" href="manual-07-public-website.html"><span class="num">07</span><span>Public Website</span></a><a class="" data-title="reference" href="manual-08-reference.html"><span class="num">08</span><span>Reference</span></a><a class="" data-title="troubleshooting and faq" href="manual-09-troubleshooting-and-faq.html"><span class="num">09</span><span>Troubleshooting And Faq</span></a></details><details class="nav-group">
+<summary><span>How QREX Works</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="explain-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="system at a glance" href="explain-01-system-at-a-glance.html"><span class="num">01</span><span>System At A Glance</span></a><a class="" data-title="sales lifecycle" href="explain-02-sales-lifecycle.html"><span class="num">02</span><span>Sales Lifecycle</span></a><a class="" data-title="data model" href="explain-03-data-model.html"><span class="num">03</span><span>Data Model</span></a><a class="" data-title="roles and permissions" href="explain-04-roles-and-permissions.html"><span class="num">04</span><span>Roles And Permissions</span></a><a class="" data-title="screen designs" href="explain-05-screen-designs.html"><span class="num">05</span><span>Screen Designs</span></a><a class="" data-title="operations and automation" href="explain-06-operations-and-automation.html"><span class="num">06</span><span>Operations And Automation</span></a></details><details class="nav-group" open>
+<summary><span>Technical Documentation</span><span class="chev">▶</span></summary>
+<a class="" data-title="project scope" href="tech-01-project-scope.html"><span class="num">01</span><span>Project Scope</span></a><a class="active" data-title="architecture" href="tech-02-architecture.html"><span class="num">02</span><span>Architecture</span></a><a class="" data-title="operations modules" href="tech-03-operations-modules.html"><span class="num">03</span><span>Operations Modules</span></a><a class="" data-title="roles permissions" href="tech-04-roles-permissions.html"><span class="num">04</span><span>Roles Permissions</span></a><a class="" data-title="database schema" href="tech-05-database-schema.html"><span class="num">05</span><span>Database Schema</span></a><a class="" data-title="operations" href="tech-06-operations.html"><span class="num">06</span><span>Operations</span></a><a class="" data-title="security hardening" href="tech-07-security-hardening.html"><span class="num">07</span><span>Security Hardening</span></a><a class="" data-title="glossary" href="tech-08-glossary.html"><span class="num">08</span><span>Glossary</span></a><a class="" data-title="project proposal" href="tech-09-project-proposal.html"><span class="num">09</span><span>Project Proposal</span></a><a class="" data-title="budget pricing mumbai" href="tech-10-budget-pricing-mumbai.html"><span class="num">10</span><span>Budget Pricing Mumbai</span></a></details>
+  </nav>
+  <details class="nav-group"><summary><span>Downloads</span><span class="chev">▶</span></summary>
+    <a href="../word/QREX-User-Manual.docx"><span class="num"></span><span>User Manual (.docx)</span></a>
+    <a href="../word/QREX-User-Manual.doc"><span class="num"></span><span>User Manual (.doc)</span></a>
+    <a href="../word/QREX-How-It-Works.docx"><span class="num"></span><span>How QREX Works (.docx)</span></a>
+    <a href="../word/QREX-How-It-Works.doc"><span class="num"></span><span>How QREX Works (.doc)</span></a>
+    <a href="../word/QREX-Technical-Documentation.docx"><span class="num"></span><span>Technical Docs (.docx)</span></a>
+    <a href="../word/QREX-Technical-Documentation.doc"><span class="num"></span><span>Technical Docs (.doc)</span></a>
+  </details>
+</aside>
+<main>
+<div class="crumbs">QREX Technical Documentation</div>
+<h1 id="2-architecture">2. Architecture</h1>
+<h2 id="21-technology-stack">2.1 Technology Stack</h2>
+<h3 id="backend-laravel-13-php-83">Backend (Laravel 13, PHP ^8.3)</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://laravel.com">Laravel</a> 13</td>
+<td>Application framework, Eloquent ORM, routing, queues, validation, auth</td>
+</tr>
+<tr>
+<td><a href="https://inertiajs.com">Inertia</a> 3</td>
+<td>Server-driven React rendering; controllers return page props instead of HTML strings</td>
+</tr>
+<tr>
+<td><a href="https://laravel.com/docs/sanctum">Laravel Sanctum</a> 4</td>
+<td>API token authentication for <code>/api/*</code> routes</td>
+</tr>
+<tr>
+<td><a href="https://github.com/barryvdh/laravel-dompdf">barryvdh/laravel-dompdf</a> 3</td>
+<td>PDF export for reports</td>
+</tr>
+<tr>
+<td><a href="https://github.com/laravel/tinker">Laravel Tinker</a></td>
+<td>REPL for debugging / scripting</td>
+</tr>
+<tr>
+<td><a href="https://laravel.com/docs/pint">Laravel Pint</a></td>
+<td>Code style tool (dev)</td>
+</tr>
+<tr>
+<td><a href="https://phpunit.de">PHPUnit</a> 12</td>
+<td>Testing framework (dev)</td>
+</tr>
+<tr>
+<td><a href="https://github.com/laravel/pail">Laravel Pail</a> 1</td>
+<td>Tail-style log viewer (dev)</td>
+</tr>
+</tbody></table>
+<h3 id="frontend">Frontend</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://react.dev">React</a> 19</td>
+<td>UI rendering</td>
+</tr>
+<tr>
+<td><a href="https://www.typescriptlang.org">TypeScript</a></td>
+<td>Typed frontend code</td>
+</tr>
+<tr>
+<td><a href="https://tailwindcss.com">Tailwind CSS</a> 4</td>
+<td>Styling</td>
+</tr>
+<tr>
+<td><a href="https://vite.dev">Vite</a> 8</td>
+<td>Build tool &amp; dev server</td>
+</tr>
+<tr>
+<td><a href="https://recharts.org">Recharts</a></td>
+<td>Dashboard/report charts</td>
+</tr>
+<tr>
+<td><a href="https://lucide.dev">lucide-react</a></td>
+<td>Icons</td>
+</tr>
+</tbody></table>
+<h2 id="22-repository-layout">2.2 Repository Layout</h2>
+<pre><code>├── app/
+│   ├── Console/Commands/        # Artisan commands (e.g. CheckFollowups)
+│   ├── Http/
+│   │   ├── Controllers/         # Web controllers
+│   │   └── Controllers/Api/     # Sanctum API controllers
+│   ├── Mail/                    # Mailable classes (email OTP, password reset)
+│   ├── Models/                  # Eloquent models (19 models)
+│   ├── Notifications/           # Laravel notifications
+│   ├── Providers/               # Service providers
+│   └── Services/                # Business services (ID gen, OTP, mail config, permission payload)
+├── bootstrap/
+├── config/                      # Laravel config files
+├── database/
+│   ├── factories/               # Model factories
+│   ├── migrations/              # 33 migrations incl. schema + data migrations
+│   └── seeders/                 # 10 seeders for roles, users, and demo data
+├── public/                      # Web root (index.php, built assets)
+├── resources/
+│   ├── js/                      # React + TypeScript frontend (Inertia pages)
+│   ├── views/                   # Blade layouts (app shell, exports/report.blade.php)
+│   └── css/
+├── routes/                      # web.php, api.php, console.php
+├── tests/                       # PHPUnit tests
+└── package.json, composer.json, vite.config.js
+</code></pre>
+<h2 id="23-request-flow">2.3 Request Flow</h2>
+<ol>
+<li>A browser hits a route (<code>routes/web.php</code>) → the web middleware stack runs.</li>
+<li>For admin routes, <code>auth</code> + <code>permission:</code> middleware gates access before the controller runs.</li>
+<li>The controller queries models, computes page props, and returns <code>Inertia::render(&#39;admin/Leads&#39;, [...])</code>.</li>
+<li>Inertia resolves the matching React component in <code>resources/js/pages/</code>, merges the props, and swaps the page client-side (no full reload).</li>
+<li>Mutations POST/PUT/DELETE back to the same routes; controllers validate, mutate, and <code>back()</code> with a flash message rendered by the frontend.</li>
+<li>The mobile/JSON API mirrors these operations through Sanctum-authenticated controllers in <code>routes/api.php</code>.</li>
+</ol>
+<h2 id="24-services">2.4 Services</h2>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Location</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>IdGenerator</code></td>
+<td><code>app/Services/IdGenerator.php</code></td>
+<td>Generates collision-free human-readable IDs (<code>L-001</code>, <code>DL-012</code>) using the auto-increment <code>sequences</code> table</td>
+</tr>
+<tr>
+<td><code>OtpService</code></td>
+<td><code>app/Services/OtpService.php</code></td>
+<td>Email OTP generate/send/verify with TTL (10 min), resend cooldown (60 s), max attempts (5), rate limiting</td>
+</tr>
+<tr>
+<td><code>MailConfigService</code></td>
+<td><code>app/Services/MailConfigService.php</code></td>
+<td>Reads/saves SMTP settings from the <code>settings</code> table, applies them to the mailer config at runtime, sends a test email, preserves masked passwords</td>
+</tr>
+<tr>
+<td><code>PermissionPayloadService</code></td>
+<td><code>app/Services/PermissionPayloadService.php</code></td>
+<td>Builds permission payloads for the frontend (nav visibility, ability checks)</td>
+</tr>
+</tbody></table>
+<h2 id="25-console-commands">2.5 Console Commands</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+<th>Scheduling</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>php artisan leads:check-followups</code></td>
+<td>Finds due/overdue <code>Follow-up</code> tasks and creates in-app notifications for assigned agents (12-hour dedupe)</td>
+<td>Should be scheduled (e.g., daily); command is idempotent</td>
+</tr>
+</tbody></table>
+<h2 id="26-record-id-generation">2.6 Record ID Generation</h2>
+<p>Human-readable record IDs are generated from the <code>sequences</code> table:</p>
+<pre><code>L-006   Lead       (LeadController::nextId(&#39;L&#39;))
+DL-012  Deal       (LeadController::nextId(&#39;DL&#39;))
+TSK-007 Task       (LeadController::nextId(&#39;TSK&#39;))
+SV-003  Site visit (LeadController::nextId(&#39;SV&#39;))
+</code></pre>
+<p><code>IdGenerator::next($prefix)</code> inserts a row into <code>sequences</code> and returns <code>PREFIX-NNN</code>, where <code>NNN</code> is the auto-incrementing ID zero-padded to 3 digits. This guarantees uniqueness even under concurrency (no two requests can produce the same ID).</p>
+<h2 id="27-notification-strategy">2.7 Notification Strategy</h2>
+<ul>
+<li>There is a custom <code>notifications</code> table (user-scoped rows with <code>title</code>, <code>message</code>, <code>type</code>, <code>related_id</code>, <code>is_read</code>, <code>is_seen</code>).</li>
+<li>Notifications are created by the application (e.g., lead conversion, site-visit scheduling, follow-up reminders) as DB rows, not via the framework&#39;s default table.</li>
+<li>The frontend reads them via <code>/admin/notifications</code> and can mark single or all as read.</li>
+<li>Laravel <code>Notification</code> classes are used for email (password reset) and OTP delivery.</li>
+</ul>
+
+<div class="pager"><a href="tech-01-project-scope.html">← 01. Project Scope</a><a href="tech-03-operations-modules.html">03. Operations Modules →</a></div>
+<div class="site-footer">QREX documentation · generated from the Markdown sources in <code>docs/</code> · build with <code>npm run docs:html</code></div>
+</main>
+</div>
+
+<script>
+function filterDocs(q){
+  q=(q||'').trim().toLowerCase();
+  document.querySelectorAll('#doc-nav .nav-group').forEach(function(g){
+    var visible=0;
+    g.querySelectorAll('a').forEach(function(a){
+      var hit=!q||a.getAttribute('data-title').indexOf(q)>-1;
+      a.classList.toggle('nav-hidden',!hit);
+      if(hit)visible++;
+    });
+    g.classList.toggle('nav-hidden',visible===0);
+    if(q)g.open=true;
+  });
+}
+document.querySelectorAll('.table-wrap').forEach(function(wrap){
+  var input=wrap.querySelector('.table-filter');
+  var table=wrap.querySelector('table');
+  var count=wrap.querySelector('.table-count');
+  if(!input||!table)return;
+  input.addEventListener('input',function(){
+    var q=input.value.trim().toLowerCase();
+    var shown=0,total=0;
+    table.querySelectorAll('tbody tr').forEach(function(row){
+      total++;
+      var hit=!q||row.textContent.toLowerCase().indexOf(q)>-1;
+      row.style.display=hit?'':'none';
+      if(hit)shown++;
+    });
+    if(count)count.textContent=q?shown+' of '+total+' rows':' '+total+' rows';
+  });
+});
+</script>
+</body>
+</html>

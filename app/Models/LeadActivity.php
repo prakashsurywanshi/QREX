@@ -11,6 +11,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'type',
     'title',
     'description',
+    'duration',
+    'outcome',
+    'contact_number',
+    'email_subject',
+    'next_followup',
+    'location',
     'user_id',
 ])]
 class LeadActivity extends Model

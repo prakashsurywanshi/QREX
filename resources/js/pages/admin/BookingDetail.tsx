@@ -3,6 +3,7 @@ import { Link, useForm, router } from '@inertiajs/react';
 import AdminLayout from '@/components/layout/AdminLayout';
 import PageHeader from '@/components/shared/PageHeader';
 import Modal from '@/components/ui/Modal';
+import AmountInWords from '@/components/shared/AmountInWords';
 import { ChevronLeft, FileText, KeyRound, ShoppingCart, Wallet, CheckCircle2, Clock, Plus } from 'lucide-react';
 import type { PageProps } from '@/types';
 
@@ -191,6 +192,7 @@ export default function BookingDetail(props: Props) {
                         <div>
                             <label className="block text-xs font-medium text-gray-600 mb-1">Amount (₹) *</label>
                             <input type="number" value={payForm.data.payment_amount} onChange={(e) => payForm.setData('payment_amount', e.target.value)} required className="w-full px-3.5 py-2 border border-[#E1E8F0] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-400/30" />
+                            <AmountInWords value={payForm.data.payment_amount} />
                         </div>
                         <div>
                             <label className="block text-xs font-medium text-gray-600 mb-1">Mode</label>

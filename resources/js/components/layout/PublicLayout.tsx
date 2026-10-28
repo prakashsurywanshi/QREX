@@ -18,8 +18,9 @@ interface PublicLayoutProps {
 }
 
 export default function PublicLayout({ children }: PublicLayoutProps) {
-    const { site } = usePage();
-    const agencyName = site?.agency_name || 'QREX';
+    const { site, app } = usePage();
+    const agencyName = site?.project_name || site?.agency_name || 'QREX';
+    const logoUrl = app?.logo;
     const [mobileOpen, setMobileOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
 
@@ -30,8 +31,12 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
             <header className="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur border-b border-gray-100 shadow-sm">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 h-18 py-3 flex items-center justify-between">
                     <Link href="/" className="flex items-center gap-2.5">
-                        <div className="w-10 h-10 rounded-xl bg-[#0D1B3E] flex items-center justify-center">
-                            <Building2 size={20} className="text-gold-400" />
+                        <div className="w-10 h-10 flex items-center justify-center overflow-hidden">
+                            {logoUrl ? (
+                                <img src={logoUrl} alt={agencyName} className="w-full h-full object-contain" />
+                            ) : (
+                                <Building2 size={20} className="text-[#0D1B3E]" />
+                            )}
                         </div>
                         <div>
                             <div className="font-bold text-[#0D1B3E] text-lg leading-tight">{agencyName}</div>

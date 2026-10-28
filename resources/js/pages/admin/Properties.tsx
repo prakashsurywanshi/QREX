@@ -5,6 +5,7 @@ import PageHeader from '@/components/shared/PageHeader';
 import Pagination from '@/components/ui/Pagination';
 import { Search, Plus, MapPin, Star, Eye, Pencil, Trash2, Building2 } from 'lucide-react';
 import type { Property, PageProps } from '@/types';
+import { PLACEHOLDER_IMAGE } from '@/lib/utils';
 
 interface Props extends PageProps {
     properties: { data: Property[]; current_page: number; last_page: number; total: number; per_page: number };
@@ -45,6 +46,12 @@ export default function Properties(props: Props) {
         if (confirm(`Delete "${p.title}"? This cannot be undone.`)) {
             router.delete(`/admin/properties/${p.id}`);
         }
+    };
+
+    const coverSrc = (p: Property) => {
+        const list = p.images || [];
+        const cover = list.find((i) => i.is_cover) ?? list[0];
+        return cover?.path || PLACEHOLDER_IMAGE;
     };
 
     return (
@@ -107,7 +114,7 @@ export default function Properties(props: Props) {
                                 <tr key={p.id} className="hover:bg-[#FAFBFD] transition-colors">
                                     <td className="px-5 py-3">
                                         <div className="flex items-center gap-3">
-                                            <img src={p.image} alt={p.title} className="w-12 h-10 rounded-lg object-cover flex-shrink-0" />
+                                            <img src={coverSrc(p)} alt={p.title} className="w-12 h-10 rounded-lg object-cover flex-shrink-0" />
                                             <div className="min-w-0">
                                                 <Link href={`/admin/properties/${p.id}`} className="font-medium text-[#0D1B3E] hover:text-gold-600 truncate block max-w-[200px]">
                                                     {p.title}

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AmenityController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\CMSController;
@@ -29,12 +30,12 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('/', [PublicPageController::class, 'home'])->name('home');
 Route::get('/properties', [PublicPageController::class, 'properties'])->name('public.properties');
-Route::get('/properties/{property}', [PublicPageController::class, 'propertyDetail'])->name('public.property-detail');
+Route::get('/properties/{property:public_id}', [PublicPageController::class, 'propertyDetail'])->name('public.property-detail');
 Route::get('/about', [PublicPageController::class, 'about'])->name('public.about');
 Route::get('/contact', [PublicPageController::class, 'contact'])->name('public.contact');
 
 Route::post('/contact/enquiry', [PublicInquiryController::class, 'contact'])->name('public.contact.enquiry')->middleware('throttle:5,10');
-Route::post('/properties/{property}/enquiry', [PublicInquiryController::class, 'propertyInquiry'])->name('public.property.enquiry')->middleware('throttle:5,10');
+Route::post('/properties/{property:public_id}/enquiry', [PublicInquiryController::class, 'propertyInquiry'])->name('public.property.enquiry')->middleware('throttle:5,10');
 
 /*
 |--------------------------------------------------------------------------
@@ -70,14 +71,14 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         ->middleware('permission:dashboard.view')
         ->name('dashboard');
 
-    // Properties
-    Route::middleware('permission:properties.view')->group(function () {
-        Route::get('/properties', [PropertyController::class, 'index'])->name('properties.index');
-        Route::get('/properties/{property}', [PropertyController::class, 'show'])->name('properties.show');
-    });
+    // Properties — static routes before wildcards
     Route::middleware('permission:properties.create')->group(function () {
         Route::get('/properties/create', [PropertyController::class, 'create'])->name('properties.create');
         Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');
+    });
+    Route::middleware('permission:properties.view')->group(function () {
+        Route::get('/properties', [PropertyController::class, 'index'])->name('properties.index');
+        Route::get('/properties/{property}', [PropertyController::class, 'show'])->name('properties.show');
     });
     Route::middleware('permission:properties.edit')->group(function () {
         Route::get('/properties/{property}/edit', [PropertyController::class, 'edit'])->name('properties.edit');
@@ -85,6 +86,21 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     });
     Route::middleware('permission:properties.delete')->group(function () {
         Route::delete('/properties/{property}', [PropertyController::class, 'destroy'])->name('properties.destroy');
+    });
+
+    // Amenity catalog (which amenities are valid for which property type)
+    Route::middleware('permission:amenities.view')->group(function () {
+        Route::get('/amenities', [AmenityController::class, 'index'])->name('amenities.index');
+    });
+    Route::middleware('permission:amenities.create')->group(function () {
+        Route::post('/amenities', [AmenityController::class, 'store'])->name('amenities.store');
+        Route::post('/amenities/bulk', [AmenityController::class, 'bulkStore'])->name('amenities.bulk-store');
+    });
+    Route::middleware('permission:amenities.edit')->group(function () {
+        Route::put('/amenities/{amenity}', [AmenityController::class, 'update'])->name('amenities.update');
+    });
+    Route::middleware('permission:amenities.delete')->group(function () {
+        Route::delete('/amenities/{amenity}', [AmenityController::class, 'destroy'])->name('amenities.destroy');
     });
 
     // Leads
@@ -225,9 +241,16 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Users
     Route::middleware('permission:users.view')->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('users.index');
+        Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
     });
     Route::middleware('permission:users.create')->group(function () {
         Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    });
+    Route::middleware('permission:users.edit')->group(function () {
+        Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    });
+    Route::middleware('permission:users.delete')->group(function () {
+        Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     });
 
     // Roles
@@ -257,6 +280,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::middleware('role:super-admin')->group(function () {
         Route::put('/settings/smtp', [SettingController::class, 'updateSmtp'])->name('settings.smtp.update');
         Route::post('/settings/test-mail', [SettingController::class, 'testMail'])->name('settings.test-mail');
+        Route::post('/settings/logo', [SettingController::class, 'updateLogo'])->name('settings.logo.store');
+        Route::delete('/settings/logo', [SettingController::class, 'removeLogo'])->name('settings.logo.destroy');
     });
 
     Route::get('/', fn () => redirect()->route('admin.dashboard'));

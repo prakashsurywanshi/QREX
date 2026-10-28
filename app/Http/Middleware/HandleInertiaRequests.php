@@ -20,8 +20,10 @@ class HandleInertiaRequests extends Middleware
                 'name' => config('app.name'),
                 'project_name' => \App\Models\Setting::where('key', 'project_name')->value('value') ?: config('app.name'),
                 'type' => 'Realty ERP & CRM',
+                'logo' => \App\Models\Setting::where('key', 'logo_url')->value('value') ?: null,
             ],
             'site' => [
+                'project_name' => \App\Models\Setting::where('key', 'project_name')->value('value') ?: config('app.name'),
                 'agency_name' => \App\Models\Setting::where('key', 'agency_name')->value('value') ?: 'QREX',
                 'contact_email' => \App\Models\Setting::where('key', 'contact_email')->value('value') ?: 'hello@example.in',
                 'contact_phone' => \App\Models\Setting::where('key', 'contact_phone')->value('value') ?: '+91 98100 01111',

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Lead;
 use App\Models\LeadActivity;
+use App\Models\Property;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -40,7 +41,7 @@ class PublicInquiryController extends Controller
         return back()->with('success', 'Thank you! Your enquiry has been received. We will contact you shortly.');
     }
 
-    public function propertyInquiry(Request $request, int $propertyId)
+    public function propertyInquiry(Request $request, Property $property)
     {
         $data = $request->validate([
             'name' => 'required|string',
@@ -56,7 +57,7 @@ class PublicInquiryController extends Controller
             'email' => $data['email'] ?? null,
             'source' => 'Website',
             'status' => 'New',
-            'interested_property_id' => $propertyId,
+            'interested_property_id' => $property->id,
             'requirements' => $data['message'] ?? null,
             'score' => 0,
         ]);

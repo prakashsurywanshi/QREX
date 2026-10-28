@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Setting;
 use App\Services\MailConfigService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class SettingController extends Controller
@@ -21,6 +22,7 @@ class SettingController extends Controller
         'date_format' => 'DD MMM YYYY',
         'primary_color' => '#0D1B3E',
         'accent_color' => '#C9963A',
+        'logo_url' => '',
         'social_facebook' => '',
         'social_instagram' => '',
         'social_linkedin' => '',
@@ -82,6 +84,54 @@ class SettingController extends Controller
         }
 
         return back()->with('success', 'Settings saved.');
+    }
+
+    public function updateLogo(Request $request)
+    {
+        if (!$request->user()->isSuperAdmin()) {
+            return back()->with('error', 'Only Super Admin can update the logo.');
+        }
+
+        $request->validate([
+            'logo' => ['required', 'image', 'mimes:jpeg,png,jpg,webp,svg', 'max:2048'],
+        ]);
+
+        $this->deleteLogoFile();
+
+        $path = $request->file('logo')->store('settings', 'public');
+        $url = Storage::disk('public')->url($path);
+
+        Setting::set('logo_url', $url, 'branding');
+
+        return back()->with('success', 'Logo updated.');
+    }
+
+    public function removeLogo(Request $request)
+    {
+        if (!$request->user()->isSuperAdmin()) {
+            return back()->with('error', 'Only Super Admin can remove the logo.');
+        }
+
+        $this->deleteLogoFile();
+        Setting::set('logo_url', '', 'branding');
+
+        return back()->with('success', 'Logo removed.');
+    }
+
+    protected function deleteLogoFile(): void
+    {
+        $url = Setting::where('key', 'logo_url')->value('value');
+        if (!$url) {
+            return;
+        }
+
+        $base = rtrim(Storage::disk('public')->url('/'), '/');
+        if (str_starts_with($url, $base.'/')) {
+            $relative = ltrim(substr($url, strlen($base)), '/');
+            if (str_starts_with($relative, 'settings/') && Storage::disk('public')->exists($relative)) {
+                Storage::disk('public')->delete($relative);
+            }
+        }
     }
 
     public function updateSmtp(Request $request)

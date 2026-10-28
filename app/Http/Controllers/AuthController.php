@@ -16,6 +16,7 @@ class AuthController extends Controller
         return Inertia::render('auth/Login', [
             'settings' => [
                 'project_name' => \App\Models\Setting::where('key', 'project_name')->value('value') ?? config('app.name', 'QREX'),
+                'agency_name' => \App\Models\Setting::where('key', 'agency_name')->value('value') ?? 'QREX',
                 'tagline' => \App\Models\Setting::where('key', 'tagline')->value('value') ?? 'Realty ERP & CRM',
             ],
         ]);

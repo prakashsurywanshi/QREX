@@ -4,7 +4,7 @@ import {
     LayoutDashboard, Building2, Users, UserCheck, TrendingUp, MapPin,
     CalendarCheck, CreditCard, FolderOpen, Megaphone, BarChart3, Globe,
     UserCog, Settings, Bell, Search, Plus, Menu, X, LogOut, ChevronRight,
-    ChevronLeft, Home, CheckSquare, CheckCheck, Shield,
+    ChevronLeft, Home, CheckSquare, CheckCheck, Shield, ListChecks,
 } from 'lucide-react';
 import { usePage } from '@/hooks/usePage';
 import Flash, { useLogout } from '@/components/shared/Flash';
@@ -50,6 +50,7 @@ const navGroups: { title: string; items: NavItem[] }[] = [
         items: [
             { icon: UserCog, href: '/admin/users', label: 'Users', module: 'users' },
             { icon: Shield, href: '/admin/roles', label: 'Roles & Permissions', module: 'roles' },
+            { icon: ListChecks, href: '/admin/amenities', label: 'Amenities', module: 'amenities' },
             { icon: Settings, href: '/admin/settings', label: 'Settings', module: 'settings' },
         ],
     },
@@ -67,9 +68,11 @@ interface AdminLayoutProps {
 }
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
-    const { auth, can, notifications: notifData, app } = usePage();
+    const { auth, can, notifications: notifData, app, site } = usePage();
     const user = auth.user;
-    const projectName = app?.project_name || 'QREX';
+    const agencyName = site?.project_name || site?.agency_name || 'QREX';
+    const tagline = site?.tagline || 'Realty ERP';
+    const logoUrl = app?.logo;
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const canAccess = (module: string | undefined) => !module || Boolean(can?.[module]?.view);
     const visibleGroups = navGroups
@@ -99,13 +102,17 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     const SidebarContent = () => (
         <div className="flex flex-col h-full">
             <Link href="/" className="flex items-center gap-3 px-4 py-5 border-b border-white/10">
-                <div className="w-9 h-9 rounded-lg bg-gold-500 flex items-center justify-center flex-shrink-0">
-                    <Building2 size={18} className="text-white" />
+                <div className="w-9 h-9 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                    {logoUrl ? (
+                        <img src={logoUrl} alt={agencyName} className="w-full h-full object-contain" />
+                    ) : (
+                        <Building2 size={18} className="text-white" />
+                    )}
                 </div>
                 {sidebarOpen && (
                     <div>
-                        <div className="text-white font-semibold text-[15px] leading-tight">{projectName}</div>
-                        <div className="text-[11px] text-blue-200/70 uppercase tracking-wider">Realty ERP</div>
+                        <div className="text-white font-semibold text-[15px] leading-tight">{agencyName}</div>
+                        <div className="text-[11px] text-blue-200/70 uppercase tracking-wider truncate max-w-[160px]">{tagline}</div>
                     </div>
                 )}
             </Link>
@@ -235,11 +242,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                         href="/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-gray-600 hover:text-[#0D1B3E] text-sm font-medium border border-[#E1E8F0] rounded-lg px-3 py-1.5 hover:border-gold-400 hover:bg-[#F8FAFD] transition-colors"
+                        className="flex items-center justify-center text-gray-600 hover:text-[#0D1B3E] border border-[#E1E8F0] rounded-lg w-8 h-8 hover:border-gold-400 hover:bg-[#F8FAFD] transition-colors"
                         title="Open public website"
                     >
                         <Globe size={15} />
-                        <span className="hidden md:inline">Website</span>
                     </a>
 
                     <div className="relative">

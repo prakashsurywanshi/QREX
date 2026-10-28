@@ -6,6 +6,7 @@ use App\Models\Campaign;
 use App\Models\Lead;
 use App\Models\Property;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class CampaignController extends Controller
@@ -25,11 +26,13 @@ class CampaignController extends Controller
                 ['name' => 'Walk-in', 'value' => 6],
             ],
             'propertyPromotions' => Property::query()
+                ->with('images')
                 ->where('featured', true)
                 ->orWhereIn('status', ['Ready to Move', 'Under Construction'])
                 ->take(6)
-                ->get(['id', 'title', 'price', 'price_label', 'address', 'image', 'status']),
-            'landingLeads' => Lead::where('source', 'Website')
+                ->get(['id', 'title', 'price', 'price_label', 'address', 'image', 'status'])
+                ->map(fn ($p) => $p->setAttribute('image', $p->coverOrImage())),
+            'landingLeads' => Lead::visibleTo(Auth::user())->where('source', 'Website')
                 ->latest()
                 ->take(8)
                 ->get()

@@ -4,19 +4,29 @@ import PublicLayout from '@/components/layout/PublicLayout';
 import PropertyCard from '@/components/shared/PropertyCard';
 import {
     MapPin, Bed, Bath, Maximize, ChevronRight, Check, Phone, Mail,
-    Building2, CalendarClock, Armchair, CarFront, Layers, Star, ArrowLeft, Send,
+    Building2, CalendarClock, Armchair, CarFront, Layers, Star, ArrowLeft, Send, Share2,
 } from 'lucide-react';
-import type { Property, PageProps } from '@/types';
+import type { LucideIcon } from 'lucide-react';
+import type { Property, PageProps, SpecRuleSet } from '@/types';
+import { PLACEHOLDER_IMAGE, sharePropertyLink } from '@/lib/utils';
+
+type SpecCard = { icon: LucideIcon; label: string; value: string };
+type FactRow = { label: string; value: string };
+
+/** Keeps only the rows whose field this property type actually uses. */
+const present = <T,>(row: T | false | ''): row is T => Boolean(row);
 
 interface Props extends PageProps {
     property: Property;
     similar: Property[];
     agent: { name: string; phone: string; email: string; role: string; initials: string } | null;
+    spec: SpecRuleSet;
 }
 
 export default function PropertyDetail(props: Props) {
-    const { property, similar, agent } = props;
+    const { property, similar, agent, spec } = props;
     const [activeImage, setActiveImage] = useState(0);
+    const [shareState, setShareState] = useState<'idle' | 'ok' | 'failed'>('idle');
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         phone: '',
@@ -25,15 +35,38 @@ export default function PropertyDetail(props: Props) {
     });
 
     const images = property.images?.length
-        ? property.images.map((i: any) => i.image)
-        : [property.image, property.image, property.image, property.image];
+        ? [...property.images].sort((a, b) => Number(b.is_cover) - Number(a.is_cover)).map((i) => i.path)
+        : [PLACEHOLDER_IMAGE];
 
     const submitEnquiry = (e: React.FormEvent) => {
         e.preventDefault();
-        post(`/properties/${property.id}/enquiry`);
+        post(`/properties/${property.public_id}/enquiry`);
     };
 
+    const shareSummary = [
+        `${property.title} — ${property.transaction_type} ${property.type}`,
+        [
+            property.bedrooms > 0 ? `${property.bedrooms} BHK` : null,
+            property.area > 0 ? `${property.area} sq.ft` : null,
+            property.price_label || null,
+            property.city || null,
+        ].filter(Boolean).join(' · '),
+    ].filter(Boolean).join('\n');
+
     const amenities = property.amenities || [];
+    const areaUnit = spec.area_label.match(/\((.*)\)/)?.[1] ?? 'sq.ft';
+    const areaName = spec.area_label.replace(/\s*\(.*\)/, '');
+    const shown = spec.visible;
+
+    const share = async () => {
+        const ok = await sharePropertyLink(
+            property.title,
+            window.location.href,
+            shareSummary,
+        );
+        setShareState(ok ? 'ok' : 'failed');
+        if (ok) setTimeout(() => setShareState('idle'), 2000);
+    };
 
     return (
         <PublicLayout>
@@ -57,6 +90,12 @@ export default function PropertyDetail(props: Props) {
                             </p>
                         </div>
                         <div className="text-right">
+                            <button
+                                onClick={share}
+                                className="inline-flex items-center gap-2 mb-3 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-semibold transition-colors"
+                            >
+                                <Share2 size={15} /> {shareState === 'ok' ? 'Link Copied!' : shareState === 'failed' ? 'Failed' : 'Share'}
+                            </button>
                             <div className="text-3xl font-bold text-gold-400">{property.price_label}</div>
                             <span className="inline-block mt-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300">
                                 {property.status}
@@ -88,11 +127,11 @@ export default function PropertyDetail(props: Props) {
                     {/* Quick Specs */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
                         {[
-                            { icon: Bed, label: 'Bedrooms', value: property.bedrooms > 0 ? `${property.bedrooms} BHK` : '—' },
-                            { icon: Bath, label: 'Bathrooms', value: property.bathrooms > 0 ? String(property.bathrooms) : '—' },
-                            { icon: Maximize, label: 'Built-up Area', value: `${property.area} sq.ft` },
-                            { icon: CarFront, label: 'Parking', value: `${property.parking} Slot` },
-                        ].map((s, i) => (
+                            shown.includes('bedrooms') && { icon: Bed, label: 'Bedrooms', value: property.bedrooms > 0 ? `${property.bedrooms} BHK` : '—' },
+                            shown.includes('bathrooms') && { icon: Bath, label: 'Bathrooms', value: property.bathrooms > 0 ? String(property.bathrooms) : '—' },
+                            { icon: Maximize, label: areaName, value: `${property.area} ${areaUnit}` },
+                            shown.includes('parking') && { icon: CarFront, label: 'Parking', value: `${property.parking} Slot` },
+                        ].filter((c): c is SpecCard => Boolean(c)).map((s, i) => (
                             <div key={i} className="bg-[#F7F9FC] rounded-xl p-4 text-center">
                                 <s.icon size={20} className="mx-auto text-gold-500 mb-2" />
                                 <div className="text-[#0D1B3E] font-semibold text-sm">{s.value}</div>
@@ -141,12 +180,16 @@ export default function PropertyDetail(props: Props) {
                                 { label: 'Property Type', value: property.type },
                                 { label: 'Transaction Type', value: property.transaction_type },
                                 { label: 'Status', value: property.status },
-                                { label: 'Possession', value: property.possession_date || '—' },
-                                { label: 'Furnishing', value: property.furnishing || '—' },
-                                { label: 'Total Floors', value: String(property.floors || 1) },
+                                shown.includes('possession_date') && { label: 'Possession', value: property.possession_date || '—' },
+                                shown.includes('furnishing') && property.furnishing && { label: 'Furnishing', value: property.furnishing },
+                                shown.includes('floors') && { label: 'Total Floors', value: String(property.floors || 1) },
+                                shown.includes('bedrooms') && { label: 'Bedrooms', value: String(property.bedrooms || 0) },
+                                shown.includes('bathrooms') && { label: 'Bathrooms', value: String(property.bathrooms || 0) },
+                                shown.includes('parking') && { label: 'Parking Slots', value: String(property.parking || 0) },
+                                { label: areaName, value: `${property.area} ${areaUnit}` },
                                 { label: 'City', value: property.city },
                                 { label: 'Property ID', value: property.property_id },
-                            ].map((f, i) => (
+                            ].filter((f): f is FactRow => Boolean(f)).map((f, i) => (
                                 <div key={i} className="flex justify-between border-b border-[#F0F4F8] py-2.5">
                                     <span className="text-gray-400 text-sm">{f.label}</span>
                                     <span className="text-[#0D1B3E] font-medium text-sm text-right">{f.value}</span>

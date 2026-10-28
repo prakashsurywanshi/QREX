@@ -6,9 +6,11 @@ import ActivityTimeline from '@/components/shared/ActivityTimeline';
 import Modal from '@/components/ui/Modal';
 import {
     ChevronLeft, Phone, Mail, MapPin, Gauge, CalendarClock, Clock, Pencil,
-    Plus, PhoneCall, MessageSquare, StickyNote, RefreshCw, ArrowRightLeft, IndianRupee,
+    Plus, PhoneCall, MessageSquare, MessageCircle, Send, Users, StickyNote, RefreshCw, ArrowRightLeft, IndianRupee,
 } from 'lucide-react';
 import type { Lead, PageProps } from '@/types';
+import { PLACEHOLDER_IMAGE } from '@/lib/utils';
+import AmountInWords from '@/components/shared/AmountInWords';
 
 interface Props extends PageProps {
     lead: any;
@@ -33,17 +35,54 @@ const statusColor: Record<string, string> = {
 
 const statuses = ['New', 'Contacted', 'Qualified', 'Site Visit Scheduled', 'Site Visit Completed', 'Negotiation', 'Converted', 'Lost'];
 
+type ActivityTypeOption = 'Call' | 'WhatsApp' | 'SMS' | 'Email' | 'Site Visit' | 'Meeting' | 'Note';
+
+const activityTypeOptions: { value: ActivityTypeOption; label: string }[] = [
+    { value: 'Call', label: 'Call' },
+    { value: 'WhatsApp', label: 'WhatsApp' },
+    { value: 'SMS', label: 'SMS' },
+    { value: 'Email', label: 'Email' },
+    { value: 'Site Visit', label: 'Site Visit' },
+    { value: 'Meeting', label: 'Meeting' },
+    { value: 'Note', label: 'Note' },
+];
+
+const outcomeOptions: Record<Exclude<ActivityTypeOption, 'Note'>, string[]> = {
+    'Call': ['Connected', 'No Answer', 'Busy', 'Voicemail', 'Callback Requested', 'Not Interested'],
+    'WhatsApp': ['Replied', 'Pending', 'Read'],
+    'SMS': ['Sent', 'Delivered', 'Pending'],
+    'Email': ['Sent', 'Opened', 'Replied', 'Bounced'],
+    'Site Visit': ['Scheduled', 'Completed', 'Cancelled', 'Rescheduled'],
+    'Meeting': ['Scheduled', 'Completed', 'Cancelled', 'Rescheduled'],
+};
+
+const activityTypeIcons: Record<ActivityTypeOption, typeof PhoneCall> = {
+    'Call': PhoneCall,
+    'WhatsApp': MessageSquare,
+    'SMS': MessageCircle,
+    'Email': Send,
+    'Site Visit': MapPin,
+    'Meeting': Users,
+    'Note': StickyNote,
+};
+
 export default function LeadDetail(props: Props) {
     const { lead, activities, handovers, recommendations, agents, owners, campaigns, can } = props;
     const canConvertLead = !!can?.sales?.create;
     const [editOpen, setEditOpen] = useState(false);
     const [handoverOpen, setHandoverOpen] = useState(false);
-    const [activityType, setActivityType] = useState<'Call' | 'WhatsApp' | 'Note'>('Call');
+    const [activityType, setActivityType] = useState<ActivityTypeOption>('Call');
 
     const { data, setData, post, processing, errors } = useForm({
-        type: 'Call',
+        type: activityType,
         title: '',
         description: '',
+        duration: '',
+        outcome: '',
+        contact_number: '',
+        email_subject: '',
+        next_followup: '',
+        location: '',
     });
 
     const { data: editData, setData: setEditData, put, processing: editProcessing } = useForm({
@@ -87,7 +126,21 @@ export default function LeadDetail(props: Props) {
 
     const submitActivity = (e: React.FormEvent) => {
         e.preventDefault();
-        post(`/admin/leads/${lead.id}/activity`, { onSuccess: () => { setData('title', ''); setData('description', ''); } });
+        post(`/admin/leads/${lead.id}/activity`, {
+            onSuccess: () => {
+                setData({
+                    ...data,
+                    title: '',
+                    description: '',
+                    duration: '',
+                    outcome: '',
+                    contact_number: '',
+                    email_subject: '',
+                    next_followup: '',
+                    location: '',
+                });
+            },
+        });
     };
 
     const submitEdit = (e: React.FormEvent) => {
@@ -171,7 +224,7 @@ export default function LeadDetail(props: Props) {
                         <div className="bg-[#F7F9FC] rounded-xl p-4">
                             <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Interested Property</div>
                             <Link href={`/admin/properties/${property.id}`} className="flex items-center gap-3 hover:opacity-80">
-                                <img src={property.image} alt="" className="w-16 h-12 rounded-lg object-cover" />
+                                <img src={property.image || PLACEHOLDER_IMAGE} alt="" className="w-16 h-12 rounded-lg object-cover" />
                                 <div>
                                     <div className="font-semibold text-[#0D1B3E] text-sm">{property.title}</div>
                                     <div className="text-gray-400 text-xs">{property.price_label} · {property.location}</div>
@@ -213,20 +266,20 @@ export default function LeadDetail(props: Props) {
 
                     {/* Add activity */}
                     <form onSubmit={submitActivity} className="bg-[#F7F9FC] rounded-xl p-4 mb-6">
-                        <div className="flex gap-2 mb-3">
-                            {(['Call', 'WhatsApp', 'Note'] as const).map((t) => (
-                                <button
-                                    key={t}
-                                    type="button"
-                                    onClick={() => { setActivityType(t); setData('type', t); }}
-                                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${activityType === t ? 'bg-[#0D1B3E] text-white' : 'bg-white border border-[#E1E8F0] text-gray-600'}`}
-                                >
-                                    {t === 'Call' && <PhoneCall size={12} />}
-                                    {t === 'WhatsApp' && <MessageSquare size={12} />}
-                                    {t === 'Note' && <StickyNote size={12} />}
-                                    {t}
-                                </button>
-                            ))}
+                        <div className="flex flex-wrap gap-2 mb-3">
+                            {activityTypeOptions.map(({ value, label }) => {
+                                const Icon = activityTypeIcons[value];
+                                return (
+                                    <button
+                                        key={value}
+                                        type="button"
+                                        onClick={() => { setActivityType(value); setData('type', value); }}
+                                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${activityType === value ? 'bg-[#0D1B3E] text-white' : 'bg-white border border-[#E1E8F0] text-gray-600'}`}
+                                    >
+                                        <Icon size={12} /> {label}
+                                    </button>
+                                );
+                            })}
                         </div>
                         <input
                             value={data.title}
@@ -235,13 +288,72 @@ export default function LeadDetail(props: Props) {
                             required
                             className="w-full px-3.5 py-2.5 border border-[#E1E8F0] bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-400/30 mb-2"
                         />
-                        <div className="flex gap-2">
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2">
+                            {(activityType === 'Call' || activityType === 'WhatsApp' || activityType === 'SMS') && (
+                                <input
+                                    value={data.contact_number}
+                                    onChange={(e) => setData('contact_number', e.target.value)}
+                                    placeholder="Contact number"
+                                    className="w-full px-3.5 py-2.5 border border-[#E1E8F0] bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-400/30"
+                                />
+                            )}
+                            {(activityType === 'Call' || activityType === 'Meeting') && (
+                                <input
+                                    value={data.duration}
+                                    onChange={(e) => setData('duration', e.target.value)}
+                                    placeholder="Duration (e.g. 5 min, 30 min)"
+                                    className="w-full px-3.5 py-2.5 border border-[#E1E8F0] bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-400/30"
+                                />
+                            )}
+                            {activityType === 'Email' && (
+                                <input
+                                    value={data.email_subject}
+                                    onChange={(e) => setData('email_subject', e.target.value)}
+                                    placeholder="Email subject"
+                                    className="w-full px-3.5 py-2.5 border border-[#E1E8F0] bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-400/30"
+                                />
+                            )}
+                            {(activityType === 'Site Visit' || activityType === 'Meeting') && (
+                                <input
+                                    value={data.location}
+                                    onChange={(e) => setData('location', e.target.value)}
+                                    placeholder="Location"
+                                    className="w-full px-3.5 py-2.5 border border-[#E1E8F0] bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-400/30"
+                                />
+                            )}
+                            {activityType !== 'Note' && (
+                                <select
+                                    value={data.outcome}
+                                    onChange={(e) => setData('outcome', e.target.value)}
+                                    className="w-full px-3.5 py-2.5 border border-[#E1E8F0] bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-400/30"
+                                >
+                                    <option value="">Outcome...</option>
+                                    {outcomeOptions[activityType as Exclude<ActivityTypeOption, 'Note'>].map((o) => (
+                                        <option key={o} value={o}>{o}</option>
+                                    ))}
+                                </select>
+                            )}
+                        </div>
+
+                        <div className="flex gap-2 mb-2">
                             <input
                                 value={data.description}
                                 onChange={(e) => setData('description', e.target.value)}
                                 placeholder="Add notes (optional)"
                                 className="flex-1 px-3.5 py-2.5 border border-[#E1E8F0] bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-400/30"
                             />
+                        </div>
+                        <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2">
+                                <span className="text-xs font-medium text-gray-500 flex items-center gap-1"><CalendarClock size={13} /> Next follow-up</span>
+                                <input
+                                    type="date"
+                                    value={data.next_followup}
+                                    onChange={(e) => setData('next_followup', e.target.value)}
+                                    className="px-3.5 py-2 border border-[#E1E8F0] bg-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-400/30 text-gray-500"
+                                />
+                            </div>
                             <button type="submit" disabled={processing} className="px-4 py-2.5 bg-[#0D1B3E] text-white rounded-lg text-sm font-semibold disabled:opacity-60 flex items-center gap-1.5">
                                 <Plus size={14} /> Log
                             </button>
@@ -257,7 +369,7 @@ export default function LeadDetail(props: Props) {
                     <div className="space-y-3">
                         {recommendations.map((p) => (
                             <Link key={p.id} href={`/admin/properties/${p.id}`} className="flex items-center gap-3 bg-[#F7F9FC] rounded-lg p-2.5 hover:bg-[#EFF3F9] transition-colors">
-                                <img src={p.image} alt="" className="w-14 h-12 rounded-lg object-cover" />
+                                <img src={p.image || PLACEHOLDER_IMAGE} alt="" className="w-14 h-12 rounded-lg object-cover" />
                                 <div className="min-w-0">
                                     <div className="font-medium text-[#0D1B3E] text-sm truncate">{p.title}</div>
                                     <div className="text-gray-400 text-xs">{p.price_label}</div>
@@ -324,6 +436,7 @@ export default function LeadDetail(props: Props) {
                                 <div>
                                     <label className="block text-xs font-medium text-gray-600 mb-1">Budget</label>
                                     <input value={editData.budget} onChange={(e) => setEditData('budget', e.target.value)} className="w-full px-3.5 py-2 border border-[#E1E8F0] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-400/30" />
+                                    <AmountInWords value={editData.budget} />
                                 </div>
                                 <div>
                                     <label className="block text-xs font-medium text-gray-600 mb-1">Preferred Location</label>

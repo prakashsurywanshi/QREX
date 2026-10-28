@@ -52,7 +52,7 @@ class MailConfigService
             'host' => $s['host'],
             'port' => $s['port'],
             'username' => $s['username'],
-            'password' => $s['password'],
+            'password' => $this->value('password', ''),
             'encryption' => $s['encryption'] === '' ? null : $s['encryption'],
             'timeout' => 30,
             'local_domain' => parse_url((string) config('app.url', 'http://localhost'), PHP_URL_HOST),

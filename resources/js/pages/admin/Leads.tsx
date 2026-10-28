@@ -4,6 +4,7 @@ import AdminLayout from '@/components/layout/AdminLayout';
 import PageHeader from '@/components/shared/PageHeader';
 import Pagination from '@/components/ui/Pagination';
 import Modal from '@/components/ui/Modal';
+import AmountInWords from '@/components/shared/AmountInWords';
 import { Search, Plus, Phone, Gauge, X, Upload, Download, FileSpreadsheet } from 'lucide-react';
 import type { Lead, PageProps } from '@/types';
 
@@ -240,6 +241,7 @@ export default function Leads(props: Props) {
                         <div>
                             <label className="block text-xs font-medium text-gray-600 mb-1">Budget</label>
                             <input value={data.budget} onChange={(e) => setData('budget', e.target.value)} className="w-full px-3.5 py-2 border border-[#E1E8F0] rounded-lg text-sm focus:outline-none" placeholder="₹1.5 Cr" />
+                            <AmountInWords value={data.budget} />
                         </div>
                         <div className="sm:col-span-2">
                             <label className="block text-xs font-medium text-gray-600 mb-1">Preferred Location</label>

@@ -28,6 +28,54 @@ export type PropertyType =
 
 export type TransactionType = "Buy" | "Rent" | "Lease";
 
+/** Every spec field the property form knows how to render. */
+export type SpecField =
+    | "price"
+    | "area"
+    | "bedrooms"
+    | "bathrooms"
+    | "floors"
+    | "parking"
+    | "furnishing"
+    | "possession_date";
+
+export interface SpecRuleSet {
+    visible: SpecField[];
+    required: SpecField[];
+    hidden: SpecField[];
+    defaults: Record<string, string | number>;
+    area_label: string;
+}
+
+export interface Amenity {
+    id: number;
+    property_type_id: number;
+    name: string;
+    slug: string;
+    icon?: string | null;
+    sort_order: number;
+    is_active: boolean;
+}
+
+/** One entry of the property-type catalog shipped to the form from the backend. */
+export interface PropertyTypeMeta {
+    name: string;
+    slug: string;
+    description?: string | null;
+    amenities: string[];
+    spec: SpecRuleSet;
+}
+
+export interface PropertyTypeSummary {
+    id: number;
+    name: string;
+    slug: string;
+    description?: string | null;
+    is_active: boolean;
+    amenity_count: number;
+    active_count: number;
+}
+
 export type LeadStatus =
     | "New"
     | "Contacted"
@@ -78,9 +126,11 @@ export type PaymentStatus =
 export type ActivityType =
     | "Call"
     | "WhatsApp"
+    | "SMS"
     | "Email"
     | "Note"
     | "Site Visit"
+    | "Meeting"
     | "Status Change"
     | "Task"
     | "Document"
@@ -91,6 +141,12 @@ export interface Activity {
     type: ActivityType;
     title: string;
     description?: string;
+    duration?: string;
+    outcome?: string;
+    contact_number?: string;
+    email_subject?: string;
+    next_followup?: string;
+    location?: string;
     user_name: string;
     created_at: string;
 }
@@ -110,6 +166,7 @@ export interface Agent {
 
 export interface Property {
     id: number;
+    public_id: string;
     property_id: string;
     title: string;
     type: PropertyType;
@@ -138,7 +195,7 @@ export interface Property {
     agent_id: number;
     agent_name?: string;
     image: string;
-    images?: { id: number; property_id: number; image: string }[];
+    images?: { id: number; path: string; type?: string; is_cover?: boolean; sort_order?: number }[];
     location?: string;
     agent?: { id: number; name: string; email: string; phone: string; role: string; initials: string };
     seo_title?: string;
@@ -311,8 +368,9 @@ export interface ModulePermission {
 export type CanObject = Record<string, ModulePermission>;
 
 export interface SharedData {
-    app: { name: string; type: string; project_name?: string };
+    app: { name: string; type: string; project_name?: string; logo?: string | null };
     site?: {
+        project_name?: string;
         agency_name?: string;
         contact_email?: string;
         contact_phone?: string;

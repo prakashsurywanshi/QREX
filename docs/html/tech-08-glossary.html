@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>8. Glossary · QREX</title>
+<style>
+:root{--bg:#f7f8fa;--panel:#fff;--ink:#1f2733;--muted:#5b6472;--line:#e3e7ee;--accent:#0f5c4e;--accent2:#b5893b;--code:#f2f4f7;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65;font-size:16px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.layout{display:flex;min-height:100vh}
+aside{width:280px;flex:0 0 280px;background:var(--panel);border-right:1px solid var(--line);padding:24px 20px;position:sticky;top:0;height:100vh;overflow-y:auto}
+aside h2{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:18px 0 8px}
+aside a{display:block;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.9rem}
+aside a:hover{background:var(--bg);text-decoration:none}
+aside a.active{background:var(--accent);color:#fff}
+aside .brand{font-weight:700;font-size:1.05rem;color:var(--accent);margin-bottom:4px}
+main{flex:1;min-width:0;padding:40px 56px;max-width:960px;margin:0 auto}
+main h1{font-size:2rem;line-height:1.25;margin:0 0 .5em;padding-bottom:.35em;border-bottom:2px solid var(--line)}
+main h2{font-size:1.45rem;margin:2em 0 .6em;padding-bottom:.25em;border-bottom:1px solid var(--line)}
+main h3{font-size:1.15rem;margin:1.6em 0 .5em}
+main h4{font-size:1rem;margin:1.3em 0 .4em}
+main p,main li{color:#2b3542}
+table{border-collapse:collapse;width:100%;margin:1.1em 0;font-size:.92rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+th{background:#eef1f5;font-weight:600}
+tr:nth-child(even) td{background:#fbfcfd}
+code{background:var(--code);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em}
+pre{background:#1e2530;color:#e6e9ef;padding:16px 18px;border-radius:8px;overflow-x:auto}
+pre code{background:none;color:inherit;padding:0}
+blockquote{margin:1.2em 0;padding:.6em 1.1em;background:#fff8e8;border-left:4px solid var(--accent2);color:#5b4a22;border-radius:0 6px 6px 0}
+blockquote p{margin:.4em 0}
+hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
+img{max-width:100%}
+.crumbs{font-size:.82rem;color:var(--muted);margin-bottom:18px}
+.pager{display:flex;justify-content:space-between;gap:16px;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{font-size:.9rem}
+.site-footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:24px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.card h3{margin:.2em 0 .4em;font-size:1.02rem}
+.card p{margin:.2em 0;font-size:.88rem;color:var(--muted)}
+/* --- Figures: diagrams and screen wireframes --- */
+.figure{margin:1.8em 0}
+.figure>svg{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px}
+.figure.diagram{overflow-x:auto}
+.figure.diagram.wide>svg{max-width:none;margin:0}
+.figure.wireframe>svg{border-color:#dbe2ea}
+figcaption{margin-top:.7em;font-size:.82rem;color:var(--muted);text-align:center;line-height:1.45}
+.art-missing{border-left:3px solid #c0392b}
+/* --- Long reference tables --- */
+.table-wrap{margin:1.1em 0}
+.table-filter{width:100%;max-width:300px;padding:7px 11px;margin-bottom:.55em;border:1px solid var(--line);border-radius:8px;font-size:.86rem;background:#fff;color:var(--ink);font-family:inherit}
+.table-filter:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.table-count{font-size:.78rem;color:var(--muted);margin-left:8px;vertical-align:middle}
+/* --- Documentation menu (sidebar) --- */
+.side-search{width:100%;padding:8px 10px;margin:10px 0 4px;border:1px solid var(--line);border-radius:8px;font-size:.85rem;background:var(--bg);color:var(--ink)}
+.side-search:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.home-link{display:block;font-size:.8rem;font-weight:600;color:var(--accent);margin-bottom:14px;padding:4px 0}
+.nav-group{border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:6px}
+.nav-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:10px 4px 6px;font-weight:700;user-select:none}
+.nav-group>summary::-webkit-details-marker{display:none}
+.nav-group>summary .chev{transition:transform .15s ease;font-size:.7rem;color:var(--muted)}
+.nav-group[open]>summary .chev{transform:rotate(90deg)}
+.nav-group .count{color:var(--muted);font-weight:400;margin-left:auto;font-size:.68rem}
+.nav-group a{display:flex;gap:8px;align-items:baseline;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.88rem;line-height:1.35}
+.nav-group a:hover{background:var(--bg);text-decoration:none}
+.nav-group a.active{background:var(--accent);color:#fff}
+.nav-group a.active .num{color:#d9ece7}
+.nav-group a .num{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.75rem;min-width:1.4em}
+.nav-hidden{display:none!important}
+.menu-toggle{display:none;position:fixed;top:12px;left:12px;z-index:50;width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:1.2rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.menu-backdrop{display:none}
+@media(max-width:900px){
+  .layout{flex-direction:column}
+  .menu-toggle{display:flex}
+  aside{position:fixed;top:0;left:0;z-index:60;width:290px;height:100vh;overflow-y:auto;border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .2s ease;box-shadow:0 0 24px rgba(0,0,0,.12)}
+  body.menu-open aside{transform:translateX(0)}
+  body.menu-open .menu-backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:55}
+  main{padding:64px 20px 24px}
+}
+@media print{
+  aside,.crumbs,.pager,.menu-toggle,.menu-backdrop{display:none}
+  body{background:#fff;font-size:11pt}
+  main{max-width:none;padding:0}
+  a{color:var(--ink)}
+  pre{background:#f2f4f7;color:#1f2733;border:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<button class="menu-toggle" aria-label="Open documentation menu" onclick="document.body.classList.toggle('menu-open')">☰</button>
+<div class="menu-backdrop" onclick="document.body.classList.remove('menu-open')"></div>
+<aside>
+  <a class="home-link" href="index.html">⌂ All documentation</a>
+  <div class="brand">QREX Documentation</div>
+  <div style="font-size:.78rem;color:var(--muted)">Qodeigence Infocircle Pvt. Ltd.</div>
+  <input class="side-search" type="search" placeholder="Search documents…" aria-label="Search documents" oninput="filterDocs(this.value)">
+  <nav id="doc-nav">
+    <details class="nav-group">
+<summary><span>User Manual</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="manual-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="overview and getting started" href="manual-01-overview-and-getting-started.html"><span class="num">01</span><span>Overview And Getting Started</span></a><a class="" data-title="roles and access" href="manual-02-roles-and-access.html"><span class="num">02</span><span>Roles And Access</span></a><a class="" data-title="sales lifecycle" href="manual-03-sales-lifecycle.html"><span class="num">03</span><span>Sales Lifecycle</span></a><a class="" data-title="modules sales" href="manual-04-modules-sales.html"><span class="num">04</span><span>Modules Sales</span></a><a class="" data-title="modules operations" href="manual-05-modules-operations.html"><span class="num">05</span><span>Modules Operations</span></a><a class="" data-title="modules marketing and admin" href="manual-06-modules-marketing-and-admin.html"><span class="num">06</span><span>Modules Marketing And Admin</span></a><a class="" data-title="public website" href="manual-07-public-website.html"><span class="num">07</span><span>Public Website</span></a><a class="" data-title="reference" href="manual-08-reference.html"><span class="num">08</span><span>Reference</span></a><a class="" data-title="troubleshooting and faq" href="manual-09-troubleshooting-and-faq.html"><span class="num">09</span><span>Troubleshooting And Faq</span></a></details><details class="nav-group">
+<summary><span>How QREX Works</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="explain-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="system at a glance" href="explain-01-system-at-a-glance.html"><span class="num">01</span><span>System At A Glance</span></a><a class="" data-title="sales lifecycle" href="explain-02-sales-lifecycle.html"><span class="num">02</span><span>Sales Lifecycle</span></a><a class="" data-title="data model" href="explain-03-data-model.html"><span class="num">03</span><span>Data Model</span></a><a class="" data-title="roles and permissions" href="explain-04-roles-and-permissions.html"><span class="num">04</span><span>Roles And Permissions</span></a><a class="" data-title="screen designs" href="explain-05-screen-designs.html"><span class="num">05</span><span>Screen Designs</span></a><a class="" data-title="operations and automation" href="explain-06-operations-and-automation.html"><span class="num">06</span><span>Operations And Automation</span></a></details><details class="nav-group" open>
+<summary><span>Technical Documentation</span><span class="chev">▶</span></summary>
+<a class="" data-title="project scope" href="tech-01-project-scope.html"><span class="num">01</span><span>Project Scope</span></a><a class="" data-title="architecture" href="tech-02-architecture.html"><span class="num">02</span><span>Architecture</span></a><a class="" data-title="operations modules" href="tech-03-operations-modules.html"><span class="num">03</span><span>Operations Modules</span></a><a class="" data-title="roles permissions" href="tech-04-roles-permissions.html"><span class="num">04</span><span>Roles Permissions</span></a><a class="" data-title="database schema" href="tech-05-database-schema.html"><span class="num">05</span><span>Database Schema</span></a><a class="" data-title="operations" href="tech-06-operations.html"><span class="num">06</span><span>Operations</span></a><a class="" data-title="security hardening" href="tech-07-security-hardening.html"><span class="num">07</span><span>Security Hardening</span></a><a class="active" data-title="glossary" href="tech-08-glossary.html"><span class="num">08</span><span>Glossary</span></a><a class="" data-title="project proposal" href="tech-09-project-proposal.html"><span class="num">09</span><span>Project Proposal</span></a><a class="" data-title="budget pricing mumbai" href="tech-10-budget-pricing-mumbai.html"><span class="num">10</span><span>Budget Pricing Mumbai</span></a></details>
+  </nav>
+  <details class="nav-group"><summary><span>Downloads</span><span class="chev">▶</span></summary>
+    <a href="../word/QREX-User-Manual.docx"><span class="num"></span><span>User Manual (.docx)</span></a>
+    <a href="../word/QREX-User-Manual.doc"><span class="num"></span><span>User Manual (.doc)</span></a>
+    <a href="../word/QREX-How-It-Works.docx"><span class="num"></span><span>How QREX Works (.docx)</span></a>
+    <a href="../word/QREX-How-It-Works.doc"><span class="num"></span><span>How QREX Works (.doc)</span></a>
+    <a href="../word/QREX-Technical-Documentation.docx"><span class="num"></span><span>Technical Docs (.docx)</span></a>
+    <a href="../word/QREX-Technical-Documentation.doc"><span class="num"></span><span>Technical Docs (.doc)</span></a>
+  </details>
+</aside>
+<main>
+<div class="crumbs">QREX Technical Documentation</div>
+<h1 id="8-glossary">8. Glossary</h1>
+<p>Terms as used across QREX, the admin UI, and this documentation.</p>
+<div class="table-wrap">
+<input class="table-filter" type="search" placeholder="Filter rows…" aria-label="Filter table rows">
+<span class="table-count"></span>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Lead</strong></td>
+<td>A prospective buyer/enquirer recorded with name, phone, source, status, budget, and preferences. Created from website enquiries, manually, or by CSV import.</td>
+</tr>
+<tr>
+<td><strong>Lead source</strong></td>
+<td>Where a lead came from: <code>Website, Facebook, Instagram, Google, Referral, Walk-in, Phone, WhatsApp, Campaign</code>.</td>
+</tr>
+<tr>
+<td><strong>Lead status</strong></td>
+<td>Stage of a lead&#39;s journey: <code>New, Contacted, Qualified, Site Visit Scheduled, Site Visit Completed, Negotiation, Converted, Lost</code>.</td>
+</tr>
+<tr>
+<td><strong>Lead score</strong></td>
+<td>An integer 0–100 indicating lead quality/priority. Set manually or via import; sanitized to the valid range.</td>
+</tr>
+<tr>
+<td><strong>Lead activity</strong></td>
+<td>An entry appended to a lead&#39;s timeline (call, email, note, meeting) including communication fields (duration, outcome, contact number, email subject, next follow-up, location).</td>
+</tr>
+<tr>
+<td><strong>Lead handover</strong></td>
+<td>A transfer of a lead from one agent to another, recorded with reason/notes. Reassignment updates both assigned agent and owner.</td>
+</tr>
+<tr>
+<td><strong>Lead owner vs assigned agent</strong></td>
+<td><code>assigned_agent_id</code> is the current working agent; <code>owner_id</code> tracks who retains ownership. Agent-scoped users can see leads where they are either.</td>
+</tr>
+<tr>
+<td><strong>Deal</strong></td>
+<td>A sales opportunity created when a lead is converted (or entered directly). Has a value, stage, probability, and assigned agent.</td>
+</tr>
+<tr>
+<td><strong>Pipeline</strong></td>
+<td>The Kanban deal board. Deals move through stages; <code>days_in_stage</code> measures time spent at the current stage.</td>
+</tr>
+<tr>
+<td><strong>Pipeline stage</strong></td>
+<td>One of <code>New Lead, Contacted, Qualified, Property Shortlisted, Site Visit Scheduled, Site Visit Completed, Negotiation, Booking, Agreement, Payment, Closed Won, Closed Lost</code>.</td>
+</tr>
+<tr>
+<td><strong>Close probability</strong></td>
+<td>Estimate of a deal&#39;s likelihood to close, set per deal (a new deal defaults to 30).</td>
+</tr>
+<tr>
+<td><strong>Value label</strong></td>
+<td>Human-readable money formatting: <code>₹X.XX Cr</code> (≥ ₹1 Cr) or <code>₹X.XX L</code> (≥ ₹1 L).</td>
+</tr>
+<tr>
+<td><strong>Property</strong></td>
+<td>A listing the agency sells/rents, with type, transaction type, price, area, configuration, amenities, images, featured/website-visibility flags, and SEO fields.</td>
+</tr>
+<tr>
+<td><strong>Property image / cover</strong></td>
+<td>Images attached to a property; one is the cover. <code>coverOrImage()</code> resolves the display image.</td>
+</tr>
+<tr>
+<td><strong>Featured property</strong></td>
+<td>A property flagged <code>featured = true</code> (and website-visible) shown on the public home.</td>
+</tr>
+<tr>
+<td><strong>Website-visible property</strong></td>
+<td>A property with <code>is_website_visible = true</code>; hidden properties 404 on the public site.</td>
+</tr>
+<tr>
+<td><strong>Customer</strong></td>
+<td>A recorded party (buyer/seller/renter) with contact details, type, budget, and notes.</td>
+</tr>
+<tr>
+<td><strong>Site visit</strong></td>
+<td>A scheduled/held visit of a customer to a property, with status <code>Scheduled, Confirmed, Completed, Cancelled, Rescheduled</code> plus location, notes, and feedback. Auto-created when a lead becomes <em>Site Visit Scheduled</em>.</td>
+</tr>
+<tr>
+<td><strong>Booking</strong></td>
+<td>A reservation holding a deal: captures booking amount, and three tracks — booking <code>status</code>, <code>agreement_status</code>, and <code>possession_status</code>.</td>
+</tr>
+<tr>
+<td><strong>Payment</strong></td>
+<td>A financial record (amount, mode, txn id, due/paid dates, status <code>Pending, Paid, Overdue, Partially Paid</code>). Payments are recorded manually; there is no gateway integration.</td>
+</tr>
+<tr>
+<td><strong>Campaign</strong></td>
+<td>A marketing initiative tracked for attribution (channel, budget, spent, leads, conversions, revenue, ROI). Leads may carry a <code>campaign_id</code>.</td>
+</tr>
+<tr>
+<td><strong>Follow-up task</strong></td>
+<td>A <code>Follow-up</code>-type task with a due date/time, auto-synchronized from a lead&#39;s <code>next_followup</code>, assigned to the lead&#39;s agent, and flagged overdue by automation.</td>
+</tr>
+<tr>
+<td><strong>Notification</strong></td>
+<td>An in-app notification row (title, message, type, related id, read/seen flags) delivered to a user; e.g., follow-up, lead conversion, site-visit scheduled.</td>
+</tr>
+<tr>
+<td><strong>Readable ID</strong></td>
+<td>A human-friendly record identifier such as <code>L-006</code>, <code>DL-012</code>, <code>TSK-007</code>, <code>SV-003</code>, generated collision-free from the <code>sequences</code> table.</td>
+</tr>
+<tr>
+<td><strong>CMS</strong></td>
+<td>Content management for the public site: content sections and featured-property selection.</td>
+</tr>
+<tr>
+<td><strong>Settings</strong></td>
+<td>The key-value store (<code>settings</code> table) holding branding, contact info, SEO defaults, feature toggles, and SMTP configuration.</td>
+</tr>
+<tr>
+<td><strong>Super Admin / Admin / Sales Executive / Senior Agent / Marketing User / Accountant</strong></td>
+<td>The six seeded roles controlling module access. See <a href="tech-04-roles-permissions.html"><code>04-roles-permissions.md</code></a>.</td>
+</tr>
+<tr>
+<td><strong>Field-level permission</strong></td>
+<td>A permission of the form <code>{module}.{action}.{field}</code> (e.g., <code>leads.edit.phone</code>) that restricts which fields a user may edit.</td>
+</tr>
+<tr>
+<td><strong>Agent scope</strong></td>
+<td>The row-level rule that limits <code>sales-executive</code>/<code>senior-agent</code> users to leads they are assigned to or own.</td>
+</tr>
+<tr>
+<td><strong>CSV import</strong></td>
+<td>Bulk creation of leads from a CSV, with header aliasing, validation, deduplication, reference resolution, and per-row error reporting.</td>
+</tr>
+<tr>
+<td><strong>Waterfall / funnel</strong></td>
+<td>Report visualization of deals across pipeline stages (count and value per stage).</td>
+</tr>
+<tr>
+<td><strong>Recharts</strong></td>
+<td>The charting library used on the dashboard and reports pages.</td>
+</tr>
+<tr>
+<td><strong>DomPDF</strong></td>
+<td>The PDF renderer used for report PDF export.</td>
+</tr>
+<tr>
+<td><strong>SMTP test mail</strong></td>
+<td>A super-admin action that sends a real test email to verify DB-stored mail configuration.</td>
+</tr>
+</tbody></table>
+</div>
+
+
+<div class="pager"><a href="tech-07-security-hardening.html">← 07. Security Hardening</a><a href="tech-09-project-proposal.html">09. Project Proposal →</a></div>
+<div class="site-footer">QREX documentation · generated from the Markdown sources in <code>docs/</code> · build with <code>npm run docs:html</code></div>
+</main>
+</div>
+
+<script>
+function filterDocs(q){
+  q=(q||'').trim().toLowerCase();
+  document.querySelectorAll('#doc-nav .nav-group').forEach(function(g){
+    var visible=0;
+    g.querySelectorAll('a').forEach(function(a){
+      var hit=!q||a.getAttribute('data-title').indexOf(q)>-1;
+      a.classList.toggle('nav-hidden',!hit);
+      if(hit)visible++;
+    });
+    g.classList.toggle('nav-hidden',visible===0);
+    if(q)g.open=true;
+  });
+}
+document.querySelectorAll('.table-wrap').forEach(function(wrap){
+  var input=wrap.querySelector('.table-filter');
+  var table=wrap.querySelector('table');
+  var count=wrap.querySelector('.table-count');
+  if(!input||!table)return;
+  input.addEventListener('input',function(){
+    var q=input.value.trim().toLowerCase();
+    var shown=0,total=0;
+    table.querySelectorAll('tbody tr').forEach(function(row){
+      total++;
+      var hit=!q||row.textContent.toLowerCase().indexOf(q)>-1;
+      row.style.display=hit?'':'none';
+      if(hit)shown++;
+    });
+    if(count)count.textContent=q?shown+' of '+total+' rows':' '+total+' rows';
+  });
+});
+</script>
+</body>
+</html>

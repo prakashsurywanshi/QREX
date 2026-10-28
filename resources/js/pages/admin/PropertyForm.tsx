@@ -1,50 +1,77 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link, useForm } from '@inertiajs/react';
 import AdminLayout from '@/components/layout/AdminLayout';
 import PageHeader from '@/components/shared/PageHeader';
-import { ChevronLeft, ChevronRight, ImagePlus, Check } from 'lucide-react';
-import type { Property } from '@/types';
+import { AlertTriangle, Check, ChevronLeft, ChevronRight, Plus, Star, X } from 'lucide-react';
+import AmountInWords from '@/components/shared/AmountInWords';
+import type { Property, PropertyTypeMeta, SpecField } from '@/types';
 
 type Agent = { id: number; name: string };
+type GalleryImage = { id: number; path: string; is_cover?: boolean; sort_order?: number };
 
 interface Props {
     property: Property | null;
     agents: Agent[];
+    typeCatalog: PropertyTypeMeta[];
     errors?: Record<string, string>;
     flash?: { success?: string; error?: string };
     auth?: unknown;
 }
 
-const types = ['Apartment', 'Villa', 'Plot', 'Commercial', 'Office', 'Shop', 'Warehouse', 'Farm/Land', 'Other'];
 const transactionTypes = ['Buy', 'Rent', 'Lease'];
 const statuses = ['Available', 'Reserved', 'Under Negotiation', 'Sold', 'Draft', 'Rented', 'Inactive'];
 const furnishing = ['Unfurnished', 'Semi-Furnished', 'Fully Furnished'];
-
-const amenityOptions = [
-    'Swimming Pool', 'Gym', 'Garden', 'Clubhouse', 'Security', 'CCTV', 'Lift', 'Power Backup',
-    'Parking', 'Sea View', 'Lake View', 'Children\'s Play Area', 'Spa', 'Concierge', 'Jogging Track',
-    'High-speed Fiber', 'Conference Room', 'Cafeteria', '24hr AC', 'Private Terrace', 'Private Pool',
-];
 
 const steps = [
     { title: 'Basic Info', desc: 'Title, type & status' },
     { title: 'Pricing & Specs', desc: 'Price, size & rooms' },
     { title: 'Location', desc: 'Address details' },
     { title: 'Amenities', desc: 'Features & facilities' },
-    { title: 'Image & Website', desc: 'Media & visibility' },
+    { title: 'Gallery & Website', desc: 'Media & visibility' },
 ];
 
+/** Used when the catalog is empty (e.g. the seeders have not run yet). */
+const FALLBACK_SPEC = {
+    visible: ['price', 'area', 'bedrooms', 'bathrooms', 'floors', 'parking', 'furnishing', 'possession_date'] as SpecField[],
+    required: ['price', 'area'] as SpecField[],
+    hidden: [] as SpecField[],
+    defaults: { bedrooms: 0, bathrooms: 0, floors: 1, parking: 0 },
+    area_label: 'Area (sq.ft)',
+};
+
+const fieldLabels: Record<SpecField, string> = {
+    price: 'price',
+    area: 'area',
+    bedrooms: 'bedrooms',
+    bathrooms: 'bathrooms',
+    floors: 'floors',
+    parking: 'parking',
+    furnishing: 'furnishing',
+    possession_date: 'possession date',
+};
+
 export default function PropertyForm(props: Props) {
-    const { property, agents } = props;
+    const { property, agents, typeCatalog } = props;
     const isEdit = !!property;
+
+    const initialType = property?.type || typeCatalog[0]?.name || 'Apartment';
 
     const [step, setStep] = useState(0);
     const [amenities, setAmenities] = useState<string[]>(property?.amenities || []);
-    const [imageFile, setImageFile] = useState<File | null>(null);
-    const [imagePreview, setImagePreview] = useState<string>(property?.image || '');
+    const [removedAmenities, setRemovedAmenities] = useState<string[]>([]);
+    const [customAmenity, setCustomAmenity] = useState('');
+    const [existing, setExisting] = useState<GalleryImage[]>(property?.images || []);
+    const [removedIds, setRemovedIds] = useState<number[]>([]);
+    const [picks, setPicks] = useState<{ key: number; file: File; preview: string }[]>([]);
+    const pickKeyRef = useRef(0);
+    const [coverKey, setCoverKey] = useState<string>(() => {
+        const list = property?.images || [];
+        const cover = list.find((i) => i.is_cover) ?? list[0];
+        return cover ? `e:${cover.id}` : '';
+    });
     const { data, setData, post, put, processing, errors } = useForm<Record<string, any>>({
         title: property?.title || '',
-        type: property?.type || 'Apartment',
+        type: initialType,
         transaction_type: property?.transaction_type || 'Buy',
         description: property?.description || '',
         status: property?.status || 'Available',
@@ -61,7 +88,10 @@ export default function PropertyForm(props: Props) {
         state: property?.state || '',
         country: property?.country || 'India',
         pincode: property?.pincode || '',
-        image: property?.image || '',
+        new_images: [] as File[],
+        remove_image_ids: [] as number[],
+        cover_image_id: '',
+        cover_new_index: '',
         amenities: property?.amenities || [],
         featured: property?.featured || false,
         is_website_visible: property?.is_website_visible ?? true,
@@ -70,10 +100,63 @@ export default function PropertyForm(props: Props) {
         agent_id: property?.agent_id || '',
     });
 
-    const toggleAmenity = (a: string) => {
-        const next = amenities.includes(a) ? amenities.filter((x) => x !== a) : [...amenities, a];
+    const types = typeCatalog.map((t) => t.name);
+    const activeType = typeCatalog.find((t) => t.name === data.type);
+    const spec = activeType?.spec ?? FALLBACK_SPEC;
+    const amenityOptions = activeType?.amenities ?? [];
+    const shows = (field: SpecField) => spec.visible.includes(field);
+
+    const syncAmenities = (next: string[]) => {
         setAmenities(next);
         setData('amenities', next as never[]);
+    };
+
+    /**
+     * Switching type re-scopes everything that depends on it: amenities not
+     * available for the new type are dropped (with a notice so nothing silently
+     * disappears), and spec fields the new type hides are reset so a Plot can't
+     * keep advertising the previous listing's bedroom count.
+     */
+    const handleTypeChange = (nextType: string) => {
+        const nextSpec = typeCatalog.find((t) => t.name === nextType)?.spec ?? FALLBACK_SPEC;
+        const allowed = typeCatalog.find((t) => t.name === nextType)?.amenities ?? [];
+
+        setData('type', nextType);
+
+        // Only prune amenities that belonged to the previous type's catalog but are
+        // invalid for the new one. Custom/off-catalog values are never pruned.
+        const previousAllowed = typeCatalog.find((t) => t.name === data.type)?.amenities ?? [];
+        const pruned = amenities.filter((a) => previousAllowed.includes(a) && !allowed.includes(a));
+
+        setRemovedAmenities(pruned);
+        if (pruned.length) syncAmenities(amenities.filter((a) => !pruned.includes(a)));
+
+        (['bedrooms', 'bathrooms', 'floors', 'parking'] as SpecField[]).forEach((field) => {
+            if (!nextSpec.visible.includes(field)) {
+                const fallback = field === 'floors' ? 1 : 0;
+                setData(field, (nextSpec.defaults as Record<string, string | number>)[field] ?? fallback as never);
+            }
+        });
+    };
+
+    const toggleAmenity = (a: string) => {
+        syncAmenities(amenities.includes(a) ? amenities.filter((x) => x !== a) : [...amenities, a]);
+    };
+
+    /** Amenities outside the curated list are kept, never pruned on type change. */
+    const isCustomAmenity = (a: string) => !amenityOptions.includes(a);
+
+    const addCustomAmenity = () => {
+        const name = customAmenity.trim().replace(/\s+/g, ' ');
+
+        if (!name) return;
+        if (amenities.some((a) => a.toLowerCase() === name.toLowerCase())) {
+            setCustomAmenity('');
+            return;
+        }
+
+        syncAmenities([...amenities, name]);
+        setCustomAmenity('');
     };
 
     const next = (e: React.MouseEvent) => {
@@ -85,21 +168,54 @@ export default function PropertyForm(props: Props) {
         if (step > 0) setStep(step - 1);
     };
 
-    const handleImageFile = (file: File | undefined) => {
-        if (!file) return;
-        setImageFile(file);
-        setImagePreview(URL.createObjectURL(file));
-        setData('image', file as never);
+    const setCoverToFirst = (exs: GalleryImage[], pks: { key: number }[]) => {
+        if (exs.length) setCoverKey(`e:${exs[0].id}`);
+        else if (pks.length) setCoverKey(`n:${pks[0].key}`);
+        else setCoverKey('');
     };
 
-    const clearImageFile = () => {
-        setImageFile(null);
-        setImagePreview(property?.image || '');
-        setData('image', property?.image || '');
+    const addPicks = (files: FileList | null) => {
+        if (!files || files.length === 0) return;
+        const remaining = 15 - existing.length - picks.length;
+        const added = Array.from(files)
+            .slice(0, Math.max(0, remaining))
+            .map((file) => ({ key: ++pickKeyRef.current, file, preview: URL.createObjectURL(file) }));
+        setPicks((prev) => [...prev, ...added]);
+        if (coverKey === '' && existing.length === 0 && added.length) setCoverKey(`n:${added[0].key}`);
     };
+
+    const removeExisting = (img: GalleryImage) => {
+        setExisting((prev) => prev.filter((x) => x.id !== img.id));
+        setRemovedIds((prev) => [...prev, img.id]);
+        if (coverKey === `e:${img.id}`) setCoverToFirst(existing.filter((x) => x.id !== img.id), picks);
+    };
+
+    const removePick = (key: number) => {
+        const pick = picks.find((p) => p.key === key);
+        if (pick) URL.revokeObjectURL(pick.preview);
+        const next = picks.filter((p) => p.key !== key);
+        setPicks(next);
+        if (coverKey === `n:${key}`) setCoverToFirst(existing, next);
+    };
+
+    const totalImages = existing.length + picks.length;
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
+        const [kind, value] = coverKey.split(':');
+        if (kind === 'e') {
+            setData('cover_image_id', value as never);
+            setData('cover_new_index', '' as never);
+        } else if (kind === 'n') {
+            const idx = picks.findIndex((p) => p.key === Number(value));
+            setData('cover_new_index', String(idx < 0 ? 0 : idx) as never);
+            setData('cover_image_id', '' as never);
+        } else {
+            setData('cover_image_id', '' as never);
+            setData('cover_new_index', '' as never);
+        }
+        setData('new_images', picks.map((p) => p.file) as never);
+        setData('remove_image_ids', removedIds as never);
         if (isEdit) {
             put(`/admin/properties/${property.id}`, { forceFormData: true });
         } else {
@@ -162,9 +278,12 @@ export default function PropertyForm(props: Props) {
                             </div>
                             <div>
                                 <label className={labelCls}>Property Type *</label>
-                                <select value={data.type} onChange={(e) => setData('type', e.target.value)} className={inputCls}>
+                                <select value={data.type} onChange={(e) => handleTypeChange(e.target.value)} className={inputCls}>
                                     {types.map((t) => <option key={t}>{t}</option>)}
                                 </select>
+                                {activeType?.description && (
+                                    <p className="text-[11px] text-gray-400 mt-1">{activeType.description}</p>
+                                )}
                             </div>
                             <div>
                                 <label className={labelCls}>Transaction Type *</label>
@@ -195,43 +314,70 @@ export default function PropertyForm(props: Props) {
 
                 {step === 1 && (
                     <div className="bg-white rounded-xl border border-[#E1E8F0] p-6">
-                        <h3 className="font-semibold text-[#0D1B3E] mb-4 pb-3 border-b border-[#F0F4F8]">Pricing & Specifications</h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div>
-                                <label className={labelCls}>Price (₹) *</label>
-                                <input type="number" value={data.price} onChange={(e) => setData('price', e.target.value as never)} required className={inputCls} placeholder="18500000" />
-                            </div>
-                            <div>
-                                <label className={labelCls}>Area (sq.ft) *</label>
-                                <input type="number" value={data.area} onChange={(e) => setData('area', e.target.value as never)} required className={inputCls} placeholder="1450" />
-                            </div>
-                            <div>
-                                <label className={labelCls}>Furnishing</label>
-                                <select value={data.furnishing} onChange={(e) => setData('furnishing', e.target.value)} className={inputCls}>
-                                    {furnishing.map((f) => <option key={f}>{f}</option>)}
-                                </select>
-                            </div>
-                            <div>
-                                <label className={labelCls}>Bedrooms</label>
-                                <input type="number" value={data.bedrooms} onChange={(e) => setData('bedrooms', e.target.value as never)} className={inputCls} placeholder="3" />
-                            </div>
-                            <div>
-                                <label className={labelCls}>Bathrooms</label>
-                                <input type="number" value={data.bathrooms} onChange={(e) => setData('bathrooms', e.target.value as never)} className={inputCls} placeholder="2" />
-                            </div>
-                            <div>
-                                <label className={labelCls}>Total Floors</label>
-                                <input type="number" value={data.floors} onChange={(e) => setData('floors', e.target.value as never)} className={inputCls} placeholder="1" />
-                            </div>
-                            <div>
-                                <label className={labelCls}>Parking Slots</label>
-                                <input type="number" value={data.parking} onChange={(e) => setData('parking', e.target.value as never)} className={inputCls} placeholder="1" />
-                            </div>
-                            <div>
-                                <label className={labelCls}>Possession Date</label>
-                                <input value={data.possession_date} onChange={(e) => setData('possession_date', e.target.value)} className={inputCls} placeholder="Dec 2026" />
-                            </div>
+                        <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#F0F4F8]">
+                            <h3 className="font-semibold text-[#0D1B3E]">Pricing & Specifications</h3>
+                            <span className="text-[11px] font-medium text-gray-400">
+                                Fields for {data.type}
+                            </span>
                         </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            {shows('price') && (
+                                <div>
+                                    <label className={labelCls}>Price (₹) *</label>
+                                    <input type="number" value={data.price} onChange={(e) => setData('price', e.target.value as never)} required className={inputCls} placeholder="18500000" />
+                                    <AmountInWords value={data.price} />
+                                </div>
+                            )}
+                            {shows('area') && (
+                                <div>
+                                    <label className={labelCls}>{spec.area_label} *</label>
+                                    <input type="number" step="any" value={data.area} onChange={(e) => setData('area', e.target.value as never)} required className={inputCls} placeholder="1450" />
+                                </div>
+                            )}
+                            {shows('furnishing') && (
+                                <div>
+                                    <label className={labelCls}>Furnishing</label>
+                                    <select value={data.furnishing} onChange={(e) => setData('furnishing', e.target.value)} className={inputCls}>
+                                        {furnishing.map((f) => <option key={f}>{f}</option>)}
+                                    </select>
+                                </div>
+                            )}
+                            {shows('bedrooms') && (
+                                <div>
+                                    <label className={labelCls}>Bedrooms</label>
+                                    <input type="number" min="0" value={data.bedrooms} onChange={(e) => setData('bedrooms', e.target.value as never)} className={inputCls} placeholder="3" />
+                                </div>
+                            )}
+                            {shows('bathrooms') && (
+                                <div>
+                                    <label className={labelCls}>Bathrooms</label>
+                                    <input type="number" min="0" value={data.bathrooms} onChange={(e) => setData('bathrooms', e.target.value as never)} className={inputCls} placeholder="2" />
+                                </div>
+                            )}
+                            {shows('floors') && (
+                                <div>
+                                    <label className={labelCls}>Total Floors</label>
+                                    <input type="number" min="0" value={data.floors} onChange={(e) => setData('floors', e.target.value as never)} className={inputCls} placeholder="1" />
+                                </div>
+                            )}
+                            {shows('parking') && (
+                                <div>
+                                    <label className={labelCls}>Parking Slots</label>
+                                    <input type="number" min="0" value={data.parking} onChange={(e) => setData('parking', e.target.value as never)} className={inputCls} placeholder="1" />
+                                </div>
+                            )}
+                            {shows('possession_date') && (
+                                <div>
+                                    <label className={labelCls}>Possession Date</label>
+                                    <input value={data.possession_date} onChange={(e) => setData('possession_date', e.target.value)} className={inputCls} placeholder="Dec 2026" />
+                                </div>
+                            )}
+                        </div>
+                        {spec.hidden.length > 0 && (
+                            <p className="text-[11px] text-gray-400 mt-4 pt-3 border-t border-[#F0F4F8]">
+                                {data.type} listings don&apos;t use {spec.hidden.map((f) => fieldLabels[f]).join(', ')} — those values will be cleared on save.
+                            </p>
+                        )}
                     </div>
                 )}
 
@@ -265,7 +411,29 @@ export default function PropertyForm(props: Props) {
 
                 {step === 3 && (
                     <div className="bg-white rounded-xl border border-[#E1E8F0] p-6">
-                        <h3 className="font-semibold text-[#0D1B3E] mb-4 pb-3 border-b border-[#F0F4F8]">Amenities</h3>
+                        <div className="flex flex-wrap items-center justify-between gap-2 mb-4 pb-3 border-b border-[#F0F4F8]">
+                            <h3 className="font-semibold text-[#0D1B3E]">Amenities</h3>
+                            <span className="text-[11px] font-medium text-gray-400">
+                                {amenityOptions.length} available for {data.type} · {amenities.length} selected
+                            </span>
+                        </div>
+
+                        {removedAmenities.length > 0 && (
+                            <div className="flex items-start gap-2.5 mb-4 bg-amber-50 border border-amber-200 text-amber-800 text-xs px-3.5 py-2.5 rounded-lg">
+                                <AlertTriangle size={14} className="mt-0.5 flex-shrink-0" />
+                                <div className="flex-1">
+                                    <p className="font-semibold">
+                                        {removedAmenities.length} {removedAmenities.length === 1 ? 'amenity' : 'amenities'} not available for {data.type} and{' '}
+                                        {removedAmenities.length === 1 ? 'was' : 'were'} removed.
+                                    </p>
+                                    <p className="mt-0.5 text-amber-700">{removedAmenities.join(', ')}</p>
+                                </div>
+                                <button type="button" onClick={() => setRemovedAmenities([])} title="Dismiss" className="flex-shrink-0 p-0.5 rounded hover:bg-amber-100">
+                                    <X size={13} />
+                                </button>
+                            </div>
+                        )}
+
                         <div className="flex flex-wrap gap-2">
                             {amenityOptions.map((a) => {
                                 const active = amenities.includes(a);
@@ -276,40 +444,116 @@ export default function PropertyForm(props: Props) {
                                         onClick={() => toggleAmenity(a)}
                                         className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${active ? 'bg-[#0D1B3E] text-white' : 'bg-[#F4F7FC] text-gray-600 hover:bg-[#E9EEF6]'}`}
                                     >
-                                        {active ? a : a}
+                                        {active && <Check size={11} className="inline mr-1 -mt-0.5" />}
+                                        {a}
                                     </button>
                                 );
                             })}
+                            {amenityOptions.length === 0 && (
+                                <p className="text-sm text-gray-400">No amenities configured for {data.type} yet. Add them below or curate them under Settings → Amenities.</p>
+                            )}
+                        </div>
+
+                        {amenities.some(isCustomAmenity) && (
+                            <div className="mt-5 pt-4 border-t border-[#F0F4F8]">
+                                <p className="text-xs font-medium text-gray-600 mb-2">Custom amenities</p>
+                                <div className="flex flex-wrap gap-2">
+                                    {amenities.filter(isCustomAmenity).map((a) => (
+                                        <span key={a} className="inline-flex items-center gap-1.5 pl-3 pr-1.5 py-1 rounded-full text-xs font-medium bg-gold-50 text-gold-700 border border-gold-200">
+                                            {a}
+                                            <button type="button" onClick={() => toggleAmenity(a)} title={`Remove ${a}`} className="p-0.5 rounded-full hover:bg-gold-200">
+                                                <X size={11} />
+                                            </button>
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="mt-5 pt-4 border-t border-[#F0F4F8]">
+                            <label className={labelCls}>Add a custom amenity</label>
+                            <div className="flex gap-2">
+                                <input
+                                    value={customAmenity}
+                                    onChange={(e) => setCustomAmenity(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            e.preventDefault();
+                                            addCustomAmenity();
+                                        }
+                                    }}
+                                    className={inputCls}
+                                    placeholder="e.g. Rainwater harvesting"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={addCustomAmenity}
+                                    className="inline-flex flex-shrink-0 items-center gap-1.5 px-4 py-2 bg-[#0D1B3E] text-white rounded-lg text-sm font-semibold hover:bg-[#1A2B50] transition-colors"
+                                >
+                                    <Plus size={14} /> Add
+                                </button>
+                            </div>
+                            <p className="text-[11px] text-gray-400 mt-1.5">
+                                Custom amenities are stored on this property only — they won&apos;t be offered to other {data.type} listings.
+                            </p>
                         </div>
                     </div>
                 )}
 
                 {step === 4 && (
                     <div className="bg-white rounded-xl border border-[#E1E8F0] p-6">
-                        <h3 className="font-semibold text-[#0D1B3E] mb-4 pb-3 border-b border-[#F0F4F8]">Image & Website</h3>
+                        <h3 className="font-semibold text-[#0D1B3E] mb-4 pb-3 border-b border-[#F0F4F8]">Gallery & Website</h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div className="sm:col-span-2">
-                                <label className={labelCls}>Property Image</label>
-                                <div className="flex gap-3">
-                                    <label className="cursor-pointer w-28 h-28 rounded-lg border border-dashed border-[#E1E8F0] bg-[#F7F9FC] flex items-center justify-center hover:border-gold-400/60 hover:bg-gold-50/40 transition-colors overflow-hidden shrink-0">
-                                        <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageFile(e.target.files?.[0])} />
-                                        {imagePreview ? (
-                                            <img src={imagePreview} alt="preview" className="w-full h-full object-cover" />
-                                        ) : (
-                                            <div className="flex flex-col items-center text-gray-400 gap-1">
-                                                <ImagePlus size={20} />
-                                                <span className="text-[10px] font-medium">Add Image</span>
-                                            </div>
-                                        )}
-                                    </label>
-                                    <div className="flex-1 space-y-2">
-                                        <div className="text-xs text-gray-500">{imageFile ? `Selected: ${imageFile.name}` : (data.image && typeof data.image === 'string' ? 'Using image URL below' : 'No image selected')}</div>
-                                        <input value={typeof data.image === 'string' ? data.image : ''} onChange={(e) => { setData('image', e.target.value); setImageFile(null); }} className={inputCls} placeholder="...or paste an image URL" />
-                                        {imageFile && (
-                                            <button type="button" onClick={clearImageFile} className="text-xs font-semibold text-red-500 hover:underline">Remove uploaded image</button>
-                                        )}
-                                    </div>
+                            <div className="sm:col-span-2 mt-1 border-t border-[#F0F4F8] pt-4">
+                                <div className="flex items-center justify-between mb-2">
+                                    <label className="block text-xs font-medium text-gray-600">Image Gallery <span className="text-gray-400">({totalImages}/15)</span></label>
+                                    {totalImages < 15 && (
+                                        <label className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 border border-[#E1E8F0] rounded-lg text-xs font-semibold text-[#0D1B3E] hover:bg-[#F7F9FC] transition-colors">
+                                            <Plus size={13} /> Add Images
+                                            <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => addPicks(e.target.files)} />
+                                        </label>
+                                    )}
                                 </div>
+                                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                                    {existing.map((img) => (
+                                        <div key={img.id} className="relative aspect-square rounded-lg overflow-hidden border border-[#E1E8F0] bg-[#F7F9FC]">
+                                            <img src={img.path} alt="" className="w-full h-full object-cover" />
+                                            {coverKey === `e:${img.id}` && (
+                                                <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 bg-gold-500 text-white px-2 py-0.5 rounded-full text-[9px] font-bold">COVER</span>
+                                            )}
+                                            <button type="button" onClick={() => setCoverKey(`e:${img.id}`)} title="Set as cover" className={`absolute top-1.5 left-1.5 p-1 rounded-md text-white bg-black/40 hover:bg-gold-500 transition-colors ${coverKey === `e:${img.id}` ? 'bg-gold-500' : ''}`}>
+                                                <Star size={12} fill={coverKey === `e:${img.id}` ? 'currentColor' : 'none'} />
+                                            </button>
+                                            <button type="button" onClick={() => removeExisting(img)} title="Remove" className="absolute top-1.5 right-1.5 p-1 rounded-md text-white bg-black/40 hover:bg-red-500 transition-colors">
+                                                <X size={12} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                    {picks.map((p) => (
+                                        <div key={p.key} className="relative aspect-square rounded-lg overflow-hidden border border-[#E1E8F0] bg-[#F7F9FC]">
+                                            <img src={p.preview} alt="" className="w-full h-full object-cover" />
+                                            {coverKey === `n:${p.key}` && (
+                                                <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 bg-gold-500 text-white px-2 py-0.5 rounded-full text-[9px] font-bold">COVER</span>
+                                            )}
+                                            <button type="button" onClick={() => setCoverKey(`n:${p.key}`)} title="Set as cover" className={`absolute top-1.5 left-1.5 p-1 rounded-md text-white bg-black/40 hover:bg-gold-500 transition-colors ${coverKey === `n:${p.key}` ? 'bg-gold-500' : ''}`}>
+                                                <Star size={12} fill={coverKey === `n:${p.key}` ? 'currentColor' : 'none'} />
+                                            </button>
+                                            <button type="button" onClick={() => removePick(p.key)} title="Remove" className="absolute top-1.5 right-1.5 p-1 rounded-md text-white bg-black/40 hover:bg-red-500 transition-colors">
+                                                <X size={12} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                    {totalImages < 15 && (
+                                        <label className="cursor-pointer aspect-square rounded-lg border border-dashed border-[#E1E8F0] bg-[#F7F9FC] flex flex-col items-center justify-center gap-1 text-gray-400 hover:border-gold-400/60 hover:bg-gold-50/40 transition-colors">
+                                            <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => addPicks(e.target.files)} />
+                                            <Plus size={18} />
+                                            <span className="text-[10px] font-medium">Add</span>
+                                        </label>
+                                    )}
+                                </div>
+                                {totalImages > 0 && (
+                                    <p className="text-[11px] text-gray-400 mt-2">Tap the star to set the cover photo.</p>
+                                )}
                             </div>
                             <div>
                                 <label className={labelCls}>SEO Title</label>

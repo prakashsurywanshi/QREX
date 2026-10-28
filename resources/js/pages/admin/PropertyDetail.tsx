@@ -1,15 +1,25 @@
+import { useState } from 'react';
 import { Link, router } from '@inertiajs/react';
 import AdminLayout from '@/components/layout/AdminLayout';
 import PageHeader from '@/components/shared/PageHeader';
 import {
     ChevronLeft, MapPin, Bed, Bath, Maximize, Star, CarFront, Clock,
-    ArrowRightLeft, Pencil, Trash2, ExternalLink, Users,
+    ArrowRightLeft, Pencil, Trash2, ExternalLink, Share2, Users,
 } from 'lucide-react';
-import type { Property, Lead, PageProps } from '@/types';
+import type { LucideIcon } from 'lucide-react';
+import type { Property, Lead, PageProps, SpecRuleSet } from '@/types';
+import { PLACEHOLDER_IMAGE, sharePropertyLink } from '@/lib/utils';
+
+type SpecCard = { icon: LucideIcon; label: string; value: string };
+
+/** Keeps only the spec rows whose field this property type actually uses. */
+const present = (card: SpecCard | false): card is SpecCard => Boolean(card);
 
 interface Props extends PageProps {
     property: Property;
     leads: Lead[];
+    spec: SpecRuleSet;
+    typeAmenities: string[];
 }
 
 const statusColor: Record<string, string> = {
@@ -23,7 +33,12 @@ const statusColor: Record<string, string> = {
 };
 
 export default function PropertyDetail(props: Props) {
-    const { property, leads } = props;
+    const { property, leads, spec, typeAmenities } = props;
+
+    const galleryImages = property.images?.length
+        ? [...property.images].sort((a, b) => Number(b.is_cover) - Number(a.is_cover)).map((i) => i.path)
+        : [PLACEHOLDER_IMAGE];
+    const [activeImage, setActiveImage] = useState(0);
 
     const destroy = () => {
         if (confirm(`Delete "${property.title}"? This cannot be undone.`)) {
@@ -33,7 +48,31 @@ export default function PropertyDetail(props: Props) {
         }
     };
 
+    const [shareState, setShareState] = useState<'idle' | 'ok' | 'failed'>('idle');
+
+    const shareSummary = [
+        `${property.title} — ${property.transaction_type} ${property.type}`,
+        [
+            property.bedrooms > 0 ? `${property.bedrooms} BHK` : null,
+            property.area > 0 ? `${property.area} sq.ft` : null,
+            property.price_label || null,
+            property.city || null,
+        ].filter(Boolean).join(' · '),
+    ].filter(Boolean).join('\n');
+
+    const share = async () => {
+        const ok = await sharePropertyLink(
+            property.title,
+            `${window.location.origin}/properties/${property.public_id}`,
+            shareSummary,
+        );
+        setShareState(ok ? 'ok' : 'failed');
+        if (ok) setTimeout(() => setShareState('idle'), 2000);
+    };
+
     const amenities = property.amenities || [];
+    const isCustom = (a: string) => !typeAmenities.includes(a);
+    const shown = spec.visible;
 
     return (
         <AdminLayout>
@@ -46,9 +85,12 @@ export default function PropertyDetail(props: Props) {
                         <Link href="/admin/properties" className="inline-flex items-center gap-1.5 px-3.5 py-2.5 border border-[#E1E8F0] rounded-lg text-sm font-semibold text-gray-600 hover:bg-[#F7F9FC]">
                             <ChevronLeft size={16} /> Back
                         </Link>
-                        <Link href={`/properties/${property.id}`} target="_blank" className="inline-flex items-center gap-1.5 px-3.5 py-2.5 border border-[#E1E8F0] rounded-lg text-sm font-semibold text-gray-600 hover:bg-[#F7F9FC]">
+                        <Link href={`/properties/${property.public_id}`} target="_blank" className="inline-flex items-center gap-1.5 px-3.5 py-2.5 border border-[#E1E8F0] rounded-lg text-sm font-semibold text-gray-600 hover:bg-[#F7F9FC]">
                             <ExternalLink size={15} /> View Site
                         </Link>
+                        <button onClick={share} className="inline-flex items-center gap-1.5 px-3.5 py-2.5 border border-[#E1E8F0] rounded-lg text-sm font-semibold text-gray-600 hover:bg-[#F7F9FC]">
+                            <Share2 size={15} /> {shareState === 'ok' ? 'Copied!' : shareState === 'failed' ? 'Failed' : 'Share'}
+                        </button>
                         <Link href={`/admin/properties/${property.id}/edit`} className="inline-flex items-center gap-1.5 px-3.5 py-2.5 bg-[#0D1B3E] text-white rounded-lg text-sm font-semibold hover:bg-[#1A2B50]">
                             <Pencil size={15} /> Edit
                         </Link>
@@ -62,7 +104,7 @@ export default function PropertyDetail(props: Props) {
             {/* Hero */}
             <div className="bg-white rounded-xl border border-[#E1E8F0] overflow-hidden mb-6">
                 <div className="relative h-64 sm:h-80">
-                    <img src={property.image} alt={property.title} className="w-full h-full object-cover" />
+                    <img src={galleryImages[activeImage]} alt={property.title} className="w-full h-full object-cover" />
                     <div className="absolute top-4 left-4 flex gap-2">
                         <span className={`status-badge ${statusColor[property.status] || 'bg-gray-100 text-gray-600'}`}>{property.status}</span>
                         <span className="status-badge bg-[#0D1B3E] text-white">{property.type}</span>
@@ -70,12 +112,31 @@ export default function PropertyDetail(props: Props) {
                     <div className="absolute bottom-4 left-4 bg-[#0D1B3E]/90 text-white px-4 py-2 rounded-lg font-bold text-lg backdrop-blur">
                         {property.price_label}
                     </div>
+                    {galleryImages.length > 1 && (
+                        <span className="absolute bottom-4 right-4 bg-black/50 text-white text-xs font-semibold px-2.5 py-1 rounded-full backdrop-blur">
+                            {activeImage + 1} / {galleryImages.length}
+                        </span>
+                    )}
                     {property.featured && (
                         <span className="absolute top-4 right-4 status-badge bg-gold-500 text-white">
                             <Star size={11} fill="currentColor" /> Featured
                         </span>
                     )}
                 </div>
+                {galleryImages.length > 1 && (
+                    <div className="grid grid-cols-5 gap-2 p-3 bg-[#F7F9FC] border-t border-[#F0F4F8]">
+                        {galleryImages.map((img, i) => (
+                            <button
+                                key={i}
+                                type="button"
+                                onClick={() => setActiveImage(i)}
+                                className={`overflow-hidden rounded-lg h-16 ${activeImage === i ? 'ring-2 ring-gold-400' : 'opacity-70 hover:opacity-100'}`}
+                            >
+                                <img src={img} alt="" className="w-full h-full object-cover" />
+                            </button>
+                        ))}
+                    </div>
+                )}
                 <div className="p-5">
                     <p className="flex items-center gap-1.5 text-gray-500 text-sm"><MapPin size={15} /> {property.location}</p>
                 </div>
@@ -89,13 +150,13 @@ export default function PropertyDetail(props: Props) {
                         <h3 className="font-semibold text-[#0D1B3E] mb-4">Property Highlights</h3>
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                             {[
-                                { icon: Bed, label: 'Bedrooms', value: property.bedrooms > 0 ? `${property.bedrooms} BHK` : '—' },
-                                { icon: Bath, label: 'Bathrooms', value: property.bathrooms > 0 ? String(property.bathrooms) : '—' },
-                                { icon: Maximize, label: 'Area', value: `${property.area} sqft` },
-                                { icon: CarFront, label: 'Parking', value: `${property.parking} slot` },
-                                { icon: Clock, label: 'Possession', value: property.possession_date || '—' },
+                                shown.includes('bedrooms') && { icon: Bed, label: 'Bedrooms', value: property.bedrooms > 0 ? `${property.bedrooms} BHK` : '—' },
+                                shown.includes('bathrooms') && { icon: Bath, label: 'Bathrooms', value: property.bathrooms > 0 ? String(property.bathrooms) : '—' },
+                                { icon: Maximize, label: spec.area_label.replace(/\s*\(.*\)/, ''), value: `${property.area} ${spec.area_label.match(/\((.*)\)/)?.[1] ?? 'sq.ft'}` },
+                                shown.includes('parking') && { icon: CarFront, label: 'Parking', value: `${property.parking} slot` },
+                                shown.includes('possession_date') && { icon: Clock, label: 'Possession', value: property.possession_date || '—' },
                                 { icon: ArrowRightLeft, label: 'Transaction', value: property.transaction_type },
-                            ].map((s, i) => (
+                            ].filter(present).map((s, i) => (
                                 <div key={i} className="bg-[#F7F9FC] rounded-lg p-3.5">
                                     <s.icon size={16} className="text-gold-500 mb-2" />
                                     <div className="text-[#0D1B3E] font-semibold text-sm">{s.value}</div>
@@ -118,6 +179,11 @@ export default function PropertyDetail(props: Props) {
                             {amenities.map((a, i) => (
                                 <div key={i} className="flex items-center gap-2 bg-[#F7F9FC] rounded-lg px-3 py-2 text-sm text-gray-700 text-[13px]">
                                     <span className="w-1.5 h-1.5 rounded-full bg-gold-500 flex-shrink-0" /> {a}
+                                    {isCustom(a) && (
+                                        <span className="ml-auto text-[9px] font-semibold uppercase tracking-wide text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">
+                                            custom
+                                        </span>
+                                    )}
                                 </div>
                             ))}
                         </div>

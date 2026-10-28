@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>9. Troubleshooting & FAQ · QREX</title>
+<style>
+:root{--bg:#f7f8fa;--panel:#fff;--ink:#1f2733;--muted:#5b6472;--line:#e3e7ee;--accent:#0f5c4e;--accent2:#b5893b;--code:#f2f4f7;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65;font-size:16px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.layout{display:flex;min-height:100vh}
+aside{width:280px;flex:0 0 280px;background:var(--panel);border-right:1px solid var(--line);padding:24px 20px;position:sticky;top:0;height:100vh;overflow-y:auto}
+aside h2{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:18px 0 8px}
+aside a{display:block;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.9rem}
+aside a:hover{background:var(--bg);text-decoration:none}
+aside a.active{background:var(--accent);color:#fff}
+aside .brand{font-weight:700;font-size:1.05rem;color:var(--accent);margin-bottom:4px}
+main{flex:1;min-width:0;padding:40px 56px;max-width:960px;margin:0 auto}
+main h1{font-size:2rem;line-height:1.25;margin:0 0 .5em;padding-bottom:.35em;border-bottom:2px solid var(--line)}
+main h2{font-size:1.45rem;margin:2em 0 .6em;padding-bottom:.25em;border-bottom:1px solid var(--line)}
+main h3{font-size:1.15rem;margin:1.6em 0 .5em}
+main h4{font-size:1rem;margin:1.3em 0 .4em}
+main p,main li{color:#2b3542}
+table{border-collapse:collapse;width:100%;margin:1.1em 0;font-size:.92rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+th{background:#eef1f5;font-weight:600}
+tr:nth-child(even) td{background:#fbfcfd}
+code{background:var(--code);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em}
+pre{background:#1e2530;color:#e6e9ef;padding:16px 18px;border-radius:8px;overflow-x:auto}
+pre code{background:none;color:inherit;padding:0}
+blockquote{margin:1.2em 0;padding:.6em 1.1em;background:#fff8e8;border-left:4px solid var(--accent2);color:#5b4a22;border-radius:0 6px 6px 0}
+blockquote p{margin:.4em 0}
+hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
+img{max-width:100%}
+.crumbs{font-size:.82rem;color:var(--muted);margin-bottom:18px}
+.pager{display:flex;justify-content:space-between;gap:16px;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{font-size:.9rem}
+.site-footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:24px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.card h3{margin:.2em 0 .4em;font-size:1.02rem}
+.card p{margin:.2em 0;font-size:.88rem;color:var(--muted)}
+/* --- Figures: diagrams and screen wireframes --- */
+.figure{margin:1.8em 0}
+.figure>svg{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px}
+.figure.diagram{overflow-x:auto}
+.figure.diagram.wide>svg{max-width:none;margin:0}
+.figure.wireframe>svg{border-color:#dbe2ea}
+figcaption{margin-top:.7em;font-size:.82rem;color:var(--muted);text-align:center;line-height:1.45}
+.art-missing{border-left:3px solid #c0392b}
+/* --- Long reference tables --- */
+.table-wrap{margin:1.1em 0}
+.table-filter{width:100%;max-width:300px;padding:7px 11px;margin-bottom:.55em;border:1px solid var(--line);border-radius:8px;font-size:.86rem;background:#fff;color:var(--ink);font-family:inherit}
+.table-filter:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.table-count{font-size:.78rem;color:var(--muted);margin-left:8px;vertical-align:middle}
+/* --- Documentation menu (sidebar) --- */
+.side-search{width:100%;padding:8px 10px;margin:10px 0 4px;border:1px solid var(--line);border-radius:8px;font-size:.85rem;background:var(--bg);color:var(--ink)}
+.side-search:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.home-link{display:block;font-size:.8rem;font-weight:600;color:var(--accent);margin-bottom:14px;padding:4px 0}
+.nav-group{border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:6px}
+.nav-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:10px 4px 6px;font-weight:700;user-select:none}
+.nav-group>summary::-webkit-details-marker{display:none}
+.nav-group>summary .chev{transition:transform .15s ease;font-size:.7rem;color:var(--muted)}
+.nav-group[open]>summary .chev{transform:rotate(90deg)}
+.nav-group .count{color:var(--muted);font-weight:400;margin-left:auto;font-size:.68rem}
+.nav-group a{display:flex;gap:8px;align-items:baseline;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.88rem;line-height:1.35}
+.nav-group a:hover{background:var(--bg);text-decoration:none}
+.nav-group a.active{background:var(--accent);color:#fff}
+.nav-group a.active .num{color:#d9ece7}
+.nav-group a .num{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.75rem;min-width:1.4em}
+.nav-hidden{display:none!important}
+.menu-toggle{display:none;position:fixed;top:12px;left:12px;z-index:50;width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:1.2rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.menu-backdrop{display:none}
+@media(max-width:900px){
+  .layout{flex-direction:column}
+  .menu-toggle{display:flex}
+  aside{position:fixed;top:0;left:0;z-index:60;width:290px;height:100vh;overflow-y:auto;border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .2s ease;box-shadow:0 0 24px rgba(0,0,0,.12)}
+  body.menu-open aside{transform:translateX(0)}
+  body.menu-open .menu-backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:55}
+  main{padding:64px 20px 24px}
+}
+@media print{
+  aside,.crumbs,.pager,.menu-toggle,.menu-backdrop{display:none}
+  body{background:#fff;font-size:11pt}
+  main{max-width:none;padding:0}
+  a{color:var(--ink)}
+  pre{background:#f2f4f7;color:#1f2733;border:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<button class="menu-toggle" aria-label="Open documentation menu" onclick="document.body.classList.toggle('menu-open')">☰</button>
+<div class="menu-backdrop" onclick="document.body.classList.remove('menu-open')"></div>
+<aside>
+  <a class="home-link" href="index.html">⌂ All documentation</a>
+  <div class="brand">QREX Documentation</div>
+  <div style="font-size:.78rem;color:var(--muted)">Qodeigence Infocircle Pvt. Ltd.</div>
+  <input class="side-search" type="search" placeholder="Search documents…" aria-label="Search documents" oninput="filterDocs(this.value)">
+  <nav id="doc-nav">
+    <details class="nav-group" open>
+<summary><span>User Manual</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="manual-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="overview and getting started" href="manual-01-overview-and-getting-started.html"><span class="num">01</span><span>Overview And Getting Started</span></a><a class="" data-title="roles and access" href="manual-02-roles-and-access.html"><span class="num">02</span><span>Roles And Access</span></a><a class="" data-title="sales lifecycle" href="manual-03-sales-lifecycle.html"><span class="num">03</span><span>Sales Lifecycle</span></a><a class="" data-title="modules sales" href="manual-04-modules-sales.html"><span class="num">04</span><span>Modules Sales</span></a><a class="" data-title="modules operations" href="manual-05-modules-operations.html"><span class="num">05</span><span>Modules Operations</span></a><a class="" data-title="modules marketing and admin" href="manual-06-modules-marketing-and-admin.html"><span class="num">06</span><span>Modules Marketing And Admin</span></a><a class="" data-title="public website" href="manual-07-public-website.html"><span class="num">07</span><span>Public Website</span></a><a class="" data-title="reference" href="manual-08-reference.html"><span class="num">08</span><span>Reference</span></a><a class="active" data-title="troubleshooting and faq" href="manual-09-troubleshooting-and-faq.html"><span class="num">09</span><span>Troubleshooting And Faq</span></a></details><details class="nav-group">
+<summary><span>How QREX Works</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="explain-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="system at a glance" href="explain-01-system-at-a-glance.html"><span class="num">01</span><span>System At A Glance</span></a><a class="" data-title="sales lifecycle" href="explain-02-sales-lifecycle.html"><span class="num">02</span><span>Sales Lifecycle</span></a><a class="" data-title="data model" href="explain-03-data-model.html"><span class="num">03</span><span>Data Model</span></a><a class="" data-title="roles and permissions" href="explain-04-roles-and-permissions.html"><span class="num">04</span><span>Roles And Permissions</span></a><a class="" data-title="screen designs" href="explain-05-screen-designs.html"><span class="num">05</span><span>Screen Designs</span></a><a class="" data-title="operations and automation" href="explain-06-operations-and-automation.html"><span class="num">06</span><span>Operations And Automation</span></a></details><details class="nav-group">
+<summary><span>Technical Documentation</span><span class="chev">▶</span></summary>
+<a class="" data-title="project scope" href="tech-01-project-scope.html"><span class="num">01</span><span>Project Scope</span></a><a class="" data-title="architecture" href="tech-02-architecture.html"><span class="num">02</span><span>Architecture</span></a><a class="" data-title="operations modules" href="tech-03-operations-modules.html"><span class="num">03</span><span>Operations Modules</span></a><a class="" data-title="roles permissions" href="tech-04-roles-permissions.html"><span class="num">04</span><span>Roles Permissions</span></a><a class="" data-title="database schema" href="tech-05-database-schema.html"><span class="num">05</span><span>Database Schema</span></a><a class="" data-title="operations" href="tech-06-operations.html"><span class="num">06</span><span>Operations</span></a><a class="" data-title="security hardening" href="tech-07-security-hardening.html"><span class="num">07</span><span>Security Hardening</span></a><a class="" data-title="glossary" href="tech-08-glossary.html"><span class="num">08</span><span>Glossary</span></a><a class="" data-title="project proposal" href="tech-09-project-proposal.html"><span class="num">09</span><span>Project Proposal</span></a><a class="" data-title="budget pricing mumbai" href="tech-10-budget-pricing-mumbai.html"><span class="num">10</span><span>Budget Pricing Mumbai</span></a></details>
+  </nav>
+  <details class="nav-group"><summary><span>Downloads</span><span class="chev">▶</span></summary>
+    <a href="../word/QREX-User-Manual.docx"><span class="num"></span><span>User Manual (.docx)</span></a>
+    <a href="../word/QREX-User-Manual.doc"><span class="num"></span><span>User Manual (.doc)</span></a>
+    <a href="../word/QREX-How-It-Works.docx"><span class="num"></span><span>How QREX Works (.docx)</span></a>
+    <a href="../word/QREX-How-It-Works.doc"><span class="num"></span><span>How QREX Works (.doc)</span></a>
+    <a href="../word/QREX-Technical-Documentation.docx"><span class="num"></span><span>Technical Docs (.docx)</span></a>
+    <a href="../word/QREX-Technical-Documentation.doc"><span class="num"></span><span>Technical Docs (.doc)</span></a>
+  </details>
+</aside>
+<main>
+<div class="crumbs">QREX User Manual</div>
+<h1 id="9-troubleshooting-faq">9. Troubleshooting & FAQ</h1>
+<p>Everything that commonly goes wrong, what it means, and what to do about it.</p>
+<hr>
+<h2 id="91-access-login">9.1 Access & Login</h2>
+<h3 id="you-do-not-have-permission-to-perform-this-action">"You do not have permission to perform this action."</h3>
+<p><strong>What it means.</strong> A red toast after an action was refused. Your role does not hold the permission the action needs.</p>
+<p><strong>What to do.</strong></p>
+<ol>
+<li>Check the <strong>Roles &amp; Permissions</strong> screen (or ask an Admin) for the exact slug. The pattern is <code>module.action</code> — for creating a lead it is <code>leads.create</code>, for moving a deal it is <code>sales.edit</code>.</li>
+<li>Ask for that specific permission to be added to your role. Naming the slug makes the request quick.</li>
+<li>If the <strong>module is missing from the sidebar</strong> rather than the action being refused, your role lacks the <code>view</code> permission for the module. That is the same class of problem — ask for <code>module.view</code>.</li>
+</ol>
+<h3 id="you-do-not-have-the-required-role-to-access-this-page">"You do not have the required role to access this page."</h3>
+<p><strong>What it means.</strong> You have the permission but not the <strong>role</strong>. This applies to the Super-Admin-only actions: SMTP configuration, test mail, logo upload and logo removal.</p>
+<p><strong>What to do.</strong> Only a <strong>Super Admin</strong> can perform these. Ask them to do it, or ask for the role itself.</p>
+<h3 id="you-do-not-have-access-to-this-lead">"You do not have access to this lead."</h3>
+<p><strong>What it means.</strong> HTTP 403. You are a Sales Executive or Senior Agent and this lead is neither <strong>assigned to you</strong> nor <strong>owned by you</strong>.</p>
+<p><strong>What to do.</strong></p>
+<ol>
+<li>Go back to the <strong>Leads</strong> list — if it is not in your filtered list, it is not yours.</li>
+<li>Ask whoever has it to <strong>hand it over</strong> (reassign). The handover moves both the assigned agent and the owner, and the lead then appears in your list immediately.</li>
+<li>If you believe it <em>should</em> be yours, an Admin can change the assigned agent and owner for you.</li>
+</ol>
+<h3 id="my-colleague-says-they-sent-me-a-lead-but-i-cannot-see-it">My colleague says they sent me a lead, but I cannot see it</h3>
+<p>Most often one of these:</p>
+<ul>
+<li>The lead was assigned to them but the <strong>owner</strong> was not changed, and you are only the owner.</li>
+<li>The handover was not done — the lead is still assigned to them.</li>
+<li>You are signed in on a different account than you think. Check <strong>My Profile</strong> for your email and role.</li>
+</ul>
+<h3 id="the-sign-in-screen-says-my-account-is-not-valid">The sign-in screen says my account is not valid</h3>
+<p><strong>What it means.</strong> The account exists but is <strong>Inactive</strong>, or the password is wrong, or you have exceeded the rate limit.</p>
+<p><strong>What to do.</strong> Check the order of likelihood:</p>
+<ol>
+<li><strong>Rate limit</strong> — more than 5 attempts in a minute. Wait 60 seconds and try once.</li>
+<li><strong>Inactive account</strong> — an Admin set your status to <code>Inactive</code>. Sign-in is refused even with the right password. Ask them to set it back to <code>Active</code>.</li>
+<li><strong>Wrong password</strong> — use <strong>Forgot password</strong> to reset it by email.</li>
+</ol>
+<h3 id="the-forgot-password-email-never-arrives">The "Forgot password" email never arrives</h3>
+<p><strong>What it means.</strong> Outgoing mail is not working. Password resets, new-user invitations and email-change OTPs all depend on it.</p>
+<p><strong>What to do.</strong></p>
+<ol>
+<li>Ask a <strong>Super Admin</strong> to open <strong>Settings → SMTP / Email Configuration</strong> and press <strong>Test mail</strong>.</li>
+<li>If the test fails, the mail server details, credentials or the &quot;Enable SMTP&quot; switch need fixing.</li>
+<li>Until SMTP works, a Super Admin can set a temporary password for you directly on <strong>Users → Edit user</strong>, and you can change it from <strong>My Profile → Change Password</strong> afterwards.</li>
+</ol>
+<h3 id="the-demo-account-on-the-login-screen-does-not-work">The demo account on the login screen does not work</h3>
+<p><strong>What it means.</strong> The login screen&#39;s demo chips use <code>@example.com</code> addresses, while the database seeder creates <code>@example.in</code> addresses. They do not line up.</p>
+<p><strong>What to do.</strong> Use the seeder table in <a href="manual-01-overview-and-getting-started.html#16-demo-accounts-evaluation-and-training-only"><code>01-overview-and-getting-started.md</code></a> instead. The <strong>Accountant</strong> chip points at a deliberately <strong>Inactive</strong> account and will always be refused — that is expected.</p>
+<h3 id="i-signed-in-but-the-sidebar-is-missing-half-the-modules">I signed in but the sidebar is missing half the modules</h3>
+<p><strong>What it means.</strong> That is the permission system. The sidebar only shows modules you have <code>view</code> access to.</p>
+<p><strong>What to do.</strong> Nothing, unless you think you should have more. Check your role with an Admin. See <a href="manual-02-roles-and-access.html"><code>02-roles-and-access.md</code></a>.</p>
+<hr>
+<h2 id="92-leads">9.2 Leads</h2>
+<h3 id="my-csv-import-imported-some-rows-and-skipped-others">My CSV import imported some rows and skipped others</h3>
+<p><strong>What it means.</strong> The import is per-row tolerant — good rows go in, bad rows are reported and skipped.</p>
+<p><strong>What to do.</strong> Read the per-row errors. Each one tells you which row and why:</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><em>&quot;Row N: name and phone are required.&quot;</em></td>
+<td>Both columns must be filled</td>
+</tr>
+<tr>
+<td><em>&quot;Row N: duplicate lead within file (Name / Phone).&quot;</em></td>
+<td>The same phone appears twice in your file</td>
+</tr>
+<tr>
+<td><em>&quot;Row N: duplicate lead (Name / Phone).&quot;</em></td>
+<td>That phone already exists in the system — this is a genuine duplicate, not a file problem</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Watch the toast colour.</strong> A clean import shows green. An import with skipped rows uses the <em>warning</em> channel, which is less prominent. <strong>Always read the per-row errors</strong> — the count alone will not tell you that rows were dropped.</p>
+</blockquote>
+<h3 id="the-whole-import-failed-with-import-failed-please-check-the-file-format-and-try-again">The whole import failed with "Import failed. Please check the file format and try again."</h3>
+<p><strong>What it means.</strong> The file failed structurally and the import was rolled back in full. Nothing was imported.</p>
+<p><strong>What to do.</strong></p>
+<ol>
+<li>Check the file is <strong>under 2 MB</strong> and is <code>.csv</code> or <code>.txt</code>.</li>
+<li>Download a fresh <strong>import template</strong> and copy your data into it, rather than editing your own file. The template&#39;s columns are in the expected order.</li>
+<li>If your file has a header row, make sure the names are recognisable — the system matches many aliases, but an exotic header like <code>Mobile No. of Prospect</code> will not match anything. Either rename the column or remove the header row so the columns are read positionally.</li>
+<li>If a cell contains a comma, quote it: <code>&quot;Andheri West, Mumbai&quot;</code>.</li>
+</ol>
+<h3 id="the-import-ignored-my-column-order">The import ignored my column order</h3>
+<p><strong>What it means.</strong> The system auto-detects the header. If it finds at least three recognisable column names, it maps by name; otherwise it falls back to <strong>positional</strong> mapping in the order <code>name, phone, email, source, status, budget, preferred_location, requirements, score, next_followup</code>.</p>
+<p><strong>What to do.</strong> Download the template and match its column order exactly, or use clearly recognisable header names.</p>
+<h3 id="this-lead-cannot-be-converted-in-its-current-status">"This lead cannot be converted in its current status."</h3>
+<p><strong>What it means.</strong> The lead is <code>Converted</code> or <code>Lost</code>. Both are terminal.</p>
+<p><strong>What to do.</strong> If the deal genuinely was lost, leave it as <code>Lost</code> — that is what makes the lost-leads report accurate. If it was converted by mistake, an Admin can correct the status, or convert a different lead.</p>
+<h3 id="two-people-converted-the-same-lead">Two people converted the same lead</h3>
+<p>This is <strong>prevented by design</strong> — the lead row is locked during conversion, so only one deal can ever be created from a lead. If it looks like it happened twice, check whether one of the two is a direct deal created on the pipeline board (which has no lead attached).</p>
+<h3 id="a-site-visit-was-not-created-when-i-changed-the-status">A site visit was not created when I changed the status</h3>
+<p><strong>What it means.</strong> The visit is created <strong>once per lead</strong>. If a visit already exists for that lead, no second one is made.</p>
+<p><strong>What to do.</strong> Open <strong>Site Visits</strong> and look for the existing one — update its date and status instead of expecting a new one.</p>
+<h3 id="my-next-follow-up-date-did-not-create-a-task">My next-follow-up date did not create a task</h3>
+<p><strong>What it means.</strong> Usually one of three things:</p>
+<ol>
+<li>The date did not parse, so the system fell back to <strong>tomorrow</strong>.</li>
+<li>The task was <strong>completed</strong> because the previous follow-up date was cleared.</li>
+<li>An open follow-up task already existed and was <strong>updated</strong> rather than duplicated.</li>
+</ol>
+<p><strong>What to do.</strong> Check <strong>Tasks &amp; Follow-ups</strong> and filter by <strong>Pending</strong> or <strong>Overdue</strong>. The task is titled <em>&quot;Follow-up: {lead name}&quot;</em> and is assigned to the lead&#39;s agent.</p>
+<h3 id="a-follow-up-task-is-overdue-but-i-was-not-notified">A follow-up task is Overdue but I was not notified</h3>
+<p><strong>What it means.</strong> The daily sweep at 09:00 notifies the task&#39;s <strong>assignee</strong>. If the task has no assignee, it is flagged but nobody is told.</p>
+<p><strong>What to do.</strong> Open the task and set <strong>Assign to</strong> to the right person. The next sweep will notify them. Also note the <strong>12-hour rule</strong> — a second unread notice for the same lead will not be sent within 12 hours.</p>
+<h3 id="the-notification-badge-is-not-clearing">The notification badge is not clearing</h3>
+<p><strong>What it means.</strong> A notification is still marked unread.</p>
+<p><strong>What to do.</strong> Open the notification list from the bell and press <strong>Mark all as read</strong>. Note that the follow-up sweep will not re-send a notice for the same lead within 12 hours, so the badge will not immediately come back.</p>
+<hr>
+<h2 id="93-properties-the-public-site">9.3 Properties & the Public Site</h2>
+<h3 id="my-property-is-not-showing-on-the-public-site">My property is not showing on the public site</h3>
+<p><strong>What it means.</strong> One of three things:</p>
+<ol>
+<li><strong>&quot;Show on website&quot; is off.</strong> This is the master switch and it hides the listing from listings <em>and</em> direct links. It is in the <strong>Gallery &amp; Website</strong> step of the property form.</li>
+<li><strong>The status is <code>Draft</code> or <code>Inactive</code>.</strong></li>
+<li>It is a <em>featured</em> listing that the <strong>CMS featured selection</strong> has excluded.</li>
+</ol>
+<p><strong>What to do.</strong> Open the property → <strong>Edit</strong> → <strong>Gallery &amp; Website</strong> and check the visibility switch. Then check <strong>CMS / Website → Featured properties</strong>.</p>
+<h3 id="a-direct-link-to-my-property-returns-404">A direct link to my property returns 404</h3>
+<p><strong>What it means.</strong> Either the property is not website-visible, or the link has been tampered with. Public links use an <strong>encrypted</strong> identifier, so a raw or hand-edited link will not resolve.</p>
+<p><strong>What to do.</strong> Get the link from the <strong>Share</strong> button on the property detail page rather than constructing it.</p>
+<h3 id="the-area-box-says-land-area-acres-but-it-says-sqft-elsewhere">The area box says "Land Area (acres)" but it says sq.ft elsewhere</h3>
+<p><strong>What it means.</strong> The area label is set by the property <strong>type</strong>. <code>Farm/Land</code> is labelled in acres, <code>Commercial</code>/<code>Office</code>/<code>Shop</code>/<code>Warehouse</code> in carpet area, and the rest in built-up area.</p>
+<p><strong>What to do.</strong> The label does <strong>not</strong> convert the number. For a 5-acre plot, enter <code>5</code> under Farm/Land. If you want the value in square feet, change the property type or enter the converted figure and accept the label — or have an Admin adjust the type&#39;s label in the property type catalogue.</p>
+<h3 id="an-amenity-vanished-when-i-changed-the-property-type">An amenity vanished when I changed the property type</h3>
+<p><strong>What it means.</strong> Amenities that are not valid for the new type are pruned automatically, and the form tells you how many were removed.</p>
+<p><strong>What to do.</strong> Change the type back, or re-add the amenity as a <strong>custom</strong> entry — custom amenities are never pruned. Alternatively, ask an Admin to add it to the new type&#39;s amenity list in <strong>Amenities</strong>.</p>
+<h3 id="a-lead-i-am-working-is-not-linked-to-the-property">A lead I am working is not linked to the property</h3>
+<p><strong>What it means.</strong> Only a <strong>property enquiry</strong> from the public site links a lead to a listing automatically. A lead created by an agent or imported from a CSV is linked only if you set <strong>Interested property</strong> on it.</p>
+<p><strong>What to do.</strong> Edit the lead and set the interested property.</p>
+<hr>
+<h2 id="94-pipeline-bookings-payments">9.4 Pipeline, Bookings & Payments</h2>
+<h3 id="i-cannot-drag-a-card-on-the-pipeline-board">I cannot drag a card on the pipeline board</h3>
+<p><strong>What it means.</strong> Moving a card needs <code>sales.edit</code>. You probably hold <code>sales.view</code> only — which is the <strong>Accountant</strong> role&#39;s situation: they can see the board to reconcile bookings, but cannot move anything.</p>
+<p><strong>What to do.</strong> Ask for <code>sales.edit</code> if you genuinely need to move deals.</p>
+<h3 id="the-booking-shows-under-agreement-but-the-agreement-is-not-signed">The booking shows "Under Agreement" but the agreement is not signed</h3>
+<p><strong>What it means.</strong> That is expected. The <strong>booking status</strong> and the <strong>agreement status</strong> are <strong>two independent tracks</strong>.</p>
+<p><strong>What to do.</strong> Change the <strong>agreement status</strong> dropdown separately. A booking can be <em>Under Agreement</em> while the agreement is still <em>Pending</em> or <em>Under Review</em>.</p>
+<h3 id="a-payment-will-not-save">A payment will not save</h3>
+<p><strong>What it means.</strong> Usually a missing or invalid value.</p>
+<p><strong>What to do.</strong> Check the amount is a number, the mode is one of the seven offered values, and the due date is a real date. If you are recording from a booking, the <strong>amount</strong> is required.</p>
+<h3 id="the-payment-total-does-not-match-the-booking-amount">The payment total does not match the booking amount</h3>
+<p><strong>What it means.</strong> A booking&#39;s <strong>booking amount</strong> and its <strong>payments</strong> are separate records. A booking can have a booking amount of ₹50 L and one payment of ₹5 L recorded against it.</p>
+<p><strong>What to do.</strong> Look at the <strong>linked payments</strong> list on the booking detail page to see what has actually been received. The booking amount is what was agreed; the payments are what arrived.</p>
+<h3 id="the-transaction-id-shows-">The transaction id shows "—"</h3>
+<p><strong>What it means.</strong> Payments created from a booking get a placeholder transaction id, because there is no payment gateway to generate a real one.</p>
+<p><strong>What to do.</strong> Edit the payment and replace it with the actual UTR or cheque number so the accounts team can trace it.</p>
+<h3 id="the-reports-export-button-is-missing">The Reports export button is missing</h3>
+<p><strong>What it means.</strong> The <strong>CSV</strong> export needs <code>reports.export</code>. The <strong>PDF</strong> export only needs <code>reports.view</code>, so you may have the PDF and not the CSV.</p>
+<p><strong>What to do.</strong> Ask for <code>reports.export</code> if you need the spreadsheet. Sales Executives and Senior Agents have <code>reports.view</code> only, so this is expected for them.</p>
+<hr>
+<h2 id="95-administration">9.5 Administration</h2>
+<h3 id="system-roles-cannot-be-modified">"System roles cannot be modified."</h3>
+<p><strong>What it means.</strong> Super Admin and Admin are <strong>system</strong> roles and are locked.</p>
+<p><strong>What to do.</strong> Create a <strong>custom role</strong> with the permissions you want and move the affected users onto it. That is the supported path, and it leaves the system roles intact.</p>
+<h3 id="cannot-delete-role-that-is-assigned-to-n-users">"Cannot delete role that is assigned to N user(s)."</h3>
+<p><strong>What it means.</strong> A role still in use cannot be deleted.</p>
+<p><strong>What to do.</strong> Move those users to another role first, then delete it. If you just want the role to stop being used, create a replacement with the same name but different permissions and move the users across.</p>
+<h3 id="only-a-super-admin-can-grant-the-super-admin-role">"Only a Super Admin can grant the Super Admin role."</h3>
+<p><strong>What it means.</strong> Even an Admin cannot assign the <code>super-admin</code> role.</p>
+<p><strong>What to do.</strong> Ask a Super Admin directly.</p>
+<h3 id="the-super-admin-account-cannot-be-deleted">"The Super Admin account cannot be deleted."</h3>
+<p><strong>What it means.</strong> That guard is permanent and is there to prevent the agency locking itself out.</p>
+<p><strong>What to do.</strong> Set the account to <strong>Inactive</strong> instead if the person has left. Note that the account then remains in the system, still holding its permissions, and is still hidden from non-Super-Admins.</p>
+<h3 id="you-cannot-delete-your-own-account">"You cannot delete your own account."</h3>
+<p><strong>What it means.</strong> Self-deletion is blocked.</p>
+<p><strong>What to do.</strong> Ask another administrator to deactivate you and delete the account.</p>
+<h3 id="a-users-email-change-did-not-go-through">A user's email change did not go through</h3>
+<p><strong>What it means.</strong> The email-change flow is OTP-protected in both directions. All four steps must complete:</p>
+<ol>
+<li>Code sent to the <strong>current</strong> email → verified.</li>
+<li>Code sent to the <strong>new</strong> email → verified.</li>
+</ol>
+<p><strong>What to do.</strong></p>
+<ul>
+<li>The code is 6 digits and lives for <strong>10 minutes</strong>. Request a new one rather than retrying a stale code.</li>
+<li>You can only request a new code every <strong>60 seconds</strong>.</li>
+<li>After <strong>5</strong> wrong attempts you must request a fresh code.</li>
+<li>The &quot;verify current email&quot; step always appears to succeed, even if the address is wrong — that is deliberate, to avoid revealing which addresses exist.</li>
+</ul>
+<h3 id="the-smtp-password-field-looks-empty-will-not-save">The SMTP password field looks empty / will not save</h3>
+<p><strong>What it means.</strong> The stored SMTP password is masked on purpose.</p>
+<p><strong>What to do.</strong> Leave the field blank (or type <code>********</code>) and save — the existing password is preserved. Only type a new value to replace it. Then press <strong>Test mail</strong> to confirm the configuration still works.</p>
+<h3 id="i-deleted-a-media-file-but-the-property-photo-is-still-there">I deleted a media file but the property photo is still there</h3>
+<p><strong>What it means.</strong> That is expected. Property photos belong to the <strong>property record</strong>, not to the media library.</p>
+<p><strong>What to do.</strong> Remove the photo from the property&#39;s own gallery (<strong>Edit property → Gallery &amp; Website</strong>).</p>
+<hr>
+<h2 id="96-general-faq">9.6 General FAQ</h2>
+<h3 id="how-do-i-change-a-value-that-i-am-not-allowed-to-change">How do I change a value that I am not allowed to change?</h3>
+<p>You cannot, if you are on the <strong>Settings</strong> screen. Settings is the one screen where field-level permissions are actually enforced: if you lack <code>settings.edit.{field}</code> the server refuses the save, and only a Super Admin holds <code>settings.edit.project_name</code>.</p>
+<p>On <strong>every other</strong> screen there is no field-level enforcement today — if a box is present you can edit it, and if it is absent it is because the whole module or action is gated, not the individual field. Field permissions for other modules exist in the catalogue for planning but are not yet read by the application, so asking for <code>leads.edit.source</code> on its own will not currently hide or lock that field. See the note in <a href="manual-02-roles-and-access.html#idea-2-some-permissions-are-field-level"><code>02-roles-and-access.md</code></a>.</p>
+<h3 id="why-does-the-same-action-sometimes-work-and-sometimes-not">Why does the same action sometimes work and sometimes not?</h3>
+<p>The usual cause is <strong>row-level scoping</strong>, not permissions. You may hold <code>leads.edit</code> and still be refused whenever the lead is not yours — see <a href="#91-access-login">Access &amp; Login</a> above.</p>
+<p>Two mechanisms are genuinely in play:</p>
+<ul>
+<li><strong>Route permissions</strong> are checked on every request. If one fails, you get a red toast.</li>
+<li><strong>Field-level permissions</strong> are checked on the <strong>Settings</strong> screen only, and there they refuse the save rather than hiding the field.</li>
+</ul>
+<h3 id="a-field-is-present-but-will-not-save-why">A field is present but will not save. Why?</h3>
+<p>On <strong>Settings</strong>, it is a field-level permission (<code>settings.edit.{field}</code>) — an Admin lacks <code>settings.edit.project_name</code>, for example.</p>
+<p>On any other screen a refusal to save is far more likely to be <strong>row-level scoping</strong> (the record is not yours) or a <strong>validation</strong> error. Check the message next to the field.</p>
+<h3 id="why-is-a-menu-item-missing">Why is a menu item missing?</h3>
+<p>The sidebar only shows modules where you hold <code>module.view</code>. A role with only <code>leads.create</code> but not <code>leads.view</code> will not see the Leads module at all. (The sidebar is the <em>only</em> place that hides controls by permission — action buttons elsewhere render regardless and are refused on click.)</p>
+<h3 id="do-i-need-to-refresh-after-a-change">Do I need to refresh after a change?</h3>
+<p>Sidebar and button visibility update on the next page load. If a change you just made to your own role or profile does not appear, reload the page.</p>
+<h3 id="can-two-people-edit-the-same-record-at-once">Can two people edit the same record at once?</h3>
+<p>Yes, and the last save wins. QREX does not lock a record against concurrent editing — except during <strong>lead conversion</strong>, which is deliberately protected so a lead can never produce two deals. If two people are working the same lead, coordinate by hand.</p>
+<h3 id="does-anything-email-me-about-my-leads">Does anything email me about my leads?</h3>
+<p>No, by default. QREX sends only three kinds of email: <strong>password resets</strong>, <strong>new-user invitations</strong>, and <strong>email-change OTP codes</strong>. All other alerts — new lead, site visit, deal assigned, booking, payment, follow-up — are <strong>in-app notifications</strong> in the bell menu. Open the bell rather than waiting for an email.</p>
+<h3 id="is-there-a-way-to-log-my-emails-or-whatsapp-messages-automatically">Is there a way to log my emails or WhatsApp messages automatically?</h3>
+<p>No. Activities are logged manually. That is deliberate: it keeps the timeline honest, because only you know what actually happened on a call.</p>
+<h3 id="can-i-delete-a-lead">Can I delete a lead?</h3>
+<p>There is no delete button. Set the status to <code>Lost</code> instead — it preserves the history and makes the lost-leads report accurate.</p>
+<h3 id="why-is-my-report-showing-fewer-leads-than-the-leads-list">Why is my report showing fewer leads than the Leads list?</h3>
+<p>Two likely reasons:</p>
+<ol>
+<li><strong>Scoping.</strong> Sales Executives and Senior Agents see only their own leads in both places, but the report also applies the <strong>date range</strong> — check it is set to <em>All</em> if you expect a full picture.</li>
+<li><strong>The report tab is filtered.</strong> The agent and property dropdowns narrow every tab.</li>
+</ol>
+<h3 id="the-public-website-shows-a-listing-i-have-already-sold">The public website shows a listing I have already sold</h3>
+<p>Change the status to <code>Sold</code> — it stays listed, which is usually what you want for a sold-property page. To take it down entirely, switch off <strong>Show on website</strong> or set the status to <code>Inactive</code>.</p>
+<h3 id="something-looks-like-a-bug">Something looks like a bug</h3>
+<p>Collect these before reporting it:</p>
+<ul>
+<li>The <strong>exact URL</strong> you were on</li>
+<li>The <strong>exact action</strong> you took</li>
+<li>The <strong>exact message</strong> (screenshot it — toasts disappear after 3.5 seconds)</li>
+<li>Your <strong>role</strong> (shown in your profile menu)</li>
+<li>The <strong>time</strong> it happened</li>
+</ul>
+<p>That is usually enough to pinpoint the cause.</p>
+<hr>
+<h2 id="97-quick-reference-the-messages-you-will-see">9.7 Quick reference — the messages you will see</h2>
+<div class="table-wrap">
+<input class="table-filter" type="search" placeholder="Filter rows…" aria-label="Filter table rows">
+<span class="table-count"></span>
+<table>
+<thead>
+<tr>
+<th>Message</th>
+<th>Module</th>
+<th>Meaning</th>
+<th>Who can fix it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>You do not have permission to perform this action.</td>
+<td>Any</td>
+<td>The role lacks the permission</td>
+<td>An Admin, by editing the role</td>
+</tr>
+<tr>
+<td>You do not have the required role to access this page.</td>
+<td>Settings</td>
+<td>Super-Admin-only action</td>
+<td>A Super Admin</td>
+</tr>
+<tr>
+<td>You do not have access to this lead.</td>
+<td>Leads</td>
+<td>Row-level scoping</td>
+<td>The lead&#39;s owner, by handing it over</td>
+</tr>
+<tr>
+<td>This lead cannot be converted in its current status.</td>
+<td>Leads</td>
+<td>The lead is <code>Converted</code> or <code>Lost</code></td>
+<td>An Admin, if it was a mistake</td>
+</tr>
+<tr>
+<td>Import failed. Please check the file format and try again.</td>
+<td>Leads</td>
+<td>The import rolled back</td>
+<td>Re-import using the template</td>
+</tr>
+<tr>
+<td>System roles cannot be modified.</td>
+<td>Roles</td>
+<td>System roles are locked</td>
+<td>Create a custom role instead</td>
+</tr>
+<tr>
+<td>System roles cannot be deleted.</td>
+<td>Roles</td>
+<td>System roles are locked</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Cannot delete role that is assigned to N user(s).</td>
+<td>Roles</td>
+<td>The role is still in use</td>
+<td>Move the users first</td>
+</tr>
+<tr>
+<td>Only a Super Admin can grant the Super Admin role.</td>
+<td>Users</td>
+<td>Privilege guard</td>
+<td>A Super Admin</td>
+</tr>
+<tr>
+<td>The Super Admin account cannot be deleted.</td>
+<td>Users</td>
+<td>Privilege guard</td>
+<td>Deactivate instead</td>
+</tr>
+<tr>
+<td>You cannot delete your own account.</td>
+<td>Users</td>
+<td>Privilege guard</td>
+<td>Another administrator</td>
+</tr>
+<tr>
+<td>User invited. They will receive an email to set their password.</td>
+<td>Users</td>
+<td>Success — the invite was emailed</td>
+<td>The user, if the email does not arrive (SMTP)</td>
+</tr>
+<tr>
+<td>Too many verification attempts. Please request a new code and try again later.</td>
+<td>Profile</td>
+<td>5 wrong OTP attempts</td>
+<td>Wait, then request a new code</td>
+</tr>
+</tbody></table>
+</div>
+
+<hr>
+<p><strong>Back to:</strong> <a href="manual-README.html"><code>README.md</code></a> — the manual index.</p>
+
+<div class="pager"><a href="manual-08-reference.html">← 08. Reference</a><span></span></div>
+<div class="site-footer">QREX documentation · generated from the Markdown sources in <code>docs/</code> · build with <code>npm run docs:html</code></div>
+</main>
+</div>
+
+<script>
+function filterDocs(q){
+  q=(q||'').trim().toLowerCase();
+  document.querySelectorAll('#doc-nav .nav-group').forEach(function(g){
+    var visible=0;
+    g.querySelectorAll('a').forEach(function(a){
+      var hit=!q||a.getAttribute('data-title').indexOf(q)>-1;
+      a.classList.toggle('nav-hidden',!hit);
+      if(hit)visible++;
+    });
+    g.classList.toggle('nav-hidden',visible===0);
+    if(q)g.open=true;
+  });
+}
+document.querySelectorAll('.table-wrap').forEach(function(wrap){
+  var input=wrap.querySelector('.table-filter');
+  var table=wrap.querySelector('table');
+  var count=wrap.querySelector('.table-count');
+  if(!input||!table)return;
+  input.addEventListener('input',function(){
+    var q=input.value.trim().toLowerCase();
+    var shown=0,total=0;
+    table.querySelectorAll('tbody tr').forEach(function(row){
+      total++;
+      var hit=!q||row.textContent.toLowerCase().indexOf(q)>-1;
+      row.style.display=hit?'':'none';
+      if(hit)shown++;
+    });
+    if(count)count.textContent=q?shown+' of '+total+' rows':' '+total+' rows';
+  });
+});
+</script>
+</body>
+</html>

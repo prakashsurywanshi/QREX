@@ -10,6 +10,7 @@ use App\Models\Property;
 use App\Models\SiteVisit;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -32,12 +33,12 @@ class ReportController extends Controller
             ->get();
         $dealsAll = Deal::all();
 
-        $leads = Lead::query()
+        $leads = Lead::query()->visibleTo(Auth::user())
             ->when($start, fn ($q) => $q->whereBetween('created_at', [$start, $end]))
             ->when($agentId, fn ($q) => $q->where('assigned_agent_id', $agentId))
             ->when($propertyId, fn ($q) => $q->where('interested_property_id', $propertyId))
             ->get();
-        $leadsAll = Lead::all();
+        $leadsAll = Lead::visibleTo(Auth::user())->get();
 
         $payments = Payment::query()
             ->when($start, fn ($q) => $q->whereBetween('paid_date', [$start, $end])->orWhereBetween('due_date', [$start, $end]))
@@ -182,7 +183,7 @@ class ReportController extends Controller
             ->get();
 
         return match ($type) {
-            'leads' => Lead::query()
+            'leads' => Lead::query()->visibleTo(Auth::user())
                 ->when($start, fn ($q) => $q->whereBetween('created_at', [$start, $end]))
                 ->when($agentId, fn ($q) => $q->where('assigned_agent_id', $agentId))
                 ->get()

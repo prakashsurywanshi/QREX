@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yearly Budget & Pricing Plan — QREX (SaaS + PaaS), Mumbai Launch · QREX</title>
+<style>
+:root{--bg:#f7f8fa;--panel:#fff;--ink:#1f2733;--muted:#5b6472;--line:#e3e7ee;--accent:#0f5c4e;--accent2:#b5893b;--code:#f2f4f7;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65;font-size:16px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.layout{display:flex;min-height:100vh}
+aside{width:280px;flex:0 0 280px;background:var(--panel);border-right:1px solid var(--line);padding:24px 20px;position:sticky;top:0;height:100vh;overflow-y:auto}
+aside h2{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:18px 0 8px}
+aside a{display:block;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.9rem}
+aside a:hover{background:var(--bg);text-decoration:none}
+aside a.active{background:var(--accent);color:#fff}
+aside .brand{font-weight:700;font-size:1.05rem;color:var(--accent);margin-bottom:4px}
+main{flex:1;min-width:0;padding:40px 56px;max-width:960px;margin:0 auto}
+main h1{font-size:2rem;line-height:1.25;margin:0 0 .5em;padding-bottom:.35em;border-bottom:2px solid var(--line)}
+main h2{font-size:1.45rem;margin:2em 0 .6em;padding-bottom:.25em;border-bottom:1px solid var(--line)}
+main h3{font-size:1.15rem;margin:1.6em 0 .5em}
+main h4{font-size:1rem;margin:1.3em 0 .4em}
+main p,main li{color:#2b3542}
+table{border-collapse:collapse;width:100%;margin:1.1em 0;font-size:.92rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+th{background:#eef1f5;font-weight:600}
+tr:nth-child(even) td{background:#fbfcfd}
+code{background:var(--code);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em}
+pre{background:#1e2530;color:#e6e9ef;padding:16px 18px;border-radius:8px;overflow-x:auto}
+pre code{background:none;color:inherit;padding:0}
+blockquote{margin:1.2em 0;padding:.6em 1.1em;background:#fff8e8;border-left:4px solid var(--accent2);color:#5b4a22;border-radius:0 6px 6px 0}
+blockquote p{margin:.4em 0}
+hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
+img{max-width:100%}
+.crumbs{font-size:.82rem;color:var(--muted);margin-bottom:18px}
+.pager{display:flex;justify-content:space-between;gap:16px;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{font-size:.9rem}
+.site-footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:24px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.card h3{margin:.2em 0 .4em;font-size:1.02rem}
+.card p{margin:.2em 0;font-size:.88rem;color:var(--muted)}
+/* --- Figures: diagrams and screen wireframes --- */
+.figure{margin:1.8em 0}
+.figure>svg{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px}
+.figure.diagram{overflow-x:auto}
+.figure.diagram.wide>svg{max-width:none;margin:0}
+.figure.wireframe>svg{border-color:#dbe2ea}
+figcaption{margin-top:.7em;font-size:.82rem;color:var(--muted);text-align:center;line-height:1.45}
+.art-missing{border-left:3px solid #c0392b}
+/* --- Long reference tables --- */
+.table-wrap{margin:1.1em 0}
+.table-filter{width:100%;max-width:300px;padding:7px 11px;margin-bottom:.55em;border:1px solid var(--line);border-radius:8px;font-size:.86rem;background:#fff;color:var(--ink);font-family:inherit}
+.table-filter:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.table-count{font-size:.78rem;color:var(--muted);margin-left:8px;vertical-align:middle}
+/* --- Documentation menu (sidebar) --- */
+.side-search{width:100%;padding:8px 10px;margin:10px 0 4px;border:1px solid var(--line);border-radius:8px;font-size:.85rem;background:var(--bg);color:var(--ink)}
+.side-search:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.home-link{display:block;font-size:.8rem;font-weight:600;color:var(--accent);margin-bottom:14px;padding:4px 0}
+.nav-group{border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:6px}
+.nav-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:10px 4px 6px;font-weight:700;user-select:none}
+.nav-group>summary::-webkit-details-marker{display:none}
+.nav-group>summary .chev{transition:transform .15s ease;font-size:.7rem;color:var(--muted)}
+.nav-group[open]>summary .chev{transform:rotate(90deg)}
+.nav-group .count{color:var(--muted);font-weight:400;margin-left:auto;font-size:.68rem}
+.nav-group a{display:flex;gap:8px;align-items:baseline;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.88rem;line-height:1.35}
+.nav-group a:hover{background:var(--bg);text-decoration:none}
+.nav-group a.active{background:var(--accent);color:#fff}
+.nav-group a.active .num{color:#d9ece7}
+.nav-group a .num{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.75rem;min-width:1.4em}
+.nav-hidden{display:none!important}
+.menu-toggle{display:none;position:fixed;top:12px;left:12px;z-index:50;width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:1.2rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.menu-backdrop{display:none}
+@media(max-width:900px){
+  .layout{flex-direction:column}
+  .menu-toggle{display:flex}
+  aside{position:fixed;top:0;left:0;z-index:60;width:290px;height:100vh;overflow-y:auto;border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .2s ease;box-shadow:0 0 24px rgba(0,0,0,.12)}
+  body.menu-open aside{transform:translateX(0)}
+  body.menu-open .menu-backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:55}
+  main{padding:64px 20px 24px}
+}
+@media print{
+  aside,.crumbs,.pager,.menu-toggle,.menu-backdrop{display:none}
+  body{background:#fff;font-size:11pt}
+  main{max-width:none;padding:0}
+  a{color:var(--ink)}
+  pre{background:#f2f4f7;color:#1f2733;border:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<button class="menu-toggle" aria-label="Open documentation menu" onclick="document.body.classList.toggle('menu-open')">☰</button>
+<div class="menu-backdrop" onclick="document.body.classList.remove('menu-open')"></div>
+<aside>
+  <a class="home-link" href="index.html">⌂ All documentation</a>
+  <div class="brand">QREX Documentation</div>
+  <div style="font-size:.78rem;color:var(--muted)">Qodeigence Infocircle Pvt. Ltd.</div>
+  <input class="side-search" type="search" placeholder="Search documents…" aria-label="Search documents" oninput="filterDocs(this.value)">
+  <nav id="doc-nav">
+    <details class="nav-group">
+<summary><span>User Manual</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="manual-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="overview and getting started" href="manual-01-overview-and-getting-started.html"><span class="num">01</span><span>Overview And Getting Started</span></a><a class="" data-title="roles and access" href="manual-02-roles-and-access.html"><span class="num">02</span><span>Roles And Access</span></a><a class="" data-title="sales lifecycle" href="manual-03-sales-lifecycle.html"><span class="num">03</span><span>Sales Lifecycle</span></a><a class="" data-title="modules sales" href="manual-04-modules-sales.html"><span class="num">04</span><span>Modules Sales</span></a><a class="" data-title="modules operations" href="manual-05-modules-operations.html"><span class="num">05</span><span>Modules Operations</span></a><a class="" data-title="modules marketing and admin" href="manual-06-modules-marketing-and-admin.html"><span class="num">06</span><span>Modules Marketing And Admin</span></a><a class="" data-title="public website" href="manual-07-public-website.html"><span class="num">07</span><span>Public Website</span></a><a class="" data-title="reference" href="manual-08-reference.html"><span class="num">08</span><span>Reference</span></a><a class="" data-title="troubleshooting and faq" href="manual-09-troubleshooting-and-faq.html"><span class="num">09</span><span>Troubleshooting And Faq</span></a></details><details class="nav-group">
+<summary><span>How QREX Works</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="explain-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="system at a glance" href="explain-01-system-at-a-glance.html"><span class="num">01</span><span>System At A Glance</span></a><a class="" data-title="sales lifecycle" href="explain-02-sales-lifecycle.html"><span class="num">02</span><span>Sales Lifecycle</span></a><a class="" data-title="data model" href="explain-03-data-model.html"><span class="num">03</span><span>Data Model</span></a><a class="" data-title="roles and permissions" href="explain-04-roles-and-permissions.html"><span class="num">04</span><span>Roles And Permissions</span></a><a class="" data-title="screen designs" href="explain-05-screen-designs.html"><span class="num">05</span><span>Screen Designs</span></a><a class="" data-title="operations and automation" href="explain-06-operations-and-automation.html"><span class="num">06</span><span>Operations And Automation</span></a></details><details class="nav-group" open>
+<summary><span>Technical Documentation</span><span class="chev">▶</span></summary>
+<a class="" data-title="project scope" href="tech-01-project-scope.html"><span class="num">01</span><span>Project Scope</span></a><a class="" data-title="architecture" href="tech-02-architecture.html"><span class="num">02</span><span>Architecture</span></a><a class="" data-title="operations modules" href="tech-03-operations-modules.html"><span class="num">03</span><span>Operations Modules</span></a><a class="" data-title="roles permissions" href="tech-04-roles-permissions.html"><span class="num">04</span><span>Roles Permissions</span></a><a class="" data-title="database schema" href="tech-05-database-schema.html"><span class="num">05</span><span>Database Schema</span></a><a class="" data-title="operations" href="tech-06-operations.html"><span class="num">06</span><span>Operations</span></a><a class="" data-title="security hardening" href="tech-07-security-hardening.html"><span class="num">07</span><span>Security Hardening</span></a><a class="" data-title="glossary" href="tech-08-glossary.html"><span class="num">08</span><span>Glossary</span></a><a class="" data-title="project proposal" href="tech-09-project-proposal.html"><span class="num">09</span><span>Project Proposal</span></a><a class="active" data-title="budget pricing mumbai" href="tech-10-budget-pricing-mumbai.html"><span class="num">10</span><span>Budget Pricing Mumbai</span></a></details>
+  </nav>
+  <details class="nav-group"><summary><span>Downloads</span><span class="chev">▶</span></summary>
+    <a href="../word/QREX-User-Manual.docx"><span class="num"></span><span>User Manual (.docx)</span></a>
+    <a href="../word/QREX-User-Manual.doc"><span class="num"></span><span>User Manual (.doc)</span></a>
+    <a href="../word/QREX-How-It-Works.docx"><span class="num"></span><span>How QREX Works (.docx)</span></a>
+    <a href="../word/QREX-How-It-Works.doc"><span class="num"></span><span>How QREX Works (.doc)</span></a>
+    <a href="../word/QREX-Technical-Documentation.docx"><span class="num"></span><span>Technical Docs (.docx)</span></a>
+    <a href="../word/QREX-Technical-Documentation.doc"><span class="num"></span><span>Technical Docs (.doc)</span></a>
+  </details>
+</aside>
+<main>
+<div class="crumbs">QREX Technical Documentation</div>
+<h1 id="yearly-budget-pricing-plan-qrex-saas-paas-mumbai-launch">Yearly Budget & Pricing Plan — QREX (SaaS + PaaS), Mumbai Launch</h1>
+<p><strong>Project:</strong> QREX — Qodeigence Real Estate Experience
+<strong>Company:</strong> Qodeigence Inc.
+<strong>Market:</strong> Mumbai Metropolitan Region (MMR), India
+<strong>Currency:</strong> INR (₹). All figures are <strong>indicative</strong>, ex-GST unless noted, and carry source labels for market data.
+<strong>Model:</strong> Two-layer commercial model — <strong>SaaS</strong> (software subscription) <strong>+ PaaS</strong> (platform as a service — managed/enterprise platform layer).</p>
+<hr>
+<h2 id="1-context-objectives">1. Context & Objectives</h2>
+<p>QREX is launching in Mumbai, India&#39;s largest residential market. Objectives for year 1:</p>
+<table>
+<thead>
+<tr>
+<th>Objective</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Paying SaaS customers by month 12</td>
+<td>25–40 agencies</td>
+</tr>
+<tr>
+<td>Paying PaaS subscribers by month 12</td>
+<td>8–15 agencies</td>
+</tr>
+<tr>
+<td>Recurring revenue run-rate (month 12)</td>
+<td>₹4–10 L MRR</td>
+</tr>
+<tr>
+<td>Time to break-even (monthly)</td>
+<td>Months 9–15</td>
+</tr>
+<tr>
+<td>Channel mix</td>
+<td>Direct sales + channel-partner associations + developer referrals</td>
+</tr>
+</tbody></table>
+<p><strong>Why Mumbai first:</strong></p>
+<ul>
+<li><strong>5,477 real-estate agencies</strong> in Mumbai (Apr 2026); 96.7% are single-owner operations, ~181 are larger multi-branch brands (Rentech Digital).</li>
+<li>The MMR hosts <strong>45,000–60,000 active channel partners (CPs)</strong>, of which <strong>12,000–18,000 are institutional/semi-organised businesses</strong>; CPs drive <strong>50–60% of MMR residential transactions</strong> (CREDAI-MCHI; Ghar.TV).</li>
+<li>MMR accounts for <strong>≈ ₹2.5 lakh crore of annual residential sales, roughly 40% of India&#39;s total</strong> (CREDAI-MCHI).</li>
+<li>Organised brokerage firms in MMR are growing <strong>18–25% annually</strong> vs. 10–15% for the wider CP ecosystem (CREDAI-MCHI; Ghar.TV) — an accessible, professionalising buyer base for a CRM + website + operations platform.</li>
+</ul>
+<hr>
+<h2 id="2-market-competitive-pricing-research">2. Market & Competitive Pricing Research</h2>
+<h3 id="21-india-real-estate-crm-price-benchmarks-per-user-per-month">2.1 India real-estate CRM price benchmarks (per user / per month)</h3>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Entry price</th>
+<th>Typical plan</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ClosingFox (India)</td>
+<td>₹499/u</td>
+<td>₹699/u (Growth), ₹1,499/u (Developer/Mandate)</td>
+<td>ClosingFox pricing, Apr 2026</td>
+</tr>
+<tr>
+<td>TeleCRM (India)</td>
+<td>₹799/u (annual)</td>
+<td>₹1,049/u (quarterly)</td>
+<td>TeleCRM pricing, Apr 2026</td>
+</tr>
+<tr>
+<td>Realatic (India)</td>
+<td>₹0 (3 users)</td>
+<td>₹499/u (Pro)</td>
+<td>Realatic pricing</td>
+</tr>
+<tr>
+<td>Zoho CRM</td>
+<td>₹800/u</td>
+<td>₹1,400/u (Professional)</td>
+<td>Zoho pricing, 2026</td>
+</tr>
+<tr>
+<td>Kylas</td>
+<td>₹1,999 flat (unlimited users)</td>
+<td>flat</td>
+<td>Kylas pricing</td>
+</tr>
+<tr>
+<td>Salesforce</td>
+<td>₹2,075/u</td>
+<td>₹5,500+/u</td>
+<td>Salesforce pricing</td>
+</tr>
+<tr>
+<td>Follow Up Boss (US)</td>
+<td>$69/u</td>
+<td>$499/mo (10 users), $1,000/mo (30 users)</td>
+<td>FUB pricing, 2026</td>
+</tr>
+<tr>
+<td>BoomTown (US)</td>
+<td>quote</td>
+<td>~$1,000–3,000+/mo</td>
+<td>Third-party estimates</td>
+</tr>
+</tbody></table>
+<p><strong>Takeaways for pricing design:</strong></p>
+<ul>
+<li>The Indian mid-market clears <strong>₹500–1,500 per user/month</strong>; <strong>₹1,999 flat</strong> (Kylas) is the disruptive low-anchor for small teams.</li>
+<li>US platforms price per-seat ($69/seat) or flat bundles with seats included ($499/10); effective per-seat cost drops with team size — a useful pattern to copy.</li>
+<li><strong>No India-native player sells an integrated public website + CRM + site-visit/booking/payment operations + platform management as one product.</strong> QREX can price per-agency (not just per-seat), justified by the consolidated value.</li>
+</ul>
+<h3 id="22-india-saas-operating-cost-benchmarks-2026">2.2 India SaaS operating-cost benchmarks (2026)</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Typical range/month</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Hosting (early-stage VPS, 4 vCPU/8 GB)</td>
+<td>₹5,000–8,000</td>
+<td>ZenoCloud; ZoopCoder</td>
+</tr>
+<tr>
+<td>Infra at seed stage (50–500 users)</td>
+<td>₹15,000–30,000</td>
+<td>ZenoCloud</td>
+</tr>
+<tr>
+<td>Transactional email / SMS</td>
+<td>₹500–3,000</td>
+<td>ZoopCoder / Jaison Christopher</td>
+</tr>
+<tr>
+<td>Payment gateway</td>
+<td>~1.9–2% per transaction</td>
+<td>Razorpay (via Nevatrix/ZoopCoder)</td>
+</tr>
+<tr>
+<td>Maintenance &amp; updates</td>
+<td>₹3,000–15,000</td>
+<td>ZoopCoder</td>
+</tr>
+<tr>
+<td>Google Ads CPC (SaaS keywords, India)</td>
+<td>₹50–500/click</td>
+<td>Codingclave, 2026</td>
+</tr>
+<tr>
+<td>B2B SaaS sales cycle</td>
+<td>4–8 months (plan ≥18-month runway)</td>
+<td>Codingclave, 2026</td>
+</tr>
+<tr>
+<td>Months to SaaS break-even (custom build)</td>
+<td>9–18 months</td>
+<td>Codingclave, 2026</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="3-pricing-saas-layer-a">3. Pricing — SaaS (Layer A)</h2>
+<p>Flat per-agency plans with included seats. Extra seats are billed as incremental per-user passes.</p>
+<table>
+<thead>
+<tr>
+<th>Plan</th>
+<th>₹/mo (monthly billing)</th>
+<th>₹/mo (annual billing, 2 months free)</th>
+<th>Seats included</th>
+<th>Extra seat pass ₹/mo</th>
+<th>Best for</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Starter</strong></td>
+<td>₹4,999</td>
+<td>₹4,166</td>
+<td>3</td>
+<td>₹800</td>
+<td>Single-owner / small broker offices (96.7% of Mumbai agencies)</td>
+</tr>
+<tr>
+<td><strong>Growth</strong></td>
+<td>₹9,999</td>
+<td>₹8,333</td>
+<td>10</td>
+<td>₹600</td>
+<td>5–15 agent teams, channel-partner firms</td>
+</tr>
+<tr>
+<td><strong>Enterprise</strong></td>
+<td>Custom</td>
+<td>Custom</td>
+<td>25+</td>
+<td>Quote</td>
+<td>Developer sales teams, multi-branch brands</td>
+</tr>
+</tbody></table>
+<p><strong>What every plan includes:</strong> public website (branded), property listings &amp; enquiries→lead capture, leads + pipeline, tasks/notifications + follow-up automation, properties &amp; customers, CMS &amp; settings basics, reports (CSV on Starter; +PDF on Growth), SMTP/test-mail (super-admin).</p>
+<p><strong>Feature gating by layer split:</strong></p>
+<ul>
+<li>Starter: site visits only if added; no PDF export, no bookings/payments gate (available on Growth).</li>
+<li>Growth: full operations (site visits, bookings, payments), marketing campaigns, media center, PDF export.</li>
+<li>Enterprise: everything + API access eligible, on-prem eligible via PaaS.</li>
+</ul>
+<p><strong>One-time onboarding fee:</strong></p>
+<ul>
+<li>Starter ₹25,000 · Growth ₹50,000 · Enterprise custom (scope-based).</li>
+<li>Includes setup, branding, data migration (CSV import), agent training, import template.</li>
+</ul>
+<p><strong>Annual billing incentive:</strong> 2 months free (standard 2026 India pattern). Quarterly invoicing accepted at ₹/mo monthly rate (no discount).</p>
+<hr>
+<h2 id="4-pricing-paas-layer-b-platform-as-a-service">4. Pricing — PaaS (Layer B) "Platform as a Service"</h2>
+<p>Stackable, per-instance add-ons that turn QREX from software into a managed platform. Any SaaS plan can carry one PaaS tier. Price bands are indicative; small-platform agencies rarely need B2.</p>
+<table>
+<thead>
+<tr>
+<th>PaaS tier</th>
+<th>₹/mo</th>
+<th>Included</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>B1 · Core Ops</strong></td>
+<td>₹2,500</td>
+<td>Managed hosting (application server + database + backups), uptime monitoring + alerts, security patching &amp; updates, scheduled automation ops (<code>php artisan leads:check-followups</code> cron), storage for uploads, 1×/mo maintenance window</td>
+<td>Any SaaS customer who wants &quot;it just runs&quot;</td>
+</tr>
+<tr>
+<td><strong>B2 · Pro / Managed</strong></td>
+<td>₹9,999</td>
+<td>Everything in B1, <strong>plus</strong>: REST API access &amp; integration support, custom integrations (WhatsApp, portals, Excel/CSV automation), data-migration retainers, SMTP/deliverability management, priority support, dedicated solutions engineer (named contact)</td>
+<td>Growth + Enterprise agencies, channel-partner firms scaling</td>
+</tr>
+<tr>
+<td><strong>B3 · Private / On-prem</strong></td>
+<td>Custom (est. ₹25,000–60,000/mo)</td>
+<td>Dedicated/private-cloud or on-premise deployment, white-label branding, custom development days, compliance support (DPDP/India data residency), custom SLA + business-hours support, monthly platform reporting</td>
+<td>Developers, multi-branch corporates, data-residency-sensitive firms</td>
+</tr>
+</tbody></table>
+<p><strong>Bundling guidance:</strong> Starter + B1 is the natural &quot;get us running&quot; offer (≈ ₹7.5K/mo all-in for a small office). Growth + B2 is the midline managed-platform offer (≈ ₹20K/mo all-in for ~10 seats). Enterprise/B3 is quote-driven.</p>
+<p><strong>Why PaaS matters in this market:</strong> 96.7% of Mumbai&#39;s agencies are single-owner shops with no IT staff; raw SaaS self-serve would stall on hosting/SMTP/backups. Packaging managed platform services captures that revenue and differentiates vs ₹499/seat commodity CRMs.</p>
+<hr>
+<h2 id="5-revenue-model">5. Revenue Model</h2>
+<h3 id="51-assumptions-year-1-base-scenario">5.1 Assumptions (year 1, base scenario)</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Base</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Sales cycle (decision → paid)</td>
+<td>2–3 months</td>
+<td>Faster than generic B2B (4–8 mo) for the Starter micro-segment; Growth takes 3–5 mo</td>
+</tr>
+<tr>
+<td>Churn (monthly)</td>
+<td>2.5% (Starter), 1.5% (Growth+), 1.0% (PaaS)</td>
+<td>SaaS norms for SMB</td>
+</tr>
+<tr>
+<td>Seat mix</td>
+<td>Starter avg 3 seats · Growth avg 12 seats</td>
+<td>Growth earns ₹10K base + 2 extra seats</td>
+</tr>
+<tr>
+<td>PaaS attach</td>
+<td>30% of customers take B1, 15% B2, 5% B3</td>
+<td>Higher for Growth/Enterprise</td>
+</tr>
+<tr>
+<td>Onboarding fee capture</td>
+<td>80% of new Starter, 100% of Growth</td>
+<td>One-time revenue stream</td>
+</tr>
+</tbody></table>
+<h3 id="52-quarterly-ramp-base-scenario-indicative">5.2 Quarterly ramp (base scenario, indicative)</h3>
+<table>
+<thead>
+<tr>
+<th>Quarter</th>
+<th>New SaaS customers (cum.)</th>
+<th>SaaS MRR (₹)</th>
+<th>PaaS MRR (₹)</th>
+<th>One-time revenue (₹)</th>
+<th>Total revenue Y1 (₹)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Q1</td>
+<td>5</td>
+<td>24,995</td>
+<td>7,500</td>
+<td>1,36,000</td>
+<td>2,38,000</td>
+</tr>
+<tr>
+<td>Q2</td>
+<td>12</td>
+<td>60,000</td>
+<td>20,000</td>
+<td>93,000</td>
+<td>4,70,000</td>
+</tr>
+<tr>
+<td>Q3</td>
+<td>21</td>
+<td>1,10,000</td>
+<td>40,000</td>
+<td>1,11,000</td>
+<td>9,20,000</td>
+</tr>
+<tr>
+<td>Q4</td>
+<td>32</td>
+<td>1,70,000</td>
+<td>62,000</td>
+<td>1,30,000</td>
+<td>16,70,000</td>
+</tr>
+</tbody></table>
+<p><em>Q1 revenue includes partial start; Y1 total ≈ ₹16–17 L under the base scenario. Optimistic scenario ≈ ₹25–30 L; conservative ≈ ₹10–12 L.</em></p>
+<h3 id="53-month-12-run-rate-base">5.3 Month-12 run-rate (base)</h3>
+<ul>
+<li><strong>SaaS MRR ≈ ₹1.7 L</strong> (32 customers: ~17 Starter + 12 Growth + 3 Enterprise-equivalent)</li>
+<li><strong>PaaS MRR ≈ ₹62 K</strong> (out of the above: ~11 B1 + 4 B2 + 1 B3)</li>
+<li><strong>Total MRR ≈ ₹2.3 L</strong> → annualized ≈ ₹28 L (before churn discount it to ~₹24–26 L)</li>
+<li>vs. the 2026 India benchmark of &quot;₹1–3 L MRR with 10–25 paying customers by day 90–180&quot; (Codingclave), this is a healthy but ambitious trajectory for an enterprise-informed product.</li>
+</ul>
+<hr>
+<h2 id="6-year-1-budget-mumbai-launch">6. Year-1 Budget — Mumbai Launch</h2>
+<h3 id="61-one-time-setup-costs-pre-launch">6.1 One-time setup costs (pre-launch)</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>₹ (range)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Company incorporation (Pvt Ltd) + PAN/TAN/DSC + GST + MSME + DPIIT Startup registration</td>
+<td>20,000 – 45,000</td>
+</tr>
+<tr>
+<td>Legal docs (ToS, Privacy, DPA, customer contract) + DPDP Act compliance basics</td>
+<td>30,000 – 80,000</td>
+</tr>
+<tr>
+<td>Branding (logo, design system, landing page), domain + SSL</td>
+<td>40,000 – 1,00,000</td>
+</tr>
+<tr>
+<td>Infrastructure setup &amp; hardening (server, backups, monitoring, CI)</td>
+<td>15,000 – 35,000</td>
+</tr>
+<tr>
+<td><strong>Subtotal (one-time)</strong></td>
+<td><strong>₹1,05,000 – 2,60,000</strong></td>
+</tr>
+</tbody></table>
+<h3 id="62-monthly-operating-opex-post-launch">6.2 Monthly operating opex (post-launch)</h3>
+<table>
+<thead>
+<tr>
+<th>Line</th>
+<th>₹/month (range)</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Payroll (70–80% of burn)</strong></td>
+<td>2,50,000 – 4,50,000</td>
+<td>Founder/tech lead (~₹1.2–1.8L), 1–2 full-stack devs (₹60K–1.2L each), 1 sales/BDE (₹40–70K incl. variable). Mumbai salaries run ~40% above tier-2 cities</td>
+</tr>
+<tr>
+<td>Cloud infrastructure</td>
+<td>5,000 – 12,000</td>
+<td>Single VPS → ₹15–30K as users scale (ZenoCloud stages)</td>
+</tr>
+<tr>
+<td>Tools: Sentry, analytics, email (transactional), SMS, SMTP, backups</td>
+<td>5,000 – 12,000</td>
+<td>Per-seat stack + email/SMS (ZoopCoder)</td>
+</tr>
+<tr>
+<td>Domain/SSL amortized</td>
+<td>400 – 1,500</td>
+<td></td>
+</tr>
+<tr>
+<td>Marketing &amp; sales</td>
+<td>50,000 – 1,50,000</td>
+<td>Google/LinkedIn (₹50–500 CPC), content/SEO, CREDAI-MCHI &amp; CP-association expos, referral program</td>
+</tr>
+<tr>
+<td>Office / misc / banking</td>
+<td>10,000 – 30,000</td>
+<td>Coworking, travel for demos</td>
+</tr>
+<tr>
+<td><strong>Fixed/month before buffer</strong></td>
+<td><strong>3,20,000 – 6,55,000</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>Contingency buffer (10–15%)</td>
+<td>32,000 – 98,000</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Total monthly burn</strong></td>
+<td><strong>₹3,50,000 – 7,50,000</strong></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="63-full-year-cash-requirement">6.3 Full-year cash requirement</h3>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Assumptions</th>
+<th>Year-1 cash (₹)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Lean</td>
+<td>Founder-led sales, 1 dev, minimal ads (₹50K/mo marketing)</td>
+<td>~₹42–45 L</td>
+</tr>
+<tr>
+<td>Base</td>
+<td>2 devs + 1 BDE, ₹1L/mo marketing</td>
+<td>~₹65–75 L</td>
+</tr>
+<tr>
+<td>Ambitious</td>
+<td>Full team, ₹1.5L/mo marketing, stronger infrastructure</td>
+<td>~₹85–95 L</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Planning rule (2026):</strong> B2B SaaS sales cycles are 4–8 months; carry <strong>≥18 months of runway</strong>, not 12. If raising/investing, the recommendation is ₹1.2–1.5 Cr to burn ≥18 months comfortably in the base scenario.</p>
+</blockquote>
+<hr>
+<h2 id="7-unit-economics-break-even">7. Unit Economics & Break-Even</h2>
+<h3 id="71-unit-economics-by-channel">7.1 Unit economics by channel</h3>
+<table>
+<thead>
+<tr>
+<th>Channel</th>
+<th>CAC (₹)</th>
+<th>Payback (months)</th>
+<th>LTV (₹, 3-yr)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Direct sales (BDE-led, demos at expos)</td>
+<td>15,000 – 30,000</td>
+<td>3 – 6</td>
+<td>1,50,000 – 2,50,000</td>
+</tr>
+<tr>
+<td>Google/LinkedIn paid</td>
+<td>8,000 – 20,000</td>
+<td>2 – 4</td>
+<td>1,20,000 – 2,00,000</td>
+</tr>
+<tr>
+<td>Referral / CP-association &amp; developer partnerships</td>
+<td>0 – 5,000</td>
+<td>&lt; 1</td>
+<td>same</td>
+</tr>
+</tbody></table>
+<p><em>LTV assumes Growth-tier avg ₹12K/month gross, ~60% gross margin after hosting/support → ~₹7K net, 70% retention over 3 years.</em></p>
+<h3 id="72-break-even">7.2 Break-even</h3>
+<ul>
+<li><strong>Fixed monthly opex (lean/base):</strong> ₹3.5L (lean) to ₹5.5L (base).</li>
+<li><strong>Blended gross margin per customer:</strong> Starter ≈ ₹4.5K/mo, Growth ≈ ₹8.5K/mo, PaaS B1 ≈ ₹2.2K/mo, B2 ≈ ₹8.5K/mo net of admin.</li>
+<li><strong>Break-even customer base:</strong> ≈ 35–45 paying accounts at an average ₹7–9K net/month, or ≈ <strong>₹3.5–5.5 L MRR</strong>.</li>
+<li><strong>Expected month of break-even:</strong> base scenario ≈ <strong>months 11–15</strong> (matches the 9–18-month India benchmark).</li>
+</ul>
+<h3 id="73-cumulative-month-12-view-base">7.3 Cumulative month-12 view (base)</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>₹</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Year-1 expenses (lean but realistic, ~₹55–65 L)</td>
+<td>60,00,000</td>
+</tr>
+<tr>
+<td>Year-1 revenue (base, §5)</td>
+<td>16,00,000</td>
+</tr>
+<tr>
+<td><strong>Year-1 net cash position</strong></td>
+<td><strong>≈ −₹44 L</strong></td>
+</tr>
+<tr>
+<td>Monthly run-rate at month 12 (MRR)</td>
+<td>₹2.3 L</td>
+</tr>
+<tr>
+<td>Projected break-even (if growth holds)</td>
+<td>Month ~12–15</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="8-billing-gst-payment-operations">8. Billing, GST & Payment Operations</h2>
+<ul>
+<li><strong>GST 18%</strong> added to all SaaS/PaaS/onboarding invoices (standard software-service rate). Input credit claimed on infra/tools.</li>
+<li><strong>Billing:</strong> annual (2-months-free) preferred; quarterly at monthly rate; monthly at monthly rate + no discount. Razorpay (or Stripe) at <strong>~1.9–2% + GST</strong> per transaction (Razorpay via Nevatrix/ZoopCoder benchmarks).</li>
+<li><strong>Automatic GST-compliant invoicing</strong> per customer; recurring billing with dunning on failed cards.</li>
+<li><strong>Contract:</strong> monthly/quarterly/annual; no long-term lock-in — <strong>full CSV data export guarantee</strong> (matches product&#39;s built-in CSV export capability).</li>
+<li><strong>Refund:</strong> 14-day money-back on first paid month (Starter/Growth); on-prem POCs priced separately.</li>
+</ul>
+<hr>
+<h2 id="9-risks-mitigations">9. Risks & Mitigations</h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Impact</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>B2B sales cycle longer than modeled (4–8 mo)</td>
+<td>Cash gap</td>
+<td>≥18-month runway; Starter self-serve to shorten cycle; freemium 14-day trial</td>
+</tr>
+<tr>
+<td>Adoption stalls at agency (industry #1 failure)</td>
+<td>Churn</td>
+<td>Minimal-field lead intake, auto-created tasks/leads, included training, quarterly adoption reviews</td>
+</tr>
+<tr>
+<td>₹499–1,499/seat commodity pricing pressure</td>
+<td>Margin squeeze</td>
+<td>Position per-agency value (website+CRM+ops+PaaS); emphasize ROI (§12 of proposal); avoid a price war on per-seat alone</td>
+</tr>
+<tr>
+<td>Concentration on single-owner micro-agencies (96.7%)</td>
+<td>Low ARPU</td>
+<td>Growth-tier focus via 12–18K institutional CP firms; developer/B3 pathway for large brands</td>
+</tr>
+<tr>
+<td>Infra/SMTP/backup failures</td>
+<td>Trust damage</td>
+<td>PaaS-managed ops, monitoring, backups with defined RPO/RTO in SLA</td>
+</tr>
+<tr>
+<td>DPDP compliance (India)</td>
+<td>Legal</td>
+<td>Compliance in one-time budget line; consent + data-residency flow in B3</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="10-summary-recommendation">10. Summary Recommendation</h2>
+<ol>
+<li><strong>Launch three SaaS plans</strong> (Starter ₹4,999 · Growth ₹9,999 · Enterprise custom) with <strong>annual 2-months-free</strong> and <strong>extra-seat passes</strong>.</li>
+<li><strong>Sell PaaS as the differentiator</strong> — B1 core ops (₹2,500/mo) bundled into most deals, B2 managed (₹9,999/mo) for channel-partner firms, B3 private/on-prem (custom) for developers/corporates.</li>
+<li><strong>Fund ≈ ₹1.2–1.5 Cr runway</strong> (≥18 months) OR keep burn lean (~₹45 L/yr) with founder-led sales and a ₹50K/mo marketing budget.</li>
+<li><strong>Target the 12,000–18,000 institutional channel partners + ~181 multi-branch Mumbai brands</strong> as anchor customers; single-owner agencies via referral + self-serve.</li>
+<li><strong>Measure break-even at ≈ ₹3.5–5.5 L MRR</strong> (months 11–15 base case).</li>
+</ol>
+<hr>
+<h2 id="appendix-a-source-notes">Appendix A — Source Notes</h2>
+<table>
+<thead>
+<tr>
+<th>Figure</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>5,477 Mumbai agencies; 96.7% single-owner; ~181 larger brands</td>
+<td>Rentech Digital business directory (Apr 2026)</td>
+</tr>
+<tr>
+<td>45–60K active MMR channel partners; 12–18K institutional; 50–60% of transactions; 18–25% organised-brokerage growth; ₹2.5L Cr MMR residential (~40% of India)</td>
+<td>CREDAI-MCHI (2026); Ghar.TV India Broker Report (2026); GeoSquare (2026)</td>
+</tr>
+<tr>
+<td>India CRM prices (ClosingFox, TeleCRM, Realatic, Zoho, Kylas, Salesforce)</td>
+<td>Vendor pricing pages / ClosingFox India comparison (Apr 2026)</td>
+</tr>
+<tr>
+<td>US CRMs (Follow Up Boss, BoomTown, Sierra, Real Geeks)</td>
+<td>Vendor pricing &amp; third-party reports (2026)</td>
+</tr>
+<tr>
+<td>Hosting/infra stage costs</td>
+<td>ZenoCloud SaaS infrastructure guide (2026); ZoopCoder SaaS cost guide (2026)</td>
+</tr>
+<tr>
+<td>Email/SMS, gateway ~2%, maintenance</td>
+<td>ZoopCoder (2026); Nevatrix (2026)</td>
+</tr>
+<tr>
+<td>CPC ₹50–500; 4–8 mo sales cycle; ≥18-mo runway; ₹1–3L MRR / 10–25 customers day-90 benchmark; 9–18 mo break-even</td>
+<td>Codingclave India SaaS guide (2026)</td>
+</tr>
+<tr>
+<td>Payroll 70–80% of burn; fully-loaded multiplier; cost-of-run categories</td>
+<td>RunFutureProof startup budget template (2026); Awasero (2026)</td>
+</tr>
+</tbody></table>
+<p><em>All pricing and budget figures are indicative planning numbers for discussion, not contractual offers. Market figures carry their public sources; full titles available on request.</em></p>
+
+<div class="pager"><a href="tech-09-project-proposal.html">← 09. Project Proposal</a><span></span></div>
+<div class="site-footer">QREX documentation · generated from the Markdown sources in <code>docs/</code> · build with <code>npm run docs:html</code></div>
+</main>
+</div>
+
+<script>
+function filterDocs(q){
+  q=(q||'').trim().toLowerCase();
+  document.querySelectorAll('#doc-nav .nav-group').forEach(function(g){
+    var visible=0;
+    g.querySelectorAll('a').forEach(function(a){
+      var hit=!q||a.getAttribute('data-title').indexOf(q)>-1;
+      a.classList.toggle('nav-hidden',!hit);
+      if(hit)visible++;
+    });
+    g.classList.toggle('nav-hidden',visible===0);
+    if(q)g.open=true;
+  });
+}
+document.querySelectorAll('.table-wrap').forEach(function(wrap){
+  var input=wrap.querySelector('.table-filter');
+  var table=wrap.querySelector('table');
+  var count=wrap.querySelector('.table-count');
+  if(!input||!table)return;
+  input.addEventListener('input',function(){
+    var q=input.value.trim().toLowerCase();
+    var shown=0,total=0;
+    table.querySelectorAll('tbody tr').forEach(function(row){
+      total++;
+      var hit=!q||row.textContent.toLowerCase().indexOf(q)>-1;
+      row.style.display=hit?'':'none';
+      if(hit)shown++;
+    });
+    if(count)count.textContent=q?shown+' of '+total+' rows':' '+total+' rows';
+  });
+});
+</script>
+</body>
+</html>

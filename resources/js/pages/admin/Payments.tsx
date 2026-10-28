@@ -4,6 +4,7 @@ import AdminLayout from '@/components/layout/AdminLayout';
 import PageHeader from '@/components/shared/PageHeader';
 import StatCard from '@/components/shared/StatCard';
 import Modal from '@/components/ui/Modal';
+import AmountInWords from '@/components/shared/AmountInWords';
 import { Plus, CreditCard, IndianRupee, Wallet, AlertCircle, Pencil } from 'lucide-react';
 import type { PageProps } from '@/types';
 
@@ -170,6 +171,7 @@ export default function Payments(props: Props) {
                         <div>
                             <label className="block text-xs font-medium text-gray-600 mb-1">Amount (₹) *</label>
                             <input type="number" value={data.amount} onChange={(e) => setData('amount', e.target.value)} required className="w-full px-3.5 py-2 border border-[#E1E8F0] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gold-400/30" />
+                            <AmountInWords value={data.amount} />
                             {errors.amount && <p className="text-red-500 text-xs mt-1">{errors.amount}</p>}
                         </div>
                         <div>

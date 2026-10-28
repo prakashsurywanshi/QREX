@@ -10,6 +10,7 @@ use App\Models\Notification;
 use App\Models\Property;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class PipelineController extends Controller
@@ -47,7 +48,7 @@ class PipelineController extends Controller
             'agents' => User::whereIn('role', ['Sales Executive', 'Senior Agent', 'Admin'])->get(['id', 'name'])->map(fn ($u) => ['id' => $u->id, 'name' => $u->name, 'initials' => $u->initials]),
             'properties' => Property::orderBy('id')->limit(15)->get(['id', 'title']),
             'customers' => Customer::orderBy('id')->limit(20)->get(['id', 'name']),
-            'leads' => Lead::orderBy('created_at', 'desc')->limit(20)->get(['id', 'name']),
+            'leads' => Lead::visibleTo(Auth::user())->orderBy('created_at', 'desc')->limit(20)->get(['id', 'name']),
             'summary' => [
                 'total' => $deals->count(),
                 'pipelineValue' => $active->sum('deal_value'),

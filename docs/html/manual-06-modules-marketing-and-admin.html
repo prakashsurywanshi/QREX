@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>6. Marketing & Administration Modules · QREX</title>
+<style>
+:root{--bg:#f7f8fa;--panel:#fff;--ink:#1f2733;--muted:#5b6472;--line:#e3e7ee;--accent:#0f5c4e;--accent2:#b5893b;--code:#f2f4f7;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65;font-size:16px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.layout{display:flex;min-height:100vh}
+aside{width:280px;flex:0 0 280px;background:var(--panel);border-right:1px solid var(--line);padding:24px 20px;position:sticky;top:0;height:100vh;overflow-y:auto}
+aside h2{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:18px 0 8px}
+aside a{display:block;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.9rem}
+aside a:hover{background:var(--bg);text-decoration:none}
+aside a.active{background:var(--accent);color:#fff}
+aside .brand{font-weight:700;font-size:1.05rem;color:var(--accent);margin-bottom:4px}
+main{flex:1;min-width:0;padding:40px 56px;max-width:960px;margin:0 auto}
+main h1{font-size:2rem;line-height:1.25;margin:0 0 .5em;padding-bottom:.35em;border-bottom:2px solid var(--line)}
+main h2{font-size:1.45rem;margin:2em 0 .6em;padding-bottom:.25em;border-bottom:1px solid var(--line)}
+main h3{font-size:1.15rem;margin:1.6em 0 .5em}
+main h4{font-size:1rem;margin:1.3em 0 .4em}
+main p,main li{color:#2b3542}
+table{border-collapse:collapse;width:100%;margin:1.1em 0;font-size:.92rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+th{background:#eef1f5;font-weight:600}
+tr:nth-child(even) td{background:#fbfcfd}
+code{background:var(--code);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em}
+pre{background:#1e2530;color:#e6e9ef;padding:16px 18px;border-radius:8px;overflow-x:auto}
+pre code{background:none;color:inherit;padding:0}
+blockquote{margin:1.2em 0;padding:.6em 1.1em;background:#fff8e8;border-left:4px solid var(--accent2);color:#5b4a22;border-radius:0 6px 6px 0}
+blockquote p{margin:.4em 0}
+hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
+img{max-width:100%}
+.crumbs{font-size:.82rem;color:var(--muted);margin-bottom:18px}
+.pager{display:flex;justify-content:space-between;gap:16px;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{font-size:.9rem}
+.site-footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:24px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.card h3{margin:.2em 0 .4em;font-size:1.02rem}
+.card p{margin:.2em 0;font-size:.88rem;color:var(--muted)}
+/* --- Figures: diagrams and screen wireframes --- */
+.figure{margin:1.8em 0}
+.figure>svg{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px}
+.figure.diagram{overflow-x:auto}
+.figure.diagram.wide>svg{max-width:none;margin:0}
+.figure.wireframe>svg{border-color:#dbe2ea}
+figcaption{margin-top:.7em;font-size:.82rem;color:var(--muted);text-align:center;line-height:1.45}
+.art-missing{border-left:3px solid #c0392b}
+/* --- Long reference tables --- */
+.table-wrap{margin:1.1em 0}
+.table-filter{width:100%;max-width:300px;padding:7px 11px;margin-bottom:.55em;border:1px solid var(--line);border-radius:8px;font-size:.86rem;background:#fff;color:var(--ink);font-family:inherit}
+.table-filter:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.table-count{font-size:.78rem;color:var(--muted);margin-left:8px;vertical-align:middle}
+/* --- Documentation menu (sidebar) --- */
+.side-search{width:100%;padding:8px 10px;margin:10px 0 4px;border:1px solid var(--line);border-radius:8px;font-size:.85rem;background:var(--bg);color:var(--ink)}
+.side-search:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.home-link{display:block;font-size:.8rem;font-weight:600;color:var(--accent);margin-bottom:14px;padding:4px 0}
+.nav-group{border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:6px}
+.nav-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:10px 4px 6px;font-weight:700;user-select:none}
+.nav-group>summary::-webkit-details-marker{display:none}
+.nav-group>summary .chev{transition:transform .15s ease;font-size:.7rem;color:var(--muted)}
+.nav-group[open]>summary .chev{transform:rotate(90deg)}
+.nav-group .count{color:var(--muted);font-weight:400;margin-left:auto;font-size:.68rem}
+.nav-group a{display:flex;gap:8px;align-items:baseline;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.88rem;line-height:1.35}
+.nav-group a:hover{background:var(--bg);text-decoration:none}
+.nav-group a.active{background:var(--accent);color:#fff}
+.nav-group a.active .num{color:#d9ece7}
+.nav-group a .num{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.75rem;min-width:1.4em}
+.nav-hidden{display:none!important}
+.menu-toggle{display:none;position:fixed;top:12px;left:12px;z-index:50;width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:1.2rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.menu-backdrop{display:none}
+@media(max-width:900px){
+  .layout{flex-direction:column}
+  .menu-toggle{display:flex}
+  aside{position:fixed;top:0;left:0;z-index:60;width:290px;height:100vh;overflow-y:auto;border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .2s ease;box-shadow:0 0 24px rgba(0,0,0,.12)}
+  body.menu-open aside{transform:translateX(0)}
+  body.menu-open .menu-backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:55}
+  main{padding:64px 20px 24px}
+}
+@media print{
+  aside,.crumbs,.pager,.menu-toggle,.menu-backdrop{display:none}
+  body{background:#fff;font-size:11pt}
+  main{max-width:none;padding:0}
+  a{color:var(--ink)}
+  pre{background:#f2f4f7;color:#1f2733;border:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<button class="menu-toggle" aria-label="Open documentation menu" onclick="document.body.classList.toggle('menu-open')">☰</button>
+<div class="menu-backdrop" onclick="document.body.classList.remove('menu-open')"></div>
+<aside>
+  <a class="home-link" href="index.html">⌂ All documentation</a>
+  <div class="brand">QREX Documentation</div>
+  <div style="font-size:.78rem;color:var(--muted)">Qodeigence Infocircle Pvt. Ltd.</div>
+  <input class="side-search" type="search" placeholder="Search documents…" aria-label="Search documents" oninput="filterDocs(this.value)">
+  <nav id="doc-nav">
+    <details class="nav-group" open>
+<summary><span>User Manual</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="manual-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="overview and getting started" href="manual-01-overview-and-getting-started.html"><span class="num">01</span><span>Overview And Getting Started</span></a><a class="" data-title="roles and access" href="manual-02-roles-and-access.html"><span class="num">02</span><span>Roles And Access</span></a><a class="" data-title="sales lifecycle" href="manual-03-sales-lifecycle.html"><span class="num">03</span><span>Sales Lifecycle</span></a><a class="" data-title="modules sales" href="manual-04-modules-sales.html"><span class="num">04</span><span>Modules Sales</span></a><a class="" data-title="modules operations" href="manual-05-modules-operations.html"><span class="num">05</span><span>Modules Operations</span></a><a class="active" data-title="modules marketing and admin" href="manual-06-modules-marketing-and-admin.html"><span class="num">06</span><span>Modules Marketing And Admin</span></a><a class="" data-title="public website" href="manual-07-public-website.html"><span class="num">07</span><span>Public Website</span></a><a class="" data-title="reference" href="manual-08-reference.html"><span class="num">08</span><span>Reference</span></a><a class="" data-title="troubleshooting and faq" href="manual-09-troubleshooting-and-faq.html"><span class="num">09</span><span>Troubleshooting And Faq</span></a></details><details class="nav-group">
+<summary><span>How QREX Works</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="explain-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="system at a glance" href="explain-01-system-at-a-glance.html"><span class="num">01</span><span>System At A Glance</span></a><a class="" data-title="sales lifecycle" href="explain-02-sales-lifecycle.html"><span class="num">02</span><span>Sales Lifecycle</span></a><a class="" data-title="data model" href="explain-03-data-model.html"><span class="num">03</span><span>Data Model</span></a><a class="" data-title="roles and permissions" href="explain-04-roles-and-permissions.html"><span class="num">04</span><span>Roles And Permissions</span></a><a class="" data-title="screen designs" href="explain-05-screen-designs.html"><span class="num">05</span><span>Screen Designs</span></a><a class="" data-title="operations and automation" href="explain-06-operations-and-automation.html"><span class="num">06</span><span>Operations And Automation</span></a></details><details class="nav-group">
+<summary><span>Technical Documentation</span><span class="chev">▶</span></summary>
+<a class="" data-title="project scope" href="tech-01-project-scope.html"><span class="num">01</span><span>Project Scope</span></a><a class="" data-title="architecture" href="tech-02-architecture.html"><span class="num">02</span><span>Architecture</span></a><a class="" data-title="operations modules" href="tech-03-operations-modules.html"><span class="num">03</span><span>Operations Modules</span></a><a class="" data-title="roles permissions" href="tech-04-roles-permissions.html"><span class="num">04</span><span>Roles Permissions</span></a><a class="" data-title="database schema" href="tech-05-database-schema.html"><span class="num">05</span><span>Database Schema</span></a><a class="" data-title="operations" href="tech-06-operations.html"><span class="num">06</span><span>Operations</span></a><a class="" data-title="security hardening" href="tech-07-security-hardening.html"><span class="num">07</span><span>Security Hardening</span></a><a class="" data-title="glossary" href="tech-08-glossary.html"><span class="num">08</span><span>Glossary</span></a><a class="" data-title="project proposal" href="tech-09-project-proposal.html"><span class="num">09</span><span>Project Proposal</span></a><a class="" data-title="budget pricing mumbai" href="tech-10-budget-pricing-mumbai.html"><span class="num">10</span><span>Budget Pricing Mumbai</span></a></details>
+  </nav>
+  <details class="nav-group"><summary><span>Downloads</span><span class="chev">▶</span></summary>
+    <a href="../word/QREX-User-Manual.docx"><span class="num"></span><span>User Manual (.docx)</span></a>
+    <a href="../word/QREX-User-Manual.doc"><span class="num"></span><span>User Manual (.doc)</span></a>
+    <a href="../word/QREX-How-It-Works.docx"><span class="num"></span><span>How QREX Works (.docx)</span></a>
+    <a href="../word/QREX-How-It-Works.doc"><span class="num"></span><span>How QREX Works (.doc)</span></a>
+    <a href="../word/QREX-Technical-Documentation.docx"><span class="num"></span><span>Technical Docs (.docx)</span></a>
+    <a href="../word/QREX-Technical-Documentation.doc"><span class="num"></span><span>Technical Docs (.doc)</span></a>
+  </details>
+</aside>
+<main>
+<div class="crumbs">QREX User Manual</div>
+<h1 id="6-marketing-administration-modules">6. Marketing & Administration Modules</h1>
+<p>Covers <strong>Marketing</strong>, <strong>Media Center</strong>, <strong>Reports &amp; Analytics</strong>, <strong>CMS / Website</strong>, <strong>Users</strong>, <strong>Roles &amp; Permissions</strong>, the <strong>Permission catalog</strong> and <strong>Settings</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Who can see it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Marketing</td>
+<td>Super Admin, Admin, Marketing User</td>
+</tr>
+<tr>
+<td>Media Center</td>
+<td>Super Admin, Admin, Sales Executive, Senior Agent, Marketing User, Accountant (view)</td>
+</tr>
+<tr>
+<td>Reports &amp; Analytics</td>
+<td>Super Admin, Admin, Sales Executive, Senior Agent, Marketing User, Accountant</td>
+</tr>
+<tr>
+<td>CMS / Website</td>
+<td>Super Admin, Admin, Marketing User</td>
+</tr>
+<tr>
+<td>Users</td>
+<td>Super Admin, Admin</td>
+</tr>
+<tr>
+<td>Roles &amp; Permissions</td>
+<td>Super Admin, Admin</td>
+</tr>
+<tr>
+<td>Permission catalog</td>
+<td>Super Admin, Admin</td>
+</tr>
+<tr>
+<td>Settings</td>
+<td>Super Admin, Admin</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="61-marketing-campaigns">6.1 Marketing — Campaigns</h2>
+<p><strong>URL:</strong> <code>/admin/marketing</code> · <strong>Permissions:</strong> <code>marketing.view</code> / <code>.create</code> / <code>.edit</code></p>
+<h3 id="creating-a-campaign">Creating a campaign</h3>
+<p><strong>Marketing</strong> → <strong>New campaign</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Name</strong></td>
+<td></td>
+<td>The campaign&#39;s internal name</td>
+</tr>
+<tr>
+<td><strong>Channel</strong></td>
+<td><strong>Facebook + Instagram</strong></td>
+<td>The medium. Other common values: Facebook, Instagram, Google, WhatsApp, Referral, Newspaper, Hoardings, Website</td>
+</tr>
+<tr>
+<td><strong>Budget</strong></td>
+<td></td>
+<td>Total budget, in rupees. Shown in words as you type</td>
+</tr>
+<tr>
+<td><strong>Start date</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>End date</strong></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>A campaign is created with status <strong>Scheduled</strong>. The <strong>Status</strong> field is then set to <strong>Active</strong> when it goes live, and <strong>Paused</strong> or <strong>Completed</strong> when it ends.</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Scheduled</strong></td>
+<td>Created, not live yet</td>
+</tr>
+<tr>
+<td><strong>Active</strong></td>
+<td>Running now</td>
+</tr>
+<tr>
+<td><strong>Paused</strong></td>
+<td>Temporarily stopped</td>
+</tr>
+<tr>
+<td><strong>Completed</strong></td>
+<td>Finished</td>
+</tr>
+</tbody></table>
+<h3 id="what-the-page-shows">What the page shows</h3>
+<p><strong>Campaign KPIs</strong> — total budget · total spend · leads generated · revenue attributed.</p>
+<p><strong>Charts</strong> — a lead-source breakdown (where all enquiries came from) and a conversion comparison (leads vs conversions vs revenue per source).</p>
+<p><strong>Landing-page leads</strong> — the list of leads that came in through the website, so you can see what the campaign actually produced.</p>
+<p><strong>Property promotions</strong> — a carousel of listings being pushed. Note: this panel picks up properties whose status is <em>Ready to Move</em> or <em>Under Construction</em>, which are <strong>not</strong> among the standard property statuses. If a listing is not in the standard list, it will not appear here.</p>
+<h3 id="attributing-a-lead-to-a-campaign">Attributing a lead to a campaign</h3>
+<p>A lead carries a <code>campaign_id</code>. Set it when you create the lead, or select it in the lead&#39;s edit form, or pass it during a <strong>CSV import</strong> (the import screen has a campaign selector). This is what makes the campaign report meaningful — a campaign with no attributed leads reports zero regardless of what you spent.</p>
+<hr>
+<h2 id="62-media-center">6.2 Media Center</h2>
+<p><strong>URL:</strong> <code>/admin/media</code> · <strong>Permissions:</strong> <code>media.view</code> / <code>.create</code> / <code>.delete</code></p>
+<p>A shared library of images and documents, so assets are not scattered across individual laptops.</p>
+<h3 id="using-it">Using it</h3>
+<ol>
+<li><strong>Upload</strong> — choose a file, give it a name, drop it into a <strong>folder</strong>, optionally associate it with a property, and save. The name and size are pre-filled from the file.</li>
+<li><strong>Browse</strong> — the left sidebar filters by folder. <strong>All</strong> shows everything.</li>
+<li><strong>Storage</strong> — the page shows how much space the library is using.</li>
+<li><strong>Preview</strong> — images can be previewed in place. Other file types (PDF, video, documents) show a type icon instead.</li>
+<li><strong>Delete</strong> — removes the file from the library. Deleting is a separate permission from uploading, and it is not reversible.</li>
+</ol>
+<p><strong>Default folder:</strong> Properties. Create new folder names as you need them — a new name simply appears in the sidebar.</p>
+<blockquote>
+<p><strong>Deleting a media file does not remove the photo from a property.</strong> Property photos live on the property record, not in the media library. Use the property&#39;s own gallery to remove those.</p>
+</blockquote>
+<hr>
+<h2 id="63-reports-analytics">6.3 Reports & Analytics</h2>
+<p><strong>URL:</strong> <code>/admin/reports</code> · <strong>Permissions:</strong> <code>reports.view</code> (to open) and <code>reports.export</code> (to download)</p>
+<h3 id="631-controls">6.3.1 Controls</h3>
+<p><strong>Range</strong> — Today · 7 Days · 30 Days · 90 Days · YTD · All. Applies to the whole report.</p>
+<p><strong>Filters</strong> — <strong>Agent</strong> and <strong>Property</strong>. Both narrow every tab.</p>
+<blockquote>
+<p><strong>Scoping.</strong> Sales Executives and Senior Agents see figures for their own leads only. Admins, Super Admins, Marketing Users and Accountants see the whole agency.</p>
+</blockquote>
+<h3 id="632-the-ten-tabs">6.3.2 The ten tabs</h3>
+<table>
+<thead>
+<tr>
+<th>Tab</th>
+<th>What it shows</th>
+<th>CSV export type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Overview</strong></td>
+<td>Revenue by month and lead counts</td>
+<td><code>revenue</code></td>
+</tr>
+<tr>
+<td><strong>Sales</strong></td>
+<td>Revenue and sales trend</td>
+<td><code>revenue</code></td>
+</tr>
+<tr>
+<td><strong>Leads</strong></td>
+<td>Leads by source, by status, over time</td>
+<td><code>leads</code></td>
+</tr>
+<tr>
+<td><strong>Conversion</strong></td>
+<td>Lead → deal → won conversion rates</td>
+<td><code>revenue</code></td>
+</tr>
+<tr>
+<td><strong>Agent Performance</strong></td>
+<td>Closed-won deals and revenue per agent</td>
+<td><code>agents</code></td>
+</tr>
+<tr>
+<td><strong>Property Performance</strong></td>
+<td>Top properties by leads, deals and engagement</td>
+<td><code>properties</code></td>
+</tr>
+<tr>
+<td><strong>Payments</strong></td>
+<td>Collected vs pending, by month</td>
+<td><code>payments</code></td>
+</tr>
+<tr>
+<td><strong>Campaigns</strong></td>
+<td>Budget, spend, leads, conversions and ROI per campaign</td>
+<td><code>campaigns</code></td>
+</tr>
+<tr>
+<td><strong>Site Visits</strong></td>
+<td>Scheduled, completed, cancelled, rescheduled totals</td>
+<td><code>sitevisits</code></td>
+</tr>
+<tr>
+<td><strong>Lost Leads</strong></td>
+<td>Lost vs converted, and lost leads broken down by source</td>
+<td><code>leads</code></td>
+</tr>
+</tbody></table>
+<p><strong>Lost Leads is the report to read every week.</strong> It tells you whether the loss is happening at the top of the funnel (a bad channel), the middle (nobody is following up), or the end (the price is wrong).</p>
+<h3 id="633-exporting">6.3.3 Exporting</h3>
+<p>Two buttons, two formats:</p>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Requirement</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>CSV</strong></td>
+<td><code>reports.export</code></td>
+<td><code>report-&lt;type&gt;-&lt;timestamp&gt;.csv</code></td>
+</tr>
+<tr>
+<td><strong>PDF</strong></td>
+<td><code>reports.view</code></td>
+<td><code>report-&lt;type&gt;-&lt;timestamp&gt;.pdf</code></td>
+</tr>
+</tbody></table>
+<p>The export respects the range, agent and property filters you have set, and it exports the tab you are currently on.</p>
+<blockquote>
+<p><strong>Note the asymmetry:</strong> the PDF is available to anyone who can view reports, but the <strong>CSV</strong> needs <code>reports.export</code>. If the CSV button is missing but the PDF button is present, that is the permission system — ask an Admin for <code>reports.export</code> if you need the spreadsheet.</p>
+</blockquote>
+<blockquote>
+<p><strong>CSV safety.</strong> Values beginning with <code>=</code>, <code>+</code>, <code>-</code> or <code>@</code> are escaped with a leading apostrophe, so a crafted export cannot execute as a formula when opened in Excel. You may notice an apostrophe at the start of some cells. That is intentional — do not remove it in bulk, and do not open untrusted CSVs with macros enabled.</p>
+</blockquote>
+<h3 id="634-money-units-in-reports">6.3.4 Money units in reports</h3>
+<p>Some tables are labelled <strong>&quot;in L&quot;</strong> (lakhs) and some <strong>&quot;in Cr&quot;</strong> (crores). Read the column heading before comparing two figures. The <strong>Overview</strong> and <strong>Sales</strong> tabs mix both, deliberately.</p>
+<hr>
+<h2 id="64-cms-website">6.4 CMS / Website</h2>
+<p><strong>URL:</strong> <code>/admin/cms</code> · <strong>Permissions:</strong> <code>cms.view</code> / <code>.edit</code></p>
+<p>This screen controls what the public website shows.</p>
+<h3 id="641-homepage-sections">6.4.1 Homepage sections</h3>
+<p>Each section of the home page has a <strong>visibility toggle</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>🏠 Hero Section</td>
+<td>Visible</td>
+</tr>
+<tr>
+<td>🔍 Property Search Bar</td>
+<td>Visible</td>
+</tr>
+<tr>
+<td>⭐ Featured Properties Slider</td>
+<td>Visible</td>
+</tr>
+<tr>
+<td>📊 Statistics &amp; Numbers</td>
+<td>Visible</td>
+</tr>
+<tr>
+<td>🏘️ Property Categories</td>
+<td>Visible</td>
+</tr>
+<tr>
+<td>🏢 About Agency</td>
+<td>Visible</td>
+</tr>
+<tr>
+<td>👥 Our Agents</td>
+<td>Visible</td>
+</tr>
+<tr>
+<td>💬 Testimonials</td>
+<td><strong>Hidden</strong></td>
+</tr>
+<tr>
+<td>📞 Call to Action</td>
+<td>Visible</td>
+</tr>
+<tr>
+<td>✉️ Contact Form</td>
+<td>Visible</td>
+</tr>
+</tbody></table>
+<p>Toggling a section off hides it from the public home page. It does not delete any content, and you can switch it back on at any time.</p>
+<blockquote>
+<p><strong>Testimonials ships hidden.</strong> Turn it on only if you have real, approved testimonials — the public site shows three of them.</p>
+</blockquote>
+<h3 id="642-featured-properties">6.4.2 Featured properties</h3>
+<p><strong>Featured properties</strong> controls which listings appear in the home page slider, in a specific order. Click through, select the properties you want, and save. The selection is stored explicitly, so the order you choose is the order visitors see.</p>
+<p>This is separate from the per-property <strong>Featured</strong> flag in the property form. A property can be flagged <code>featured</code> without appearing in the slider if the CMS selection overrides it — <strong>check the CMS screen</strong> when a listing you flagged is not showing.</p>
+<h3 id="643-also-on-this-screen">6.4.3 Also on this screen</h3>
+<ul>
+<li><strong>All properties</strong> — every listing, for reference.</li>
+<li><strong>Agent directory</strong> — the agents displayed on the public site.</li>
+</ul>
+<hr>
+<h2 id="65-users">6.5 Users</h2>
+<p><strong>URL:</strong> <code>/admin/users</code> · <strong>Permissions:</strong> <code>users.view</code> / <code>.create</code> / <code>.edit</code> / <code>.delete</code></p>
+<h3 id="651-the-list">6.5.1 The list</h3>
+<p>Every user with their ID (<code>U-001</code> format), name, email, phone, <strong>role</strong>, <strong>branch</strong>, status and last login.</p>
+<p><strong>Filter by role</strong> using the tabs across the top — All, plus one tab per role.</p>
+<blockquote>
+<p><strong>Super Admin accounts are hidden</strong> from anyone who is not a Super Admin, and a direct link to one returns <strong>404</strong>. This is deliberate — it avoids confirming that a privileged account exists.</p>
+</blockquote>
+<h3 id="652-adding-a-team-member">6.5.2 Adding a team member</h3>
+<p><strong>Users</strong> → <strong>Add user</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Name</strong></td>
+<td>Required</td>
+</tr>
+<tr>
+<td><strong>Email</strong></td>
+<td>Required. Must be unique across the system</td>
+</tr>
+<tr>
+<td><strong>Phone</strong></td>
+<td>Optional</td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td>Required. Defaults to <em>Sales Executive</em></td>
+</tr>
+<tr>
+<td><strong>Branch</strong></td>
+<td>Optional. Defaults to <strong>HQ Mumbai</strong></td>
+</tr>
+</tbody></table>
+<p>The account is created <strong>Active</strong>, with a random temporary password, and an email is sent to the new user with a <strong>set-your-password</strong> link. They click it, choose their own password, and are in.</p>
+<p>You never see or set their password — that is the point.</p>
+<blockquote>
+<p><strong>Granting Super Admin is restricted.</strong> Only a Super Admin can assign the <code>super-admin</code> role. Anyone else attempting it is refused with <em>&quot;Only a Super Admin can grant the Super Admin role.&quot;</em> If you need a colleague to have it, ask a Super Admin.</p>
+</blockquote>
+<h3 id="653-editing-a-user">6.5.3 Editing a user</h3>
+<p>From the user list or the user&#39;s detail page, you can change:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Name, Email, Phone, Branch</strong></td>
+<td>Straightforward edits</td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td>Changing the role changes their permissions immediately</td>
+</tr>
+<tr>
+<td><strong>Status</strong></td>
+<td><strong>Active</strong> or <strong>Inactive</strong>. An Inactive account <strong>cannot sign in</strong>, even with the right password</td>
+</tr>
+<tr>
+<td><strong>Password</strong></td>
+<td>Optional. If you set one here, the user can sign in with it directly</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Prefer Inactive over Delete.</strong> Deactivating keeps every lead, task, booking and activity the person created attached to their name. Deleting breaks that history. <strong>Deactivate leavers; delete only duplicates and test accounts.</strong></p>
+</blockquote>
+<h3 id="654-deleting-a-user">6.5.4 Deleting a user</h3>
+<p>Two guards:</p>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>The target is a Super Admin</td>
+<td>Refused: <em>&quot;The Super Admin account cannot be deleted.&quot;</em></td>
+</tr>
+<tr>
+<td>The target is you</td>
+<td>Refused: <em>&quot;You cannot delete your own account.&quot;</em></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="66-roles-permissions">6.6 Roles & Permissions</h2>
+<p><strong>URL:</strong> <code>/admin/roles</code> · <strong>Permissions:</strong> <code>roles.view</code> / <code>.create</code> / <code>.edit</code> / <code>.delete</code></p>
+<h3 id="661-the-role-cards">6.6.1 The role cards</h3>
+<p>One card per role, showing its description, how many permissions it holds, how many users have it, and whether it is a <strong>system</strong> role.</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Super Admin</td>
+<td>System</td>
+<td>All 132 permissions</td>
+</tr>
+<tr>
+<td>Admin</td>
+<td>System</td>
+<td>All but two</td>
+</tr>
+<tr>
+<td>Sales Executive</td>
+<td>Editable</td>
+<td></td>
+</tr>
+<tr>
+<td>Senior Agent</td>
+<td>Editable</td>
+<td></td>
+</tr>
+<tr>
+<td>Marketing User</td>
+<td>Editable</td>
+<td></td>
+</tr>
+<tr>
+<td>Accountant</td>
+<td>Editable</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="662-creating-a-custom-role">6.6.2 Creating a custom role</h3>
+<p><strong>Create Role</strong> → give it a <strong>name</strong> and a <strong>description</strong> → tick the permissions in the matrix → save.</p>
+<p>The slug is generated from the name automatically (<em>&quot;Team Lead - North Mumbai&quot;</em> becomes <code>team-lead-north-mumbai</code>).</p>
+<p>The matrix is organised <strong>module × action</strong>. Each cell has three states:</p>
+<table>
+<thead>
+<tr>
+<th>Cell state</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Full</strong></td>
+<td>The role holds the action</td>
+</tr>
+<tr>
+<td><strong>Partial</strong></td>
+<td>The role holds <em>some</em> field-level permissions for that action but not the action itself</td>
+</tr>
+<tr>
+<td><strong>None</strong></td>
+<td>The role holds nothing here</td>
+</tr>
+</tbody></table>
+<p>Clicking a cell cycles it. For modules with field-level permissions, expanding a cell reveals the individual fields.</p>
+<h3 id="663-editing-and-deleting">6.6.3 Editing and deleting</h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Guard</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Edit a <strong>system</strong> role</td>
+<td>Refused: <em>&quot;System roles cannot be modified.&quot;</em></td>
+</tr>
+<tr>
+<td>Delete a <strong>system</strong> role</td>
+<td>Refused: <em>&quot;System roles cannot be deleted.&quot;</em></td>
+</tr>
+<tr>
+<td>Delete a role that still has <strong>users</strong></td>
+<td>Refused: <em>&quot;Cannot delete role that is assigned to N user(s).&quot;</em></td>
+</tr>
+<tr>
+<td>Delete a custom, unassigned role</td>
+<td>Allowed</td>
+</tr>
+</tbody></table>
+<p>To change what a system role can do, create a custom role instead and move the affected users onto it.</p>
+<h3 id="664-the-permission-catalog">6.6.4 The permission catalog</h3>
+<p><strong>URL:</strong> <code>/admin/permissions</code> · <strong>Permission:</strong> <code>roles.view</code></p>
+<p>A read-only list of every permission in the system, grouped by module, with a text filter to narrow it down. Field-level permissions carry a small badge.</p>
+<p>There are <strong>132</strong> permissions: <strong>67</strong> action permissions and <strong>65</strong> field-level permissions. The complete catalog is printed in <a href="manual-08-reference.html#6-permission-catalog"><code>08-reference.md</code></a>.</p>
+<blockquote>
+<p>This screen is not in the sidebar. Reach it directly at <code>/admin/permissions</code>.</p>
+</blockquote>
+<hr>
+<h2 id="67-settings">6.7 Settings</h2>
+<p><strong>URL:</strong> <code>/admin/settings</code> · <strong>Permissions:</strong> <code>settings.view</code> / <code>settings.edit</code></p>
+<p>Four sections everyone with access can use, plus four Super-Admin-only actions.</p>
+<h3 id="671-general-information">6.7.1 General Information</h3>
+<p>Project name · agency name · tagline · contact email · contact phone · address · currency · timezone · date format.</p>
+<p>These feed the public website&#39;s header, footer and contact page. The <strong>agency name</strong> is what the public site shows in the header (falling back to the project name, then &quot;QREX&quot;).</p>
+<blockquote>
+<p><strong>Field-level permission applies here.</strong> The save action checks <strong>each key individually</strong> against <code>settings.edit.&lt;key&gt;</code>. If you hold <code>settings.edit</code> but not <code>settings.edit.project_name</code>, your save will apply every other change you made <strong>and silently skip the project name</strong>. Check the result after saving.</p>
+</blockquote>
+<h3 id="672-branding">6.7.2 Branding</h3>
+<p>Primary colour and accent colour, plus controls for what content is displayed. These change the public site&#39;s look.</p>
+<h3 id="673-notifications">6.7.3 Notifications</h3>
+<p>Four switches:</p>
+<table>
+<thead>
+<tr>
+<th>Switch</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Lead Auto-Assignment</strong></td>
+<td>Automatically assign new leads to available agents</td>
+</tr>
+<tr>
+<td><strong>Site Visit Reminders</strong></td>
+<td>Notify agents before upcoming site visits</td>
+</tr>
+<tr>
+<td><strong>Payment Alerts</strong></td>
+<td>Alert on due and overdue instalments</td>
+</tr>
+<tr>
+<td><strong>Low Inventory Alert</strong></td>
+<td>Notify when property listings run low</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>These switches store the agency&#39;s policy. The follow-up notifications you actually receive in-app are generated by the daily scheduler and are not switched off by these toggles.</p>
+</blockquote>
+<h3 id="674-security">6.7.4 Security</h3>
+<table>
+<thead>
+<tr>
+<th>Switch</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Two-Factor Authentication</strong></td>
+<td>Require an OTP for all admin logins</td>
+</tr>
+<tr>
+<td><strong>Maintenance Mode</strong></td>
+<td>Temporarily hide the public website</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Verify before you rely on them.</strong> These are stored preferences with defined meanings, but the OTP-on-login flow is not wired into the sign-in screen in this build, and the public website does not consult the maintenance flag. Treat them as configuration to confirm with your technical contact, not as a working control.</p>
+</blockquote>
+<h3 id="675-smtp-email-configuration-super-admin-only">6.7.5 SMTP / Email Configuration — Super Admin only</h3>
+<p>Gated by the <code>super-admin</code> <strong>role</strong> on top of any permission, so an Admin cannot reach it.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Enable SMTP</strong></td>
+<td>Off means mail is written to the log file instead of being sent</td>
+</tr>
+<tr>
+<td><strong>Host, Port, Username, Password, Encryption</strong></td>
+<td>Your mail server&#39;s details</td>
+</tr>
+<tr>
+<td><strong>From address, From name</strong></td>
+<td>The sender on outgoing mail</td>
+</tr>
+<tr>
+<td><strong>Test email</strong></td>
+<td>Where the test message is sent</td>
+</tr>
+</tbody></table>
+<p><strong>How the password field behaves.</strong> Leave it blank (or enter <code>********</code>) and the stored password is preserved unchanged. Enter a new value and it replaces the old one. This is deliberate — a blank field never wipes a working password.</p>
+<p><strong>Test mail.</strong> <em>Test mail</em> sends a real message through the configured server and reports success or the error. Run it after any change to the SMTP settings, and before you invite a new user.</p>
+<blockquote>
+<p><strong>Why this matters.</strong> Password resets, new-user invitations and email-change OTPs all depend on working SMTP. If it is not configured, those flows fail silently from the user&#39;s point of view — they click &quot;forgot password&quot; and nothing arrives.</p>
+</blockquote>
+<h3 id="676-logo-super-admin-only">6.7.6 Logo — Super Admin only</h3>
+<p><strong>Upload logo</strong> replaces the site logo (stored under <code>settings/</code> on the public disk) and <strong>Remove logo</strong> deletes it. Deletion is restricted to files inside the <code>settings/</code> folder so a stray path cannot remove something else.</p>
+<p>The logo appears in the public site&#39;s header, the admin sidebar and the email notifications.</p>
+<hr>
+<p><strong>Next:</strong> <a href="manual-07-public-website.html"><code>07-public-website.md</code></a> — the public site, and how enquiries become leads.</p>
+
+<div class="pager"><a href="manual-05-modules-operations.html">← 05. Modules Operations</a><a href="manual-07-public-website.html">07. Public Website →</a></div>
+<div class="site-footer">QREX documentation · generated from the Markdown sources in <code>docs/</code> · build with <code>npm run docs:html</code></div>
+</main>
+</div>
+
+<script>
+function filterDocs(q){
+  q=(q||'').trim().toLowerCase();
+  document.querySelectorAll('#doc-nav .nav-group').forEach(function(g){
+    var visible=0;
+    g.querySelectorAll('a').forEach(function(a){
+      var hit=!q||a.getAttribute('data-title').indexOf(q)>-1;
+      a.classList.toggle('nav-hidden',!hit);
+      if(hit)visible++;
+    });
+    g.classList.toggle('nav-hidden',visible===0);
+    if(q)g.open=true;
+  });
+}
+document.querySelectorAll('.table-wrap').forEach(function(wrap){
+  var input=wrap.querySelector('.table-filter');
+  var table=wrap.querySelector('table');
+  var count=wrap.querySelector('.table-count');
+  if(!input||!table)return;
+  input.addEventListener('input',function(){
+    var q=input.value.trim().toLowerCase();
+    var shown=0,total=0;
+    table.querySelectorAll('tbody tr').forEach(function(row){
+      total++;
+      var hit=!q||row.textContent.toLowerCase().indexOf(q)>-1;
+      row.style.display=hit?'':'none';
+      if(hit)shown++;
+    });
+    if(count)count.textContent=q?shown+' of '+total+' rows':' '+total+' rows';
+  });
+});
+</script>
+</body>
+</html>

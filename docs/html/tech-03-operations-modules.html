@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3. Operations & Module Working Details · QREX</title>
+<style>
+:root{--bg:#f7f8fa;--panel:#fff;--ink:#1f2733;--muted:#5b6472;--line:#e3e7ee;--accent:#0f5c4e;--accent2:#b5893b;--code:#f2f4f7;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65;font-size:16px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.layout{display:flex;min-height:100vh}
+aside{width:280px;flex:0 0 280px;background:var(--panel);border-right:1px solid var(--line);padding:24px 20px;position:sticky;top:0;height:100vh;overflow-y:auto}
+aside h2{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:18px 0 8px}
+aside a{display:block;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.9rem}
+aside a:hover{background:var(--bg);text-decoration:none}
+aside a.active{background:var(--accent);color:#fff}
+aside .brand{font-weight:700;font-size:1.05rem;color:var(--accent);margin-bottom:4px}
+main{flex:1;min-width:0;padding:40px 56px;max-width:960px;margin:0 auto}
+main h1{font-size:2rem;line-height:1.25;margin:0 0 .5em;padding-bottom:.35em;border-bottom:2px solid var(--line)}
+main h2{font-size:1.45rem;margin:2em 0 .6em;padding-bottom:.25em;border-bottom:1px solid var(--line)}
+main h3{font-size:1.15rem;margin:1.6em 0 .5em}
+main h4{font-size:1rem;margin:1.3em 0 .4em}
+main p,main li{color:#2b3542}
+table{border-collapse:collapse;width:100%;margin:1.1em 0;font-size:.92rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+th{background:#eef1f5;font-weight:600}
+tr:nth-child(even) td{background:#fbfcfd}
+code{background:var(--code);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em}
+pre{background:#1e2530;color:#e6e9ef;padding:16px 18px;border-radius:8px;overflow-x:auto}
+pre code{background:none;color:inherit;padding:0}
+blockquote{margin:1.2em 0;padding:.6em 1.1em;background:#fff8e8;border-left:4px solid var(--accent2);color:#5b4a22;border-radius:0 6px 6px 0}
+blockquote p{margin:.4em 0}
+hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
+img{max-width:100%}
+.crumbs{font-size:.82rem;color:var(--muted);margin-bottom:18px}
+.pager{display:flex;justify-content:space-between;gap:16px;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{font-size:.9rem}
+.site-footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:24px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.card h3{margin:.2em 0 .4em;font-size:1.02rem}
+.card p{margin:.2em 0;font-size:.88rem;color:var(--muted)}
+/* --- Figures: diagrams and screen wireframes --- */
+.figure{margin:1.8em 0}
+.figure>svg{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px}
+.figure.diagram{overflow-x:auto}
+.figure.diagram.wide>svg{max-width:none;margin:0}
+.figure.wireframe>svg{border-color:#dbe2ea}
+figcaption{margin-top:.7em;font-size:.82rem;color:var(--muted);text-align:center;line-height:1.45}
+.art-missing{border-left:3px solid #c0392b}
+/* --- Long reference tables --- */
+.table-wrap{margin:1.1em 0}
+.table-filter{width:100%;max-width:300px;padding:7px 11px;margin-bottom:.55em;border:1px solid var(--line);border-radius:8px;font-size:.86rem;background:#fff;color:var(--ink);font-family:inherit}
+.table-filter:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.table-count{font-size:.78rem;color:var(--muted);margin-left:8px;vertical-align:middle}
+/* --- Documentation menu (sidebar) --- */
+.side-search{width:100%;padding:8px 10px;margin:10px 0 4px;border:1px solid var(--line);border-radius:8px;font-size:.85rem;background:var(--bg);color:var(--ink)}
+.side-search:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.home-link{display:block;font-size:.8rem;font-weight:600;color:var(--accent);margin-bottom:14px;padding:4px 0}
+.nav-group{border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:6px}
+.nav-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:10px 4px 6px;font-weight:700;user-select:none}
+.nav-group>summary::-webkit-details-marker{display:none}
+.nav-group>summary .chev{transition:transform .15s ease;font-size:.7rem;color:var(--muted)}
+.nav-group[open]>summary .chev{transform:rotate(90deg)}
+.nav-group .count{color:var(--muted);font-weight:400;margin-left:auto;font-size:.68rem}
+.nav-group a{display:flex;gap:8px;align-items:baseline;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.88rem;line-height:1.35}
+.nav-group a:hover{background:var(--bg);text-decoration:none}
+.nav-group a.active{background:var(--accent);color:#fff}
+.nav-group a.active .num{color:#d9ece7}
+.nav-group a .num{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.75rem;min-width:1.4em}
+.nav-hidden{display:none!important}
+.menu-toggle{display:none;position:fixed;top:12px;left:12px;z-index:50;width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:1.2rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.menu-backdrop{display:none}
+@media(max-width:900px){
+  .layout{flex-direction:column}
+  .menu-toggle{display:flex}
+  aside{position:fixed;top:0;left:0;z-index:60;width:290px;height:100vh;overflow-y:auto;border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .2s ease;box-shadow:0 0 24px rgba(0,0,0,.12)}
+  body.menu-open aside{transform:translateX(0)}
+  body.menu-open .menu-backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:55}
+  main{padding:64px 20px 24px}
+}
+@media print{
+  aside,.crumbs,.pager,.menu-toggle,.menu-backdrop{display:none}
+  body{background:#fff;font-size:11pt}
+  main{max-width:none;padding:0}
+  a{color:var(--ink)}
+  pre{background:#f2f4f7;color:#1f2733;border:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<button class="menu-toggle" aria-label="Open documentation menu" onclick="document.body.classList.toggle('menu-open')">☰</button>
+<div class="menu-backdrop" onclick="document.body.classList.remove('menu-open')"></div>
+<aside>
+  <a class="home-link" href="index.html">⌂ All documentation</a>
+  <div class="brand">QREX Documentation</div>
+  <div style="font-size:.78rem;color:var(--muted)">Qodeigence Infocircle Pvt. Ltd.</div>
+  <input class="side-search" type="search" placeholder="Search documents…" aria-label="Search documents" oninput="filterDocs(this.value)">
+  <nav id="doc-nav">
+    <details class="nav-group">
+<summary><span>User Manual</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="manual-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="overview and getting started" href="manual-01-overview-and-getting-started.html"><span class="num">01</span><span>Overview And Getting Started</span></a><a class="" data-title="roles and access" href="manual-02-roles-and-access.html"><span class="num">02</span><span>Roles And Access</span></a><a class="" data-title="sales lifecycle" href="manual-03-sales-lifecycle.html"><span class="num">03</span><span>Sales Lifecycle</span></a><a class="" data-title="modules sales" href="manual-04-modules-sales.html"><span class="num">04</span><span>Modules Sales</span></a><a class="" data-title="modules operations" href="manual-05-modules-operations.html"><span class="num">05</span><span>Modules Operations</span></a><a class="" data-title="modules marketing and admin" href="manual-06-modules-marketing-and-admin.html"><span class="num">06</span><span>Modules Marketing And Admin</span></a><a class="" data-title="public website" href="manual-07-public-website.html"><span class="num">07</span><span>Public Website</span></a><a class="" data-title="reference" href="manual-08-reference.html"><span class="num">08</span><span>Reference</span></a><a class="" data-title="troubleshooting and faq" href="manual-09-troubleshooting-and-faq.html"><span class="num">09</span><span>Troubleshooting And Faq</span></a></details><details class="nav-group">
+<summary><span>How QREX Works</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="explain-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="system at a glance" href="explain-01-system-at-a-glance.html"><span class="num">01</span><span>System At A Glance</span></a><a class="" data-title="sales lifecycle" href="explain-02-sales-lifecycle.html"><span class="num">02</span><span>Sales Lifecycle</span></a><a class="" data-title="data model" href="explain-03-data-model.html"><span class="num">03</span><span>Data Model</span></a><a class="" data-title="roles and permissions" href="explain-04-roles-and-permissions.html"><span class="num">04</span><span>Roles And Permissions</span></a><a class="" data-title="screen designs" href="explain-05-screen-designs.html"><span class="num">05</span><span>Screen Designs</span></a><a class="" data-title="operations and automation" href="explain-06-operations-and-automation.html"><span class="num">06</span><span>Operations And Automation</span></a></details><details class="nav-group" open>
+<summary><span>Technical Documentation</span><span class="chev">▶</span></summary>
+<a class="" data-title="project scope" href="tech-01-project-scope.html"><span class="num">01</span><span>Project Scope</span></a><a class="" data-title="architecture" href="tech-02-architecture.html"><span class="num">02</span><span>Architecture</span></a><a class="active" data-title="operations modules" href="tech-03-operations-modules.html"><span class="num">03</span><span>Operations Modules</span></a><a class="" data-title="roles permissions" href="tech-04-roles-permissions.html"><span class="num">04</span><span>Roles Permissions</span></a><a class="" data-title="database schema" href="tech-05-database-schema.html"><span class="num">05</span><span>Database Schema</span></a><a class="" data-title="operations" href="tech-06-operations.html"><span class="num">06</span><span>Operations</span></a><a class="" data-title="security hardening" href="tech-07-security-hardening.html"><span class="num">07</span><span>Security Hardening</span></a><a class="" data-title="glossary" href="tech-08-glossary.html"><span class="num">08</span><span>Glossary</span></a><a class="" data-title="project proposal" href="tech-09-project-proposal.html"><span class="num">09</span><span>Project Proposal</span></a><a class="" data-title="budget pricing mumbai" href="tech-10-budget-pricing-mumbai.html"><span class="num">10</span><span>Budget Pricing Mumbai</span></a></details>
+  </nav>
+  <details class="nav-group"><summary><span>Downloads</span><span class="chev">▶</span></summary>
+    <a href="../word/QREX-User-Manual.docx"><span class="num"></span><span>User Manual (.docx)</span></a>
+    <a href="../word/QREX-User-Manual.doc"><span class="num"></span><span>User Manual (.doc)</span></a>
+    <a href="../word/QREX-How-It-Works.docx"><span class="num"></span><span>How QREX Works (.docx)</span></a>
+    <a href="../word/QREX-How-It-Works.doc"><span class="num"></span><span>How QREX Works (.doc)</span></a>
+    <a href="../word/QREX-Technical-Documentation.docx"><span class="num"></span><span>Technical Docs (.docx)</span></a>
+    <a href="../word/QREX-Technical-Documentation.doc"><span class="num"></span><span>Technical Docs (.doc)</span></a>
+  </details>
+</aside>
+<main>
+<div class="crumbs">QREX Technical Documentation</div>
+<h1 id="3-operations-module-working-details">3. Operations & Module Working Details</h1>
+<p>This document describes how each feature actually works, derived from the routes, controllers, models, and frontend pages. Route prefixes refer to <code>routes/web.php</code> unless noted. API equivalents (<code>routes/api.php</code>, Sanctum-authenticated) exist for nearly every admin module.</p>
+<h2 id="31-public-website">3.1 Public Website</h2>
+<p>Routes: <code>GET /</code>, <code>/properties</code>, <code>/properties/{property}</code>, <code>/about</code>, <code>/contact</code>.</p>
+<h3 id="home-">Home (`/`)</h3>
+<p><code>PublicPageController::home</code> renders <code>public/Home</code> with:</p>
+<ul>
+<li><strong>Featured properties</strong> — <code>featured = true</code> and <code>is_website_visible = true</code>.</li>
+<li><strong>Latest properties</strong> — the 6 most recent visible listings.</li>
+<li><strong>Agents</strong> — up to 4 sales roles (Sales Executive / Senior Agent) for display.</li>
+<li><strong>Category counts</strong> — number of visible properties grouped by <code>type</code>.</li>
+<li><strong>Stats</strong> — total properties, deals, customers, years in business (derived from the earliest record timestamp), and total revenue (sum of <code>deal_value</code> formatted as ₹L / ₹Cr).</li>
+</ul>
+<h3 id="property-listings-properties">Property listings (`/properties`)</h3>
+<p><code>PublicPageController::properties</code> renders <code>public/Properties</code>. Supports the following query parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Filter</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>search</code></td>
+<td>Matches title / city / type (<code>LIKE</code>)</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>Exact match on <code>type</code> (<code>All</code> = no filter)</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>Exact match on <code>status</code> (<code>All</code> = no filter)</td>
+</tr>
+<tr>
+<td><code>bedrooms</code></td>
+<td><code>&gt;=</code> match when <code>&gt; 0</code></td>
+</tr>
+<tr>
+<td><code>min_price</code> / <code>max_price</code></td>
+<td>Range match on <code>price</code></td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td><code>price_asc</code>, <code>price_desc</code>, <code>featured</code> (desc), default <code>newest</code></td>
+</tr>
+</tbody></table>
+<p>Pagination is 6 per page. Only <code>is_website_visible = true</code> listings are returned.</p>
+<h3 id="property-detail-propertiesproperty">Property detail (`/properties/{property}`)</h3>
+<ul>
+<li>Loads <code>agent</code> and <code>images</code>.</li>
+<li>Returns 404 if the property is not website-visible (soft-404 behavior).</li>
+<li>Shows up to 3 <strong>similar</strong> properties of the same <code>type</code> (falls back to any 3 if none match).</li>
+<li>Exposes the property&#39;s agent (name, phone, email, role).</li>
+</ul>
+<h3 id="about-about-contact-contact">About (`/about`) & Contact (`/contact`)</h3>
+<ul>
+<li>About renders the agent list and hard-coded marketing stats.</li>
+<li>Contact is a static page with the enquiry form.</li>
+</ul>
+<h3 id="enquiry-forms-rate-limited">Enquiry forms (rate-limited)</h3>
+<p>Routes: <code>POST /contact/enquiry</code> and <code>POST /properties/{property}/enquiry</code>, both <code>throttle:5,10</code>.</p>
+<p>Each creates a <code>Lead</code> (<code>source = Website</code>, <code>status = New</code>, <code>score = 0</code>) and a <strong>Note</strong> activity <em>Website enquiry submitted</em> / logs the message into <code>requirements</code>. Property enquiries set <code>interested_property_id</code>. Validation: <code>name</code> and <code>phone</code> required, <code>email</code> (nullable, format), <code>message</code> (nullable).</p>
+<h2 id="32-authentication-profile-password">3.2 Authentication, Profile & Password</h2>
+<h3 id="login">Login</h3>
+<ul>
+<li><code>GET /login</code> renders the login page; <code>POST /login</code> authenticates, <code>throttle:5,1</code> (max 5 attempts/min).</li>
+<li><code>POST /logout</code> logs out.</li>
+</ul>
+<h3 id="password-reset">Password reset</h3>
+<ul>
+<li><code>GET /forgot-password</code> + <code>POST /forgot-password</code> (<code>throttle:5,1</code>) send a reset link.</li>
+<li><code>GET /reset-password/{token}/{email?}</code> renders the reset form; <code>POST /reset-password</code> (<code>throttle:5,1</code>) performs the reset.</li>
+<li>Uses a custom <code>ResetPasswordNotification</code> carrying a URL to the Inertia reset page.</li>
+</ul>
+<h3 id="profile-email-change-otp-verified">Profile & email change (OTP-verified)</h3>
+<ul>
+<li><code>GET/PUT /profile</code>, <code>PUT /password</code>.</li>
+<li>Changing email is a <strong>three-step OTP flow</strong> on both web and API:<ol>
+<li><code>POST /profile/email/otp</code> — sends an OTP to the current email.</li>
+<li><code>POST /profile/email/verify-current</code> — verifies it (server always returns success to avoid email-enumeration).</li>
+<li><code>POST /profile/email/new-otp</code> — sends an OTP to the new email.</li>
+<li><code>POST /profile/email/verify-new</code> — verifies the new-email OTP and commits the change.</li>
+</ol>
+</li>
+<li>Implementation lives in <code>OtpService</code> (see §7 Security for limits).</li>
+</ul>
+<h2 id="33-dashboard">3.3 Dashboard</h2>
+<p>Route: <code>GET /admin/dashboard</code> (<code>permission:dashboard.view</code>).</p>
+<p><code>DashboardController::index</code> aggregates KPI cards, charts, and lists — e.g. total leads, deals by stage, pipeline value, recent leads/activities, site visits, payments — and renders <code>admin/Dashboard</code>. Sales roles see only their own data via the shared agent-scope helper. API mirror: <code>GET /api/dashboard</code>.</p>
+<h2 id="34-leads">3.4 Leads</h2>
+<p>Routes (gated by <code>permission:leads.*</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Route</th>
+<th>Permission</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>List</td>
+<td><code>GET /admin/leads</code></td>
+<td><code>leads.view</code></td>
+</tr>
+<tr>
+<td>Detail</td>
+<td><code>GET /admin/leads/{lead}</code></td>
+<td><code>leads.view</code></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>POST /admin/leads</code></td>
+<td><code>leads.create</code></td>
+</tr>
+<tr>
+<td>Update</td>
+<td><code>PUT /admin/leads/{lead}</code></td>
+<td><code>leads.edit</code></td>
+</tr>
+<tr>
+<td>Reassign</td>
+<td><code>POST /admin/leads/{lead}/reassign</code></td>
+<td><code>leads.edit</code></td>
+</tr>
+<tr>
+<td>Activity</td>
+<td><code>POST /admin/leads/{lead}/activity</code></td>
+<td><code>leads.edit</code></td>
+</tr>
+<tr>
+<td>Status</td>
+<td><code>POST /admin/leads/{lead}/status</code></td>
+<td><code>leads.edit</code></td>
+</tr>
+<tr>
+<td>Convert</td>
+<td><code>POST /admin/leads/{lead}/convert</code></td>
+<td><code>sales.create</code></td>
+</tr>
+<tr>
+<td>Import</td>
+<td><code>POST /admin/leads/import</code></td>
+<td><code>leads.create</code></td>
+</tr>
+<tr>
+<td>Template</td>
+<td><code>GET /admin/leads/import-template</code></td>
+<td><code>leads.create</code></td>
+</tr>
+</tbody></table>
+<h3 id="list-search">List / search</h3>
+<ul>
+<li>Elastic-ish search on <code>name</code>, <code>phone</code>, <code>email</code> (<code>LIKE</code>), plus filters on <code>status</code>, <code>source</code>, <code>campaign</code>; 10 per page, newest first.</li>
+<li><strong>Agent scope</strong>: Super Admins/Admins see all. Sales Executive / Senior Agent automatically see only leads where they are <code>assigned_agent_id</code> or <code>owner_id</code> (<code>applyAgentScope</code> / model <code>scopeVisibleTo</code>). The same rule is enforced on detail views (<code>authorizeLeadAccess</code> → 403).</li>
+</ul>
+<h3 id="status-lifecycle">Status lifecycle</h3>
+<p>Valid statuses: <code>New, Contacted, Qualified, Site Visit Scheduled, Site Visit Completed, Negotiation, Converted, Lost</code>.</p>
+<ul>
+<li><code>site visits</code> are auto-created when a lead status becomes <strong>Site Visit Scheduled</strong> (once per lead — a <code>lead_id</code> exists check prevents duplicates). The visit date/time is parsed from <code>next_followup</code>, defaulting to tomorrow 10:00 AM.</li>
+<li>Each status change logs a <strong>Status Change</strong> activity and may trigger a <code>site_visit.scheduled</code> notification.</li>
+<li>Conversion is blocked for leads in <code>Converted</code> or <code>Lost</code>.</li>
+</ul>
+<h3 id="activity-timeline">Activity timeline</h3>
+<p><code>POST /admin/leads/{lead}/activity</code> appends a <code>LeadActivity</code> row (type, title, description, duration, outcome, contact number, email subject, next follow-up, location). Logging an activity with <code>next_followup</code> also syncs the lead&#39;s follow-up task and updates <code>last_contact</code>.</p>
+<h3 id="reassignment-handover">Reassignment / handover</h3>
+<ul>
+<li><code>reassign</code> moves both <code>assigned_agent_id</code> and <code>owner_id</code>.</li>
+<li>If the assignee changed, a <code>LeadHandover</code> record is created (from, to, reason, notes) and a <strong>Reassignment</strong> activity logged.</li>
+</ul>
+<h3 id="follow-up-task-sync">Follow-up task sync</h3>
+<p>Shared helper <code>syncFollowupTask</code>:</p>
+<ul>
+<li>Parses <code>next_followup</code> into <code>(date, time)</code> using common formats (<code>Y-m-d</code>, <code>Y/m/d</code>, <code>d-m-Y</code>, <code>d/m/Y</code>, plus AM/PM or 24h times). If the raw value is empty, any open follow-up task is completed.</li>
+<li>Creates (<code>TSK-xxx</code>, title <em>Follow-up: {name}</em>, priority High, status Pending/Overdue) or updates the latest open follow-up task for the lead, assigned to the lead&#39;s agent.</li>
+</ul>
+<h3 id="csv-import">CSV import</h3>
+<p><code>import</code> accepts <code>csv</code>/<code>txt</code>, max 2 MB, with optional campaign assignment:</p>
+<ul>
+<li>Header auto-detection with <strong>column aliases</strong> (e.g., <code>name/full_name/lead_name</code>, <code>phone/mobile/contact_number</code>, <code>assigned_agent/agent/agent_name</code>, <code>interested_property/property</code> …).</li>
+<li>Falls back to sequential column mapping if no header is detected.</li>
+<li>Per-row validation: <code>name</code> + <code>phone</code> required; duplicate detection <strong>within file</strong> (by phone) and <strong>against the DB</strong> (phone, or name+phone).</li>
+<li>References (<code>interested_property</code>, <code>assigned_agent</code>) resolve by ID or by fuzzy name/title match (property title <code>LIKE</code>, agent name).</li>
+<li><code>source</code>, <code>status</code>, <code>score</code> are normalized to allowed values / clamped 0–100.</li>
+<li>Runs in a transaction with rollback on failure; reports <code>X imported, Y skipped</code> with a per-row error list flashed to the session.</li>
+<li>Each row logs a <strong>Lead Imported</strong> activity and syncs a follow-up task when <code>next_followup</code> is present.</li>
+<li><code>importTemplate</code> streams a CSV with headers and one example row.</li>
+</ul>
+<h3 id="convert-to-deal">Convert to deal</h3>
+<p><code>convertToDeal</code> runs inside a transaction, <code>lockForUpdate()</code> on the lead row (prevents double-conversion under concurrency):</p>
+<ol>
+<li>Blocks if lead status is <code>Converted</code>/<code>Lost</code>.</li>
+<li>Creates <code>Deal</code> (<code>DL-xxx</code>, customer = lead name, property = chosen or lead&#39;s <code>interested_property_id</code>, <code>stage = Qualified</code> (or provided), probability 30, <code>stage_changed_at = now</code>).</li>
+<li>Sets lead <code>status = Converted</code>, logs a <strong>Conversion</strong> activity, notifies the lead&#39;s agent.</li>
+</ol>
+<h2 id="35-properties">3.5 Properties</h2>
+<p>Routes gated by <code>permission:properties.view/create/edit/delete</code>.</p>
+<ul>
+<li><strong>Fields</strong> (<code>Property</code> model + form): property ID, title, type (Apartment/Villa/Plot/Commercial/Office/Shop/Warehouse/Farm-Land), transaction type, description, status, price + price label (auto-formatted ₹L/₹Cr), area, bedrooms, bathrooms, floors, parking, furnishing, possession date, address/city/state/country/pincode, lat/long, amenities (JSON array), featured, website-visibility, SEO title/meta, slug, cover image.</li>
+<li><strong>Images</strong>: multiple images per property (<code>PropertyImage</code> table) via <code>POST /admin/properties</code> (form data) and dedicated image endpoints in the API (store / delete / set cover). <code>coverOrImage()</code> returns the cover image, else the first image, else the raw <code>image</code> column.</li>
+<li><code>featured</code> and <code>is_website_visible</code> toggles control what the public site shows.</li>
+<li>Detail view loads agent + images; soft-deleted properties are excluded from public listings.</li>
+</ul>
+<h2 id="36-customers">3.6 Customers</h2>
+<p>Routes gated by <code>permission:customers.view/create/edit</code>.</p>
+<ul>
+<li>CRUD with detail view (<code>CustomerDetail.tsx</code>). Customers hold demographic + budget/notes info.</li>
+<li>Customers are not tied to a user typically; shared read access across sales &amp; accountancy roles.</li>
+</ul>
+<h2 id="37-site-visits">3.7 Site Visits</h2>
+<p>Routes gated by <code>permission:site_visits.*</code>.</p>
+<ul>
+<li>Auto-created when a lead is moved to <em>Site Visit Scheduled</em> (see §3.4); can also be created manually from the admin area.</li>
+<li>Fields: <code>visit_id</code> (<code>SV-xxx</code>), customer name, property name, agent name, <code>visit_date</code>, <code>visit_time</code>, <code>status</code>, location, notes, feedback.</li>
+<li>Statuses: <code>Scheduled, Confirmed, Completed, Cancelled, Rescheduled</code> (report groups <code>Scheduled</code>+<code>Confirmed</code> as scheduled).</li>
+<li>Linked to a lead via <code>lead_id</code> (added by later migration).</li>
+</ul>
+<h2 id="38-bookings">3.8 Bookings</h2>
+<p>Routes gated by <code>permission:bookings.*</code>.</p>
+<ul>
+<li>Captures the deal: <code>booking_id</code> (<code>BK-*</code> range), customer, property, agent, <code>booking_date</code>, <code>deal_value</code> + label, <code>booking_amount</code> + label.</li>
+<li>Three parallel status tracks:<ul>
+<li><code>status</code> — booking lifecycle (default <code>Booking Pending</code>).</li>
+<li><code>agreement_status</code> — agreement progress (default <code>Pending</code>).</li>
+<li><code>possession_status</code> — possession progress (default <code>Pending</code>).</li>
+</ul>
+</li>
+<li>API includes a delete route; web admin exposes index, show, store, update.</li>
+</ul>
+<h2 id="39-payments">3.9 Payments</h2>
+<p>Routes gated by <code>permission:payments.*</code>.</p>
+<ul>
+<li>Fields: <code>payment_id</code>, customer, property, <code>amount</code> + label, <code>mode</code>, <code>txn_id</code>, <code>due_date</code>, <code>paid_date</code>, <code>status</code>.</li>
+<li>Statuses: <code>Pending, Paid, Overdue, Partially Paid</code> (report groups these three as &quot;pending&quot; when computing collection vs due).</li>
+<li>Payments are recorded manually — no gateway integration.</li>
+</ul>
+<h2 id="310-tasks">3.10 Tasks</h2>
+<p>Routes gated by <code>permission:tasks.*</code>.</p>
+<ul>
+<li>Tasks have title, description, <code>type</code> (e.g., <strong>Follow-up</strong>), priority, status (<code>Pending</code>, <code>Overdue</code>, <code>Completed</code>), <code>due_date</code>, <code>due_time</code>, <code>related_to</code>/<code>related_id</code>, <code>lead_id</code>, <code>assigned_to_id</code>, <code>created_by</code>.</li>
+<li>Follow-up tasks are generated automatically from lead <code>next_followup</code> values (see §3.4) and flagged overdue by <code>leads:check-followups</code>.</li>
+</ul>
+<h2 id="311-notifications">3.11 Notifications</h2>
+<p>Routes: <code>GET /admin/notifications</code>, <code>POST /admin/notifications/read-all</code>, <code>PUT /admin/notifications/{notification}/read</code> (all authenticated users, no permission gate).</p>
+<ul>
+<li>Rows: <code>user_id</code>, <code>title</code>, <code>message</code>, <code>type</code> (<code>followup</code>, <code>lead.converted</code>, <code>site_visit.scheduled</code>, …), <code>related_id</code>, <code>is_read</code>, <code>is_seen</code>.</li>
+<li>The follow-up automation creates <code>followup</code> notifications with a 12-hour de-duplication window (no duplicate unread notification for the same lead within 12h).</li>
+<li>Frontend polls/unreads via the API; the nav badge reflects unread count.</li>
+</ul>
+<h2 id="312-marketing-campaigns">3.12 Marketing / Campaigns</h2>
+<p>Routes gated by <code>permission:marketing.*</code>.</p>
+<ul>
+<li>Campaign fields: name, channel (e.g., Facebook, Instagram, Google), budget, spent, leads count, conversions, revenue, ROI, status, <code>start_date</code>, <code>end_date</code>.</li>
+<li>Leads can carry a <code>campaign_id</code> (assigned at creation or via import), letting teams attribute leads to campaigns.</li>
+</ul>
+<h2 id="313-media-center">3.13 Media Center</h2>
+<p>Routes gated by <code>permission:media.*</code>.</p>
+<ul>
+<li>Centralized file management: upload, list, delete (<code>MediaFile</code> rows; soft-deleted).</li>
+<li>Files stored on the app&#39;s configured disk (public by default for web-accessible media).</li>
+</ul>
+<h2 id="314-reports">3.14 Reports</h2>
+<p>Routes gated by <code>permission:reports.view</code> and <code>reports.export</code>.</p>
+<p><code>ReportController::index</code> computes the following datasets, honoring filters (<code>range</code>, <code>agent_id</code>, <code>property_id</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>revenueByMonth</code></td>
+<td>Monthly closed-won revenue (₹Cr) and lead counts</td>
+</tr>
+<tr>
+<td><code>leadSourceData</code></td>
+<td>Leads grouped by source</td>
+</tr>
+<tr>
+<td><code>pipelineFunnel</code></td>
+<td>Deal counts/values per stage across the 12 canonical stages</td>
+</tr>
+<tr>
+<td><code>agentPerformance</code></td>
+<td>Closed-won deals + revenue per sales agent (first names), filtered by range/property</td>
+</tr>
+<tr>
+<td><code>monthlyBookings</code></td>
+<td>Bookings count + deal value per month</td>
+</tr>
+<tr>
+<td><code>paymentData</code></td>
+<td>Collected (paid) vs pending (pending/overdue/partially paid) per month</td>
+</tr>
+<tr>
+<td><code>propertyPerformance</code></td>
+<td>Top 8 properties: views (sample), leads, deals</td>
+</tr>
+<tr>
+<td><code>siteVisitReport</code></td>
+<td>Totals: scheduled/confirmed, completed, cancelled, rescheduled</td>
+</tr>
+<tr>
+<td><code>lostLeadReport</code></td>
+<td>Lost vs converted leads, lost leads by source</td>
+</tr>
+<tr>
+<td><code>campaignPerformance</code></td>
+<td>Campaign budget/spend/leads/conversions/ROI</td>
+</tr>
+<tr>
+<td><code>reportTables</code></td>
+<td>Latest 50 leads, deals, payments for tabular views</td>
+</tr>
+</tbody></table>
+<p><strong>Range bounds</strong>: <code>today</code>, <code>7d</code>, <code>30d</code>, <code>90d</code>, <code>ytd</code>, <code>all</code>.</p>
+<p><strong>Exports</strong> (require <code>reports.export</code>):</p>
+<ul>
+<li><code>GET /admin/reports/export?type=&lt;t&gt;</code> streams a <strong>CSV</strong>. Allowed types: <code>revenue, leads, payments, agents, properties, sitevisits, campaigns, bookings</code>. Unknown types fall back to <code>revenue</code>.<ul>
+<li>CSV values are escaped against <strong>spreadsheet formula injection</strong>: leading <code>= + - @ \t \r</code> are prefixed with <code>&#39;</code>.</li>
+</ul>
+</li>
+<li><code>GET /admin/reports/export-pdf?type=&lt;t&gt;</code> renders <code>resources/views/exports/report.blade.php</code> via <strong>DomPDF</strong> into a downloadable PDF (filename <code>report-&lt;type&gt;-&lt;timestamp&gt;.pdf</code>).</li>
+<li>Monies are converted from raw rupees to ₹L/₹Cr in several datasets (&quot;in Cr&quot;, &quot;in L&quot;).</li>
+</ul>
+<h2 id="315-cms">3.15 CMS</h2>
+<p>Routes gated by <code>permission:cms.view/cms.edit</code>.</p>
+<ul>
+<li><code>PUT /admin/cms/featured</code> — pick featured properties (via <code>updateFeatured</code>).</li>
+<li><code>PUT /admin/cms/{section}</code> — edit a site content section (hero, about, contact text, etc.).</li>
+<li>The public site renders CMS values where wired (featured listings on Home, section content on About/Contact).</li>
+</ul>
+<h2 id="316-settings">3.16 Settings</h2>
+<p>Routes gated by <code>permission:settings.view/settings.edit</code>; SMTP/logo routes additionally require the <code>super-admin</code> <strong>role</strong>.</p>
+<p><code>SettingController</code> holds a <code>$defaults</code> map (project name, tagline, contact info, currency, timezone, colors, social links, office hours, SEO defaults, analytics code, feature toggles such as <code>enable_contact_form</code>, <code>maintenance_mode</code>, <code>lead_auto_assign</code>, <code>visit_reminders</code>, <code>payment_alerts</code>). <code>Setting::allAsArray()</code> merges saved values over defaults.</p>
+<ul>
+<li><strong>Update</strong> filters incoming fields against the caller&#39;s <strong>field-level permissions</strong> (<code>settings.edit.&lt;key&gt;</code>), so a user with limited permissions can only change allowed keys.</li>
+<li><strong>Logo</strong> upload (<code>POST /admin/settings/logo</code>) stores to the public disk under <code>settings/</code>, saves <code>logo_url</code>; deletion removes the file safely (only inside the <code>settings/</code> prefix) and resets the value. Super-admin only.</li>
+<li><strong>SMTP</strong> (<code>PUT /admin/settings/smtp</code>) — super-admin only. See <code>MailConfigService</code> (§2.4): masked password preserved when empty/<code>********</code>; runtime mailer config applied on demand (<code>applyForEmailSending</code>), degrading to the <code>log</code> mailer when disabled.</li>
+<li><strong>Test mail</strong> (<code>POST /admin/settings/test-mail</code>) — super-admin only; sends a raw SMTP test to the configured <code>test_email</code> or a provided recipient and reports success/error.</li>
+</ul>
+<h2 id="317-users">3.17 Users</h2>
+<p>Routes gated by <code>permission:users.*</code>.</p>
+<ul>
+<li>Fields: name, email, password (hashed), phone, <code>role</code> (display), <code>branch</code>, <code>status</code>, <code>avatar</code>, <code>last_login_at</code>.</li>
+<li>List/detail with role attribution; store/update/destroy for admins.</li>
+</ul>
+<h2 id="318-roles-permissions">3.18 Roles & Permissions</h2>
+<p>Web: <code>GET /admin/roles</code>, <code>/admin/permissions</code>, <code>POST/PUT/DELETE /admin/roles</code> (gated by <code>roles.*</code>). API mirrors these. See <a href="tech-04-roles-permissions.html"><code>04-roles-permissions.md</code></a>.</p>
+<h2 id="319-api-mobileintegration">3.19 API (mobile/integration)</h2>
+<p><code>routes/api.php</code> exposes the same modules under <code>/api</code> behind <code>auth:sanctum</code>:</p>
+<ul>
+<li>Auth: login, reset link, me, logout, profile, password, email-OTP flow.</li>
+<li>Dashboard, notifications; full CRUD for properties (incl. image management), leads (incl. import template/import/convert/activities), pipeline deals (incl. move stage), customers, site visits, tasks, bookings, payments, media, campaigns, reports (export/export-pdf), CMS, users, roles/permissions, settings (incl. SMTP test).</li>
+<li>All permission-gated identically to the web routes.</li>
+</ul>
+
+<div class="pager"><a href="tech-02-architecture.html">← 02. Architecture</a><a href="tech-04-roles-permissions.html">04. Roles Permissions →</a></div>
+<div class="site-footer">QREX documentation · generated from the Markdown sources in <code>docs/</code> · build with <code>npm run docs:html</code></div>
+</main>
+</div>
+
+<script>
+function filterDocs(q){
+  q=(q||'').trim().toLowerCase();
+  document.querySelectorAll('#doc-nav .nav-group').forEach(function(g){
+    var visible=0;
+    g.querySelectorAll('a').forEach(function(a){
+      var hit=!q||a.getAttribute('data-title').indexOf(q)>-1;
+      a.classList.toggle('nav-hidden',!hit);
+      if(hit)visible++;
+    });
+    g.classList.toggle('nav-hidden',visible===0);
+    if(q)g.open=true;
+  });
+}
+document.querySelectorAll('.table-wrap').forEach(function(wrap){
+  var input=wrap.querySelector('.table-filter');
+  var table=wrap.querySelector('table');
+  var count=wrap.querySelector('.table-count');
+  if(!input||!table)return;
+  input.addEventListener('input',function(){
+    var q=input.value.trim().toLowerCase();
+    var shown=0,total=0;
+    table.querySelectorAll('tbody tr').forEach(function(row){
+      total++;
+      var hit=!q||row.textContent.toLowerCase().indexOf(q)>-1;
+      row.style.display=hit?'':'none';
+      if(hit)shown++;
+    });
+    if(count)count.textContent=q?shown+' of '+total+' rows':' '+total+' rows';
+  });
+});
+</script>
+</body>
+</html>

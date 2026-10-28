@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4. Roles, Permissions & Data Access · QREX</title>
+<style>
+:root{--bg:#f7f8fa;--panel:#fff;--ink:#1f2733;--muted:#5b6472;--line:#e3e7ee;--accent:#0f5c4e;--accent2:#b5893b;--code:#f2f4f7;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65;font-size:16px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.layout{display:flex;min-height:100vh}
+aside{width:280px;flex:0 0 280px;background:var(--panel);border-right:1px solid var(--line);padding:24px 20px;position:sticky;top:0;height:100vh;overflow-y:auto}
+aside h2{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:18px 0 8px}
+aside a{display:block;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.9rem}
+aside a:hover{background:var(--bg);text-decoration:none}
+aside a.active{background:var(--accent);color:#fff}
+aside .brand{font-weight:700;font-size:1.05rem;color:var(--accent);margin-bottom:4px}
+main{flex:1;min-width:0;padding:40px 56px;max-width:960px;margin:0 auto}
+main h1{font-size:2rem;line-height:1.25;margin:0 0 .5em;padding-bottom:.35em;border-bottom:2px solid var(--line)}
+main h2{font-size:1.45rem;margin:2em 0 .6em;padding-bottom:.25em;border-bottom:1px solid var(--line)}
+main h3{font-size:1.15rem;margin:1.6em 0 .5em}
+main h4{font-size:1rem;margin:1.3em 0 .4em}
+main p,main li{color:#2b3542}
+table{border-collapse:collapse;width:100%;margin:1.1em 0;font-size:.92rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+th{background:#eef1f5;font-weight:600}
+tr:nth-child(even) td{background:#fbfcfd}
+code{background:var(--code);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em}
+pre{background:#1e2530;color:#e6e9ef;padding:16px 18px;border-radius:8px;overflow-x:auto}
+pre code{background:none;color:inherit;padding:0}
+blockquote{margin:1.2em 0;padding:.6em 1.1em;background:#fff8e8;border-left:4px solid var(--accent2);color:#5b4a22;border-radius:0 6px 6px 0}
+blockquote p{margin:.4em 0}
+hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
+img{max-width:100%}
+.crumbs{font-size:.82rem;color:var(--muted);margin-bottom:18px}
+.pager{display:flex;justify-content:space-between;gap:16px;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{font-size:.9rem}
+.site-footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:24px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.card h3{margin:.2em 0 .4em;font-size:1.02rem}
+.card p{margin:.2em 0;font-size:.88rem;color:var(--muted)}
+/* --- Figures: diagrams and screen wireframes --- */
+.figure{margin:1.8em 0}
+.figure>svg{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px}
+.figure.diagram{overflow-x:auto}
+.figure.diagram.wide>svg{max-width:none;margin:0}
+.figure.wireframe>svg{border-color:#dbe2ea}
+figcaption{margin-top:.7em;font-size:.82rem;color:var(--muted);text-align:center;line-height:1.45}
+.art-missing{border-left:3px solid #c0392b}
+/* --- Long reference tables --- */
+.table-wrap{margin:1.1em 0}
+.table-filter{width:100%;max-width:300px;padding:7px 11px;margin-bottom:.55em;border:1px solid var(--line);border-radius:8px;font-size:.86rem;background:#fff;color:var(--ink);font-family:inherit}
+.table-filter:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.table-count{font-size:.78rem;color:var(--muted);margin-left:8px;vertical-align:middle}
+/* --- Documentation menu (sidebar) --- */
+.side-search{width:100%;padding:8px 10px;margin:10px 0 4px;border:1px solid var(--line);border-radius:8px;font-size:.85rem;background:var(--bg);color:var(--ink)}
+.side-search:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.home-link{display:block;font-size:.8rem;font-weight:600;color:var(--accent);margin-bottom:14px;padding:4px 0}
+.nav-group{border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:6px}
+.nav-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:10px 4px 6px;font-weight:700;user-select:none}
+.nav-group>summary::-webkit-details-marker{display:none}
+.nav-group>summary .chev{transition:transform .15s ease;font-size:.7rem;color:var(--muted)}
+.nav-group[open]>summary .chev{transform:rotate(90deg)}
+.nav-group .count{color:var(--muted);font-weight:400;margin-left:auto;font-size:.68rem}
+.nav-group a{display:flex;gap:8px;align-items:baseline;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.88rem;line-height:1.35}
+.nav-group a:hover{background:var(--bg);text-decoration:none}
+.nav-group a.active{background:var(--accent);color:#fff}
+.nav-group a.active .num{color:#d9ece7}
+.nav-group a .num{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.75rem;min-width:1.4em}
+.nav-hidden{display:none!important}
+.menu-toggle{display:none;position:fixed;top:12px;left:12px;z-index:50;width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:1.2rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.menu-backdrop{display:none}
+@media(max-width:900px){
+  .layout{flex-direction:column}
+  .menu-toggle{display:flex}
+  aside{position:fixed;top:0;left:0;z-index:60;width:290px;height:100vh;overflow-y:auto;border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .2s ease;box-shadow:0 0 24px rgba(0,0,0,.12)}
+  body.menu-open aside{transform:translateX(0)}
+  body.menu-open .menu-backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:55}
+  main{padding:64px 20px 24px}
+}
+@media print{
+  aside,.crumbs,.pager,.menu-toggle,.menu-backdrop{display:none}
+  body{background:#fff;font-size:11pt}
+  main{max-width:none;padding:0}
+  a{color:var(--ink)}
+  pre{background:#f2f4f7;color:#1f2733;border:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<button class="menu-toggle" aria-label="Open documentation menu" onclick="document.body.classList.toggle('menu-open')">☰</button>
+<div class="menu-backdrop" onclick="document.body.classList.remove('menu-open')"></div>
+<aside>
+  <a class="home-link" href="index.html">⌂ All documentation</a>
+  <div class="brand">QREX Documentation</div>
+  <div style="font-size:.78rem;color:var(--muted)">Qodeigence Infocircle Pvt. Ltd.</div>
+  <input class="side-search" type="search" placeholder="Search documents…" aria-label="Search documents" oninput="filterDocs(this.value)">
+  <nav id="doc-nav">
+    <details class="nav-group">
+<summary><span>User Manual</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="manual-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="overview and getting started" href="manual-01-overview-and-getting-started.html"><span class="num">01</span><span>Overview And Getting Started</span></a><a class="" data-title="roles and access" href="manual-02-roles-and-access.html"><span class="num">02</span><span>Roles And Access</span></a><a class="" data-title="sales lifecycle" href="manual-03-sales-lifecycle.html"><span class="num">03</span><span>Sales Lifecycle</span></a><a class="" data-title="modules sales" href="manual-04-modules-sales.html"><span class="num">04</span><span>Modules Sales</span></a><a class="" data-title="modules operations" href="manual-05-modules-operations.html"><span class="num">05</span><span>Modules Operations</span></a><a class="" data-title="modules marketing and admin" href="manual-06-modules-marketing-and-admin.html"><span class="num">06</span><span>Modules Marketing And Admin</span></a><a class="" data-title="public website" href="manual-07-public-website.html"><span class="num">07</span><span>Public Website</span></a><a class="" data-title="reference" href="manual-08-reference.html"><span class="num">08</span><span>Reference</span></a><a class="" data-title="troubleshooting and faq" href="manual-09-troubleshooting-and-faq.html"><span class="num">09</span><span>Troubleshooting And Faq</span></a></details><details class="nav-group">
+<summary><span>How QREX Works</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="explain-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="system at a glance" href="explain-01-system-at-a-glance.html"><span class="num">01</span><span>System At A Glance</span></a><a class="" data-title="sales lifecycle" href="explain-02-sales-lifecycle.html"><span class="num">02</span><span>Sales Lifecycle</span></a><a class="" data-title="data model" href="explain-03-data-model.html"><span class="num">03</span><span>Data Model</span></a><a class="" data-title="roles and permissions" href="explain-04-roles-and-permissions.html"><span class="num">04</span><span>Roles And Permissions</span></a><a class="" data-title="screen designs" href="explain-05-screen-designs.html"><span class="num">05</span><span>Screen Designs</span></a><a class="" data-title="operations and automation" href="explain-06-operations-and-automation.html"><span class="num">06</span><span>Operations And Automation</span></a></details><details class="nav-group" open>
+<summary><span>Technical Documentation</span><span class="chev">▶</span></summary>
+<a class="" data-title="project scope" href="tech-01-project-scope.html"><span class="num">01</span><span>Project Scope</span></a><a class="" data-title="architecture" href="tech-02-architecture.html"><span class="num">02</span><span>Architecture</span></a><a class="" data-title="operations modules" href="tech-03-operations-modules.html"><span class="num">03</span><span>Operations Modules</span></a><a class="active" data-title="roles permissions" href="tech-04-roles-permissions.html"><span class="num">04</span><span>Roles Permissions</span></a><a class="" data-title="database schema" href="tech-05-database-schema.html"><span class="num">05</span><span>Database Schema</span></a><a class="" data-title="operations" href="tech-06-operations.html"><span class="num">06</span><span>Operations</span></a><a class="" data-title="security hardening" href="tech-07-security-hardening.html"><span class="num">07</span><span>Security Hardening</span></a><a class="" data-title="glossary" href="tech-08-glossary.html"><span class="num">08</span><span>Glossary</span></a><a class="" data-title="project proposal" href="tech-09-project-proposal.html"><span class="num">09</span><span>Project Proposal</span></a><a class="" data-title="budget pricing mumbai" href="tech-10-budget-pricing-mumbai.html"><span class="num">10</span><span>Budget Pricing Mumbai</span></a></details>
+  </nav>
+  <details class="nav-group"><summary><span>Downloads</span><span class="chev">▶</span></summary>
+    <a href="../word/QREX-User-Manual.docx"><span class="num"></span><span>User Manual (.docx)</span></a>
+    <a href="../word/QREX-User-Manual.doc"><span class="num"></span><span>User Manual (.doc)</span></a>
+    <a href="../word/QREX-How-It-Works.docx"><span class="num"></span><span>How QREX Works (.docx)</span></a>
+    <a href="../word/QREX-How-It-Works.doc"><span class="num"></span><span>How QREX Works (.doc)</span></a>
+    <a href="../word/QREX-Technical-Documentation.docx"><span class="num"></span><span>Technical Docs (.docx)</span></a>
+    <a href="../word/QREX-Technical-Documentation.doc"><span class="num"></span><span>Technical Docs (.doc)</span></a>
+  </details>
+</aside>
+<main>
+<div class="crumbs">QREX Technical Documentation</div>
+<h1 id="4-roles-permissions-data-access">4. Roles, Permissions & Data Access</h1>
+<p>QREX implements a <strong>custom role-based access control (RBAC)</strong> system. It is not Spatie; roles and permissions are plain Eloquent models with pivot tables seeded by <code>RolesAndPermissionsSeeder</code>.</p>
+<h2 id="41-model">4.1 Model</h2>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>roles</code></td>
+<td>Role definitions: <code>name</code>, <code>slug</code>, <code>description</code>, <code>is_system</code></td>
+</tr>
+<tr>
+<td><code>permissions</code></td>
+<td>Permission definitions: <code>name</code>, <code>slug</code>, <code>module</code>, <code>action</code>, <code>field</code>, <code>description</code></td>
+</tr>
+<tr>
+<td><code>role_has_permissions</code></td>
+<td>Many-to-many role ↔ permission</td>
+</tr>
+<tr>
+<td><code>model_has_roles</code></td>
+<td>Morph-many user ↔ role (polymorphic, model-aware)</td>
+</tr>
+</tbody></table>
+<p><code>User</code> helper methods (see <code>app/Models/User.php</code>):</p>
+<ul>
+<li><code>isSuperAdmin()</code>, <code>hasRole(slug)</code>, <code>hasAnyRole([...])</code></li>
+<li><code>hasPermissionTo(slug)</code>, <code>hasAnyPermission([...])</code>, <code>getAllPermissions()</code>, <code>getPermissionSlugs()</code></li>
+<li><code>canAccessModule(module)</code> — true if the user has a <code>&lt;module&gt;.view</code> permission</li>
+<li>Per-user permission cache keyed by user id (reset per request in the app cache)</li>
+</ul>
+<h2 id="42-permission-structure">4.2 Permission Structure</h2>
+<p>Permissions are generated from <strong>15 modules</strong> and their actions:</p>
+<div class="table-wrap">
+<input class="table-filter" type="search" placeholder="Filter rows…" aria-label="Filter table rows">
+<span class="table-count"></span>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>dashboard</code></td>
+<td>view</td>
+</tr>
+<tr>
+<td><code>properties</code></td>
+<td>view, create, edit, delete, export</td>
+</tr>
+<tr>
+<td><code>leads</code></td>
+<td>view, create, edit, delete, export</td>
+</tr>
+<tr>
+<td><code>customers</code></td>
+<td>view, create, edit, delete, export</td>
+</tr>
+<tr>
+<td><code>sales</code></td>
+<td>view, create, edit, delete, export</td>
+</tr>
+<tr>
+<td><code>tasks</code></td>
+<td>view, create, edit, delete</td>
+</tr>
+<tr>
+<td><code>site_visits</code></td>
+<td>view, create, edit, delete</td>
+</tr>
+<tr>
+<td><code>bookings</code></td>
+<td>view, create, edit, delete, approve</td>
+</tr>
+<tr>
+<td><code>payments</code></td>
+<td>view, create, edit, delete, export</td>
+</tr>
+<tr>
+<td><code>media</code></td>
+<td>view, create, delete</td>
+</tr>
+<tr>
+<td><code>marketing</code></td>
+<td>view, create, edit, delete, export</td>
+</tr>
+<tr>
+<td><code>reports</code></td>
+<td>view, export</td>
+</tr>
+<tr>
+<td><code>cms</code></td>
+<td>view, create, edit, delete</td>
+</tr>
+<tr>
+<td><code>users</code></td>
+<td>view, create, edit, delete</td>
+</tr>
+<tr>
+<td><code>settings</code></td>
+<td>view, edit</td>
+</tr>
+<tr>
+<td><code>roles</code></td>
+<td>view, create, edit, delete</td>
+</tr>
+</tbody></table>
+</div>
+
+<p>The slug convention is <code>{module}.{action}</code> (e.g., <code>leads.view</code>, <code>properties.create</code>).</p>
+<h2 id="43-field-level-permissions">4.3 Field-Level Permissions</h2>
+<p>For actions that touch record fields, additional permissions are seeded as <code>{module}.{action}.{field}</code>:</p>
+<ul>
+<li><code>properties.edit.{price,title,status,description,area,bedrooms,bathrooms,amenities,featured,agent}</code></li>
+<li><code>leads.edit.{name,phone,email,source,status,budget,assigned_agent,score}</code></li>
+<li><code>customers.edit.{name,phone,email,type,budget,notes}</code></li>
+<li><code>tasks.edit.{title,status,priority,due_date,assigned_to}</code></li>
+<li><code>site_visits.edit.{date,time,status,feedback,notes}</code></li>
+<li><code>bookings.edit.{amount,status,payment_mode,notes}</code></li>
+<li><code>payments.edit.{amount,status,mode,date,notes}</code></li>
+<li><code>marketing.edit.{name,budget,status,channels,content}</code></li>
+<li><code>settings.edit.{project_name,agency_name,contact_email,contact_phone,address,tagline,logo}</code></li>
+<li><code>users.edit.{name,email,phone,role,branch,status,password}</code></li>
+<li><code>cms.edit.{content,featured,seo}</code></li>
+</ul>
+<p>Notable enforcement points:</p>
+<ul>
+<li><strong>Settings</strong> (<code>SettingController::update</code>) filters each requested key by <code>settings.edit.&lt;key&gt;</code> so a partially-permitted user can only modify allowed settings.</li>
+<li>Other modules expose the permission set to the frontend (via <code>PermissionPayloadService</code>) so the UI can hide/disable controls the user cannot use; server-side route middleware is the authoritative gate.</li>
+</ul>
+<h2 id="44-seeded-roles">4.4 Seeded Roles</h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>slug</th>
+<th>Permissions summary</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Super Admin</strong></td>
+<td><code>super-admin</code></td>
+<td>All permissions (every module × action × field)</td>
+</tr>
+<tr>
+<td><strong>Admin</strong></td>
+<td><code>admin</code></td>
+<td>All permissions except <code>settings.edit.project_name</code> and <code>roles.delete</code></td>
+</tr>
+<tr>
+<td><strong>Sales Executive</strong></td>
+<td><code>sales-executive</code></td>
+<td>dashboard, properties (view/create/edit), leads (view/create/edit + edit fields), customers (view/create/edit), tasks (view/create/edit), site visits (view/create/edit), media (view/create), reports (view)</td>
+</tr>
+<tr>
+<td><strong>Senior Agent</strong></td>
+<td><code>senior-agent</code></td>
+<td>Sales Executive + <code>sales.view/create/edit</code> (pipeline)</td>
+</tr>
+<tr>
+<td><strong>Marketing User</strong></td>
+<td><code>marketing-user</code></td>
+<td>dashboard, leads (view/create), marketing (view/create/edit), media (view/create), cms (view/create/edit), reports (view/export)</td>
+</tr>
+<tr>
+<td><strong>Accountant</strong></td>
+<td><code>accountant</code></td>
+<td>dashboard, customers (view), sales (view), bookings (view/create/edit), payments (view/create/edit), reports (view/export), media (view)</td>
+</tr>
+</tbody></table>
+<p><code>roles.delete</code> is a true system-safety valve: even <code>admin</code> cannot delete roles, only super-admin can.</p>
+<p>SMTP settings, logo management, and test-mail endpoints are further gated by the <code>super-admin</code> <strong>role</strong> (<code>role:super-admin</code> middleware) in addition to permissions.</p>
+<h2 id="45-route-level-enforcement">4.5 Route-Level Enforcement</h2>
+<p>Web routes apply middleware per route group, e.g.:</p>
+<pre><code class="language-php">Route::middleware(&#39;permission:leads.edit&#39;)-&gt;group(function () {
+    Route::put(&#39;/leads/{lead}&#39;, ...);            // leads.update
+    Route::post(&#39;/leads/{lead}/reassign&#39;, ...);  // leads.reassign
+    Route::post(&#39;/leads/{lead}/status&#39;, ...);    // leads.status
+});
+</code></pre>
+<p>Each controller method also performs its own access checks where data-level restrictions apply (see below). The API uses the exact same <code>permission:</code> middleware on its routes.</p>
+<h2 id="46-data-level-scoping">4.6 Data-Level Scoping</h2>
+<p>Beyond action permissions, <strong>row-level scoping</strong> limits what agents see (but not what admins see).</p>
+<p><code>Lead::scopeVisibleTo($user)</code> / <code>LeadController::applyAgentScope</code>:</p>
+<ul>
+<li>Super Admin or role <code>admin</code> → no restriction.</li>
+<li><code>sales-executive</code> or <code>senior-agent</code> → only leads where <code>assigned_agent_id = user.id</code> <strong>or</strong> <code>owner_id = user.id</code>.</li>
+</ul>
+<p><code>LeadController::authorizeLeadAccess</code> (used on show/update/reassign/status/activity/convert) aborts <code>403</code> if a scoped user accesses a lead they don&#39;t own or are not assigned.</p>
+<p>Reports reuse <code>visibleTo</code> so agents&#39; reports are limited to their own leads, while admins see the full picture.</p>
+<h2 id="47-frontend-integration">4.7 Frontend Integration</h2>
+<p><code>PermissionPayloadService</code> builds the user&#39;s permission slugs into Inertia props. The React admin layout uses them to:</p>
+<ul>
+<li>Show/hide navigation items per module.</li>
+<li>Disable or hide create/edit/delete actions the user cannot perform.</li>
+<li>Respect field-level permissions when rendering forms (e.g., Settings page hides fields the user may not edit).</li>
+</ul>
+
+<div class="pager"><a href="tech-03-operations-modules.html">← 03. Operations Modules</a><a href="tech-05-database-schema.html">05. Database Schema →</a></div>
+<div class="site-footer">QREX documentation · generated from the Markdown sources in <code>docs/</code> · build with <code>npm run docs:html</code></div>
+</main>
+</div>
+
+<script>
+function filterDocs(q){
+  q=(q||'').trim().toLowerCase();
+  document.querySelectorAll('#doc-nav .nav-group').forEach(function(g){
+    var visible=0;
+    g.querySelectorAll('a').forEach(function(a){
+      var hit=!q||a.getAttribute('data-title').indexOf(q)>-1;
+      a.classList.toggle('nav-hidden',!hit);
+      if(hit)visible++;
+    });
+    g.classList.toggle('nav-hidden',visible===0);
+    if(q)g.open=true;
+  });
+}
+document.querySelectorAll('.table-wrap').forEach(function(wrap){
+  var input=wrap.querySelector('.table-filter');
+  var table=wrap.querySelector('table');
+  var count=wrap.querySelector('.table-count');
+  if(!input||!table)return;
+  input.addEventListener('input',function(){
+    var q=input.value.trim().toLowerCase();
+    var shown=0,total=0;
+    table.querySelectorAll('tbody tr').forEach(function(row){
+      total++;
+      var hit=!q||row.textContent.toLowerCase().indexOf(q)>-1;
+      row.style.display=hit?'':'none';
+      if(hit)shown++;
+    });
+    if(count)count.textContent=q?shown+' of '+total+' rows':' '+total+' rows';
+  });
+});
+</script>
+</body>
+</html>

@@ -70,7 +70,7 @@ export default function Home(props: HomePageProps) {
                             Find Your Dream Home in <span className="text-gold-400">Premium India</span>
                         </h1>
                         <p className="text-blue-100/80 text-lg leading-relaxed mb-9">
-                            From luxury apartments to commercial landmarks, NestPrime connects you with the finest curated properties across Mumbai, Bangalore, Pune &amp; Gurugram.
+                            From luxury apartments to commercial landmarks, QREX connects you with the finest curated properties across Mumbai, Bangalore, Pune &amp; Gurugram.
                         </p>
                         <div className="flex flex-wrap gap-4">
                             <Link href="/properties" className="px-7 py-3.5 bg-gold-500 text-white rounded-lg font-semibold hover:bg-gold-600 transition-colors flex items-center gap-2">
@@ -202,19 +202,19 @@ export default function Home(props: HomePageProps) {
             <section className="bg-[#F7F9FC] py-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
                     <div className="relative">
-                        <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?w=700&h=520&fit=crop&auto=format" alt="NestPrime team" className="rounded-2xl w-full h-[440px] object-cover" />
+                        <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?w=700&h=520&fit=crop&auto=format" alt="QREX team" className="rounded-2xl w-full h-[440px] object-cover" />
                         <div className="absolute -bottom-6 right-6 bg-[#0D1B3E] text-white rounded-2xl p-6 shadow-2xl">
                             <div className="text-3xl font-bold text-gold-400">12+</div>
                             <div className="text-blue-200/80 text-sm">Years of Excellence<br />in Real Estate</div>
                         </div>
                     </div>
                     <div>
-                        <div className="text-gold-600 text-sm font-semibold mb-2">Why Choose NestPrime</div>
+                        <div className="text-gold-600 text-sm font-semibold mb-2">Why Choose QREX</div>
                         <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#0D1B3E] leading-tight mb-6">
                             A Legacy of Trust, Transparency &amp; Exceptional Service
                         </h2>
                         <p className="text-gray-600 leading-relaxed mb-8">
-                            For over a decade, NestPrime has helped thousands of families and businesses find the perfect property. Our deep market knowledge, verified listings, and end-to-end support make the journey seamless.
+                            For over a decade, QREX has helped thousands of families and businesses find the perfect property. Our deep market knowledge, verified listings, and end-to-end support make the journey seamless.
                         </p>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             {[

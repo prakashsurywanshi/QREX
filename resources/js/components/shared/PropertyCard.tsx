@@ -1,21 +1,23 @@
 import { Link } from '@inertiajs/react';
 import { MapPin, Bed, Bath, Maximize, Star } from 'lucide-react';
 import type { Property } from '@/types';
-import { inrLabel } from '@/lib/utils';
+import { inrLabel, PLACEHOLDER_IMAGE } from '@/lib/utils';
 
 interface PropertyCardProps {
     property: Property;
 }
 
 export default function PropertyCard({ property }: PropertyCardProps) {
+    const cover = property.images?.find((i) => i.is_cover)?.path ?? property.images?.[0]?.path ?? PLACEHOLDER_IMAGE;
+
     return (
         <Link
-            href={`/properties/${property.id}`}
+            href={`/properties/${property.public_id}`}
             className="group bg-white rounded-2xl overflow-hidden border border-[#E1E8F0] hover:shadow-xl transition-shadow"
         >
             <div className="relative h-52 overflow-hidden">
                 <img
-                    src={property.image}
+                    src={cover}
                     alt={property.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />

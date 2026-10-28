@@ -65,4 +65,17 @@ class Lead extends Model
     {
         return $this->hasMany(LeadHandover::class);
     }
+
+    public function scopeVisibleTo($query, User $user): void
+    {
+        if ($user->isSuperAdmin() || $user->hasRole('admin')) {
+            return;
+        }
+
+        if ($user->hasAnyRole(['sales-executive', 'senior-agent'])) {
+            $query->where(fn ($q) => $q
+                ->where('assigned_agent_id', $user->id)
+                ->orWhere('owner_id', $user->id));
+        }
+    }
 }

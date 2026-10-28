@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>5. Operations Modules · QREX</title>
+<style>
+:root{--bg:#f7f8fa;--panel:#fff;--ink:#1f2733;--muted:#5b6472;--line:#e3e7ee;--accent:#0f5c4e;--accent2:#b5893b;--code:#f2f4f7;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65;font-size:16px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.layout{display:flex;min-height:100vh}
+aside{width:280px;flex:0 0 280px;background:var(--panel);border-right:1px solid var(--line);padding:24px 20px;position:sticky;top:0;height:100vh;overflow-y:auto}
+aside h2{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:18px 0 8px}
+aside a{display:block;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.9rem}
+aside a:hover{background:var(--bg);text-decoration:none}
+aside a.active{background:var(--accent);color:#fff}
+aside .brand{font-weight:700;font-size:1.05rem;color:var(--accent);margin-bottom:4px}
+main{flex:1;min-width:0;padding:40px 56px;max-width:960px;margin:0 auto}
+main h1{font-size:2rem;line-height:1.25;margin:0 0 .5em;padding-bottom:.35em;border-bottom:2px solid var(--line)}
+main h2{font-size:1.45rem;margin:2em 0 .6em;padding-bottom:.25em;border-bottom:1px solid var(--line)}
+main h3{font-size:1.15rem;margin:1.6em 0 .5em}
+main h4{font-size:1rem;margin:1.3em 0 .4em}
+main p,main li{color:#2b3542}
+table{border-collapse:collapse;width:100%;margin:1.1em 0;font-size:.92rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+th{background:#eef1f5;font-weight:600}
+tr:nth-child(even) td{background:#fbfcfd}
+code{background:var(--code);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em}
+pre{background:#1e2530;color:#e6e9ef;padding:16px 18px;border-radius:8px;overflow-x:auto}
+pre code{background:none;color:inherit;padding:0}
+blockquote{margin:1.2em 0;padding:.6em 1.1em;background:#fff8e8;border-left:4px solid var(--accent2);color:#5b4a22;border-radius:0 6px 6px 0}
+blockquote p{margin:.4em 0}
+hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
+img{max-width:100%}
+.crumbs{font-size:.82rem;color:var(--muted);margin-bottom:18px}
+.pager{display:flex;justify-content:space-between;gap:16px;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{font-size:.9rem}
+.site-footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:24px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.card h3{margin:.2em 0 .4em;font-size:1.02rem}
+.card p{margin:.2em 0;font-size:.88rem;color:var(--muted)}
+/* --- Figures: diagrams and screen wireframes --- */
+.figure{margin:1.8em 0}
+.figure>svg{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px}
+.figure.diagram{overflow-x:auto}
+.figure.diagram.wide>svg{max-width:none;margin:0}
+.figure.wireframe>svg{border-color:#dbe2ea}
+figcaption{margin-top:.7em;font-size:.82rem;color:var(--muted);text-align:center;line-height:1.45}
+.art-missing{border-left:3px solid #c0392b}
+/* --- Long reference tables --- */
+.table-wrap{margin:1.1em 0}
+.table-filter{width:100%;max-width:300px;padding:7px 11px;margin-bottom:.55em;border:1px solid var(--line);border-radius:8px;font-size:.86rem;background:#fff;color:var(--ink);font-family:inherit}
+.table-filter:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.table-count{font-size:.78rem;color:var(--muted);margin-left:8px;vertical-align:middle}
+/* --- Documentation menu (sidebar) --- */
+.side-search{width:100%;padding:8px 10px;margin:10px 0 4px;border:1px solid var(--line);border-radius:8px;font-size:.85rem;background:var(--bg);color:var(--ink)}
+.side-search:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.home-link{display:block;font-size:.8rem;font-weight:600;color:var(--accent);margin-bottom:14px;padding:4px 0}
+.nav-group{border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:6px}
+.nav-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:10px 4px 6px;font-weight:700;user-select:none}
+.nav-group>summary::-webkit-details-marker{display:none}
+.nav-group>summary .chev{transition:transform .15s ease;font-size:.7rem;color:var(--muted)}
+.nav-group[open]>summary .chev{transform:rotate(90deg)}
+.nav-group .count{color:var(--muted);font-weight:400;margin-left:auto;font-size:.68rem}
+.nav-group a{display:flex;gap:8px;align-items:baseline;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.88rem;line-height:1.35}
+.nav-group a:hover{background:var(--bg);text-decoration:none}
+.nav-group a.active{background:var(--accent);color:#fff}
+.nav-group a.active .num{color:#d9ece7}
+.nav-group a .num{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.75rem;min-width:1.4em}
+.nav-hidden{display:none!important}
+.menu-toggle{display:none;position:fixed;top:12px;left:12px;z-index:50;width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:1.2rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.menu-backdrop{display:none}
+@media(max-width:900px){
+  .layout{flex-direction:column}
+  .menu-toggle{display:flex}
+  aside{position:fixed;top:0;left:0;z-index:60;width:290px;height:100vh;overflow-y:auto;border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .2s ease;box-shadow:0 0 24px rgba(0,0,0,.12)}
+  body.menu-open aside{transform:translateX(0)}
+  body.menu-open .menu-backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:55}
+  main{padding:64px 20px 24px}
+}
+@media print{
+  aside,.crumbs,.pager,.menu-toggle,.menu-backdrop{display:none}
+  body{background:#fff;font-size:11pt}
+  main{max-width:none;padding:0}
+  a{color:var(--ink)}
+  pre{background:#f2f4f7;color:#1f2733;border:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<button class="menu-toggle" aria-label="Open documentation menu" onclick="document.body.classList.toggle('menu-open')">☰</button>
+<div class="menu-backdrop" onclick="document.body.classList.remove('menu-open')"></div>
+<aside>
+  <a class="home-link" href="index.html">⌂ All documentation</a>
+  <div class="brand">QREX Documentation</div>
+  <div style="font-size:.78rem;color:var(--muted)">Qodeigence Infocircle Pvt. Ltd.</div>
+  <input class="side-search" type="search" placeholder="Search documents…" aria-label="Search documents" oninput="filterDocs(this.value)">
+  <nav id="doc-nav">
+    <details class="nav-group" open>
+<summary><span>User Manual</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="manual-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="overview and getting started" href="manual-01-overview-and-getting-started.html"><span class="num">01</span><span>Overview And Getting Started</span></a><a class="" data-title="roles and access" href="manual-02-roles-and-access.html"><span class="num">02</span><span>Roles And Access</span></a><a class="" data-title="sales lifecycle" href="manual-03-sales-lifecycle.html"><span class="num">03</span><span>Sales Lifecycle</span></a><a class="" data-title="modules sales" href="manual-04-modules-sales.html"><span class="num">04</span><span>Modules Sales</span></a><a class="active" data-title="modules operations" href="manual-05-modules-operations.html"><span class="num">05</span><span>Modules Operations</span></a><a class="" data-title="modules marketing and admin" href="manual-06-modules-marketing-and-admin.html"><span class="num">06</span><span>Modules Marketing And Admin</span></a><a class="" data-title="public website" href="manual-07-public-website.html"><span class="num">07</span><span>Public Website</span></a><a class="" data-title="reference" href="manual-08-reference.html"><span class="num">08</span><span>Reference</span></a><a class="" data-title="troubleshooting and faq" href="manual-09-troubleshooting-and-faq.html"><span class="num">09</span><span>Troubleshooting And Faq</span></a></details><details class="nav-group">
+<summary><span>How QREX Works</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="explain-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="system at a glance" href="explain-01-system-at-a-glance.html"><span class="num">01</span><span>System At A Glance</span></a><a class="" data-title="sales lifecycle" href="explain-02-sales-lifecycle.html"><span class="num">02</span><span>Sales Lifecycle</span></a><a class="" data-title="data model" href="explain-03-data-model.html"><span class="num">03</span><span>Data Model</span></a><a class="" data-title="roles and permissions" href="explain-04-roles-and-permissions.html"><span class="num">04</span><span>Roles And Permissions</span></a><a class="" data-title="screen designs" href="explain-05-screen-designs.html"><span class="num">05</span><span>Screen Designs</span></a><a class="" data-title="operations and automation" href="explain-06-operations-and-automation.html"><span class="num">06</span><span>Operations And Automation</span></a></details><details class="nav-group">
+<summary><span>Technical Documentation</span><span class="chev">▶</span></summary>
+<a class="" data-title="project scope" href="tech-01-project-scope.html"><span class="num">01</span><span>Project Scope</span></a><a class="" data-title="architecture" href="tech-02-architecture.html"><span class="num">02</span><span>Architecture</span></a><a class="" data-title="operations modules" href="tech-03-operations-modules.html"><span class="num">03</span><span>Operations Modules</span></a><a class="" data-title="roles permissions" href="tech-04-roles-permissions.html"><span class="num">04</span><span>Roles Permissions</span></a><a class="" data-title="database schema" href="tech-05-database-schema.html"><span class="num">05</span><span>Database Schema</span></a><a class="" data-title="operations" href="tech-06-operations.html"><span class="num">06</span><span>Operations</span></a><a class="" data-title="security hardening" href="tech-07-security-hardening.html"><span class="num">07</span><span>Security Hardening</span></a><a class="" data-title="glossary" href="tech-08-glossary.html"><span class="num">08</span><span>Glossary</span></a><a class="" data-title="project proposal" href="tech-09-project-proposal.html"><span class="num">09</span><span>Project Proposal</span></a><a class="" data-title="budget pricing mumbai" href="tech-10-budget-pricing-mumbai.html"><span class="num">10</span><span>Budget Pricing Mumbai</span></a></details>
+  </nav>
+  <details class="nav-group"><summary><span>Downloads</span><span class="chev">▶</span></summary>
+    <a href="../word/QREX-User-Manual.docx"><span class="num"></span><span>User Manual (.docx)</span></a>
+    <a href="../word/QREX-User-Manual.doc"><span class="num"></span><span>User Manual (.doc)</span></a>
+    <a href="../word/QREX-How-It-Works.docx"><span class="num"></span><span>How QREX Works (.docx)</span></a>
+    <a href="../word/QREX-How-It-Works.doc"><span class="num"></span><span>How QREX Works (.doc)</span></a>
+    <a href="../word/QREX-Technical-Documentation.docx"><span class="num"></span><span>Technical Docs (.docx)</span></a>
+    <a href="../word/QREX-Technical-Documentation.doc"><span class="num"></span><span>Technical Docs (.doc)</span></a>
+  </details>
+</aside>
+<main>
+<div class="crumbs">QREX User Manual</div>
+<h1 id="5-operations-modules">5. Operations Modules</h1>
+<p>Covers <strong>Sales Pipeline</strong>, <strong>Tasks &amp; Follow-ups</strong>, <strong>Bookings</strong>, <strong>Payments</strong> and <strong>Notifications</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Who can see it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Sales Pipeline</td>
+<td>Super Admin, Admin, Senior Agent, Accountant (read-only)</td>
+</tr>
+<tr>
+<td>Tasks &amp; Follow-ups</td>
+<td>Super Admin, Admin, Sales Executive, Senior Agent</td>
+</tr>
+<tr>
+<td>Bookings</td>
+<td>Super Admin, Admin, Accountant</td>
+</tr>
+<tr>
+<td>Payments</td>
+<td>Super Admin, Admin, Accountant</td>
+</tr>
+<tr>
+<td>Notifications</td>
+<td><strong>Everyone</strong> with a login</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="51-sales-pipeline">5.1 Sales Pipeline</h2>
+<p><strong>URL:</strong> <code>/admin/pipeline</code> · <strong>Permissions:</strong> <code>sales.view</code> / <code>.create</code> / <code>.edit</code></p>
+<p>The pipeline is the board where live deals are worked. It is a Kanban view: each column is a <strong>stage</strong>, each card is a <strong>deal</strong>.</p>
+<h3 id="511-the-twelve-stages">5.1.1 The twelve stages</h3>
+<p>In board order, left to right:</p>
+<div class="table-wrap">
+<input class="table-filter" type="search" placeholder="Filter rows…" aria-label="Filter table rows">
+<span class="table-count"></span>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Stage</th>
+<th>What it means</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>New Lead</strong></td>
+<td>Fresh on the board. The default stage for a deal created directly</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Contacted</strong></td>
+<td>First contact made</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Qualified</strong></td>
+<td>Real requirement and real budget confirmed. <strong>The default stage for a converted lead</strong></td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Property Shortlisted</strong></td>
+<td>Specific properties chosen</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Site Visit Scheduled</strong></td>
+<td>A visit is booked</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Site Visit Completed</strong></td>
+<td>The customer has seen the property</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Negotiation</strong></td>
+<td>Terms under discussion</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>Booking</strong></td>
+<td>An offer accepted, booking being raised</td>
+</tr>
+<tr>
+<td>9</td>
+<td><strong>Agreement</strong></td>
+<td>Paperwork stage</td>
+</tr>
+<tr>
+<td>10</td>
+<td><strong>Payment</strong></td>
+<td>Money stage</td>
+</tr>
+<tr>
+<td>11</td>
+<td><strong>Closed Won</strong></td>
+<td><strong>Terminal — the deal succeeded</strong></td>
+</tr>
+<tr>
+<td>12</td>
+<td><strong>Closed Lost</strong></td>
+<td><strong>Terminal — the deal failed</strong></td>
+</tr>
+</tbody></table>
+</div>
+
+<p>Stages 1–10 are <strong>active</strong>. Stages 11 and 12 are <strong>closed</strong>.</p>
+<blockquote>
+<p><strong>Choosing a stage for a converted lead.</strong> A converted lead lands in <em>Qualified</em> with a probability of <strong>30%</strong>. A deal created directly on the board lands in <em>New Lead</em> with a probability of <strong>10%</strong>. You can move it immediately, but pick a stage that reflects reality — the funnel chart and the expected-revenue figure are both computed from it.</p>
+</blockquote>
+<h3 id="512-working-the-board">5.1.2 Working the board</h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>How</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Move a deal</strong></td>
+<td>Drag the card to another column, or use its stage control. A toast confirms: <em>&quot;Deal moved to Booking&quot;</em></td>
+</tr>
+<tr>
+<td><strong>Search</strong></td>
+<td>The free-text box filters the cards as you type</td>
+</tr>
+<tr>
+<td><strong>Filter by agent</strong></td>
+<td>The agent dropdown narrows the board to one agent&#39;s deals</td>
+</tr>
+</tbody></table>
+<p>Every move resets the <strong>days in stage</strong> counter, so the age of a stage is always current.</p>
+<h3 id="513-the-summary-bar">5.1.3 The summary bar</h3>
+<table>
+<thead>
+<tr>
+<th>Figure</th>
+<th>How it is calculated</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Total</strong></td>
+<td>Every deal, closed and open</td>
+</tr>
+<tr>
+<td><strong>Pipeline Value</strong></td>
+<td>Sum of <code>deal_value</code> for <strong>active</strong> deals only</td>
+</tr>
+<tr>
+<td><strong>Active Count</strong></td>
+<td>Number of active deals</td>
+</tr>
+<tr>
+<td><strong>Expected Revenue</strong></td>
+<td>Sum of (value × probability ÷ 100) over active deals — a probability-weighted forecast</td>
+</tr>
+<tr>
+<td><strong>Won Value / Won Count</strong></td>
+<td>Total value and number of <strong>Closed Won</strong> deals</td>
+</tr>
+<tr>
+<td><strong>Lost Value</strong></td>
+<td>Total value of <strong>Closed Lost</strong> deals</td>
+</tr>
+<tr>
+<td><strong>Conversion Rate</strong></td>
+<td>Won count ÷ total count, to one decimal place. Zero when there are no deals at all</td>
+</tr>
+</tbody></table>
+<h3 id="514-creating-a-deal-directly">5.1.4 Creating a deal directly</h3>
+<p><strong>Sales Pipeline</strong> → <strong>New deal</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Customer name</strong></td>
+<td>Required</td>
+</tr>
+<tr>
+<td><strong>Property</strong></td>
+<td>Optional link to a listing</td>
+</tr>
+<tr>
+<td><strong>Lead</strong></td>
+<td>Optional link to a lead</td>
+</tr>
+<tr>
+<td><strong>Deal value</strong></td>
+<td>Required</td>
+</tr>
+<tr>
+<td><strong>Stage</strong></td>
+<td>Defaults to <strong>New Lead</strong></td>
+</tr>
+<tr>
+<td><strong>Probability</strong></td>
+<td>0–100, defaults to <strong>10</strong></td>
+</tr>
+<tr>
+<td><strong>Assigned agent</strong></td>
+<td>Optional. If set, that agent receives a <em>New deal assigned</em> notification</td>
+</tr>
+</tbody></table>
+<p>Use this for business that never came through a lead — a walk-in referral, a broker introduction, a corporate mandate.</p>
+<h3 id="515-permissions-in-practice">5.1.5 Permissions in practice</h3>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>What they can do on the board</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Senior Agent</strong></td>
+<td>Create deals, move deals between stages</td>
+</tr>
+<tr>
+<td><strong>Accountant</strong></td>
+<td><strong>View only.</strong> They can see the board and its figures to reconcile bookings, but the create and move controls are not offered to them</td>
+</tr>
+<tr>
+<td><strong>Sales Executive</strong></td>
+<td>The board is not in their sidebar at all</td>
+</tr>
+<tr>
+<td><strong>Admin / Super Admin</strong></td>
+<td>Everything</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="52-tasks-follow-ups">5.2 Tasks & Follow-ups</h2>
+<p><strong>URL:</strong> <code>/admin/tasks</code> · <strong>Permissions:</strong> <code>tasks.view</code> / <code>.create</code> / <code>.edit</code> / <code>.delete</code></p>
+<p>Tasks are to-dos with a due date. <strong>Follow-up</strong> tasks are the important subtype: they are what reminds you to call a lead back.</p>
+<h3 id="521-filter-chips">5.2.1 Filter chips</h3>
+<p>The top of the page has chips: <strong>All · Pending · In Progress · Overdue · Completed</strong>. Counts are shown against each, so you can see at a glance how much is late.</p>
+<h3 id="522-creating-a-task">5.2.2 Creating a task</h3>
+<p><strong>Tasks</strong> → <strong>New task</strong> (or <em>New Task</em> in the <strong>Quick Add</strong> menu):</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Title</strong></td>
+<td></td>
+<td>What needs doing</td>
+</tr>
+<tr>
+<td><strong>Type</strong></td>
+<td><strong>Follow-up</strong></td>
+<td>Follow-up · Call · Meeting · Site Visit · Email · Document · Task · Other</td>
+</tr>
+<tr>
+<td><strong>Priority</strong></td>
+<td><strong>Medium</strong></td>
+<td>Low · Medium · High · Urgent</td>
+</tr>
+<tr>
+<td><strong>Due date</strong></td>
+<td></td>
+<td>The day it falls due</td>
+</tr>
+<tr>
+<td><strong>Due time</strong></td>
+<td></td>
+<td>Optional, e.g. <code>10:00</code></td>
+</tr>
+<tr>
+<td><strong>Assign to</strong></td>
+<td></td>
+<td>Which team member owns it</td>
+</tr>
+<tr>
+<td><strong>Link to lead</strong></td>
+<td></td>
+<td>Links the task to a lead</td>
+</tr>
+<tr>
+<td><strong>Description</strong></td>
+<td></td>
+<td>Extra detail</td>
+</tr>
+</tbody></table>
+<p>Tasks get IDs like <code>TSK-005</code>.</p>
+<h3 id="523-statuses">5.2.3 Statuses</h3>
+<p><strong>Pending</strong> → <strong>In Progress</strong> → <strong>Completed</strong>, with <strong>Overdue</strong> as the automatic fourth state.</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Pending</strong></td>
+<td>Not started</td>
+</tr>
+<tr>
+<td><strong>In Progress</strong></td>
+<td>Being worked on</td>
+</tr>
+<tr>
+<td><strong>Overdue</strong></td>
+<td>The due date has passed. Set automatically by the daily sweep, and on creation if the due date is already past</td>
+</tr>
+<tr>
+<td><strong>Completed</strong></td>
+<td>Done</td>
+</tr>
+</tbody></table>
+<h3 id="524-how-follow-up-tasks-are-created">5.2.4 How follow-up tasks are created</h3>
+<p>You rarely type these. They are <strong>synced automatically</strong> from the lead&#39;s next-follow-up date:</p>
+<table>
+<thead>
+<tr>
+<th>You do this</th>
+<th>The system does this</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Create a lead with a next-follow-up date</td>
+<td>Creates a follow-up task, priority <strong>High</strong>, status Pending (or Overdue if the date has passed)</td>
+</tr>
+<tr>
+<td>Edit a lead&#39;s next-follow-up date</td>
+<td>Updates the open follow-up task&#39;s date, time and assignee</td>
+</tr>
+<tr>
+<td>Log an activity with a next-follow-up date</td>
+<td>Same — updates the open follow-up task</td>
+</tr>
+<tr>
+<td><strong>Clear</strong> the next-follow-up date</td>
+<td>Marks the open follow-up task <strong>Completed</strong> (not deleted)</td>
+</tr>
+</tbody></table>
+<p>The task title is always <em>&quot;Follow-up: {lead name}&quot;</em>, and it is assigned to the lead&#39;s agent. Only the <strong>latest open</strong> follow-up task for a lead is kept in sync — older ones are left as they are.</p>
+<h3 id="525-the-daily-sweep">5.2.5 The daily sweep</h3>
+<p>At <strong>09:00 every day</strong>, the system:</p>
+<ol>
+<li>Finds every follow-up task that is <strong>not completed</strong> and whose due date is <strong>today or earlier</strong>.</li>
+<li>Flips any past-due one to <strong>Overdue</strong>.</li>
+<li>Sends the assignee a notification: <em>&quot;Follow-up due today&quot;</em> or <em>&quot;Follow-up overdue&quot;</em>.</li>
+<li><strong>Does not</strong> send a second unread notification for the same lead within <strong>12 hours</strong> — so a task that stays overdue for a week still produces one notification per half-day, not one per day.</li>
+<li><strong>Skips tasks with no assignee</strong> — they are flagged Overdue but nobody is told.</li>
+</ol>
+<h3 id="526-deleting-a-task">5.2.6 Deleting a task</h3>
+<p>Deleting is a separate action from completing, and it needs <code>tasks.delete</code>. Prefer changing the status to <strong>Completed</strong> — the history of what was done and when is worth keeping.</p>
+<hr>
+<h2 id="53-bookings">5.3 Bookings</h2>
+<p><strong>URL:</strong> <code>/admin/bookings</code> · <strong>Permissions:</strong> <code>bookings.view</code> / <code>.create</code> / <code>.edit</code> (plus <code>bookings.approve</code> in the permission catalogue)</p>
+<p>A booking is the commercial commitment behind a deal. It is what the accounts team works against.</p>
+<h3 id="531-creating-a-booking">5.3.1 Creating a booking</h3>
+<p><strong>Bookings</strong> → <strong>New booking</strong> (or <em>New Booking</em> in the <strong>Quick Add</strong> menu):</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Customer name</strong></td>
+<td>Required</td>
+</tr>
+<tr>
+<td><strong>Property name</strong></td>
+<td>Required</td>
+</tr>
+<tr>
+<td><strong>Agent name</strong></td>
+<td>Required</td>
+</tr>
+<tr>
+<td><strong>Booking date</strong></td>
+<td>Required</td>
+</tr>
+<tr>
+<td><strong>Deal value</strong></td>
+<td>The full property value</td>
+</tr>
+<tr>
+<td><strong>Booking amount</strong></td>
+<td>The amount actually booked — often the token or advance</td>
+</tr>
+</tbody></table>
+<p>Both money fields show the <strong>amount in words</strong> underneath as you type, which is exactly what a booking agreement needs.</p>
+<p>A booking gets ID <code>B-###</code> and starts as <strong>Booking Pending</strong> with agreement <strong>Pending</strong> and possession <strong>Pending</strong>. The creator receives a <em>Booking created</em> notification.</p>
+<h3 id="532-the-three-status-tracks">5.3.2 The three status tracks</h3>
+<p>This is the key idea. A booking tracks three things <strong>independently</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Track</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Booking status</strong></td>
+<td>Booking Pending → Booking Confirmed → Under Agreement → Agreement Signed · Cancelled</td>
+</tr>
+<tr>
+<td><strong>Agreement status</strong></td>
+<td>Pending → Under Review → Signed</td>
+</tr>
+<tr>
+<td><strong>Possession status</strong></td>
+<td>Pending → In Process → Handed Over</td>
+</tr>
+</tbody></table>
+<p>A typical booking looks like this over a few weeks:</p>
+<pre><code>Week 1   Booking: Booking Confirmed   Agreement: Pending        Possession: Pending
+Week 3   Booking: Under Agreement     Agreement: Under Review   Possession: Pending
+Week 5   Booking: Agreement Signed    Agreement: Signed         Possession: In Process
+Week 12  Booking: Agreement Signed    Agreement: Signed         Possession: Handed Over
+</code></pre>
+<p><strong>Do not wait for one to finish before starting the next.</strong> The agreement is usually signed well before possession.</p>
+<h3 id="533-the-booking-detail-page">5.3.3 The booking detail page</h3>
+<table>
+<thead>
+<tr>
+<th>Section</th>
+<th>What it shows</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Booking → Agreement → Possession timeline</strong></td>
+<td>The three milestones across the top, each ticked off as it completes</td>
+</tr>
+<tr>
+<td><strong>Summary card</strong></td>
+<td>Customer, property, agent, booking date, deal value, booking amount</td>
+</tr>
+<tr>
+<td><strong>Status controls</strong></td>
+<td>All three status dropdowns, each saving independently</td>
+</tr>
+<tr>
+<td><strong>Record payment</strong></td>
+<td>Opens a modal to log money against this booking</td>
+</tr>
+<tr>
+<td><strong>Linked payments</strong></td>
+<td>Every payment already recorded for this booking</td>
+</tr>
+</tbody></table>
+<h3 id="534-recording-a-payment-from-a-booking">5.3.4 Recording a payment from a booking</h3>
+<p>Use the <strong>Record Payment</strong> modal:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Payment amount</strong></td>
+<td>— (required to record)</td>
+</tr>
+<tr>
+<td><strong>Payment mode</strong></td>
+<td><strong>Bank Transfer</strong></td>
+</tr>
+<tr>
+<td><strong>Record payment</strong></td>
+<td>On</td>
+</tr>
+</tbody></table>
+<p>This creates a <strong>Payment</strong> record with:</p>
+<ul>
+<li>ID <code>PAY-###</code></li>
+<li><code>status</code> = <strong>Paid</strong></li>
+<li><code>mode</code> = your choice</li>
+<li><code>due_date</code> and <code>paid_date</code> = today</li>
+<li><code>txn_id</code> = <code>—</code> (there is no gateway to generate one)</li>
+</ul>
+<p>and notifies the customer with <em>&quot;₹ amount received&quot;</em>.</p>
+<p>The payment appears immediately in the <strong>Payments</strong> module and in the booking&#39;s linked-payments list.</p>
+<hr>
+<h2 id="54-payments">5.4 Payments</h2>
+<p><strong>URL:</strong> <code>/admin/payments</code> · <strong>Permissions:</strong> <code>payments.view</code> / <code>.create</code> / <code>.edit</code></p>
+<h3 id="541-the-four-collection-figures">5.4.1 The four collection figures</h3>
+<p>The module opens with four widgets:</p>
+<table>
+<thead>
+<tr>
+<th>Widget</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Receivable</strong></td>
+<td>Everything expected that is not <code>Paid</code> or <code>Cancelled</code></td>
+</tr>
+<tr>
+<td><strong>Received</strong></td>
+<td>Everything with status <code>Paid</code></td>
+</tr>
+<tr>
+<td><strong>Pending</strong></td>
+<td><code>Pending</code> and <code>Partially Paid</code></td>
+</tr>
+<tr>
+<td><strong>Overdue</strong></td>
+<td>Status <code>Overdue</code> — the due date has passed</td>
+</tr>
+</tbody></table>
+<h3 id="542-recording-a-payment-directly">5.4.2 Recording a payment directly</h3>
+<p><strong>Payments</strong> → <strong>New payment</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Customer name</strong></td>
+<td></td>
+<td>Required</td>
+</tr>
+<tr>
+<td><strong>Property name</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Amount</strong></td>
+<td></td>
+<td>The instalment or sum</td>
+</tr>
+<tr>
+<td><strong>Mode</strong></td>
+<td><strong>RTGS</strong></td>
+<td>RTGS · NEFT · IMPS · UPI · Cheque · Bank Transfer · Cash</td>
+</tr>
+<tr>
+<td><strong>Due date</strong></td>
+<td></td>
+<td>When it is expected</td>
+</tr>
+<tr>
+<td><strong>Status</strong></td>
+<td><strong>Pending</strong></td>
+<td>Pending · Partially Paid · Paid · Overdue</td>
+</tr>
+</tbody></table>
+<h3 id="543-payment-statuses">5.4.3 Payment statuses</h3>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Pending</strong></td>
+<td>Expected, not yet received</td>
+</tr>
+<tr>
+<td><strong>Partially Paid</strong></td>
+<td>Some of it has arrived</td>
+</tr>
+<tr>
+<td><strong>Paid</strong></td>
+<td>Fully received</td>
+</tr>
+<tr>
+<td><strong>Overdue</strong></td>
+<td>The due date has passed and it has not arrived</td>
+</tr>
+<tr>
+<td><strong>Cancelled</strong></td>
+<td>It will not be collected — excluded from every total</td>
+</tr>
+</tbody></table>
+<h3 id="544-editing-a-payment">5.4.4 Editing a payment</h3>
+<p>From the list, edit any of: <strong>status</strong>, <strong>mode</strong>, <strong>transaction id</strong>, <strong>paid date</strong>, <strong>due date</strong>. You can also change the status directly from the list row with the inline dropdown — it saves immediately and keeps your place on the page.</p>
+<blockquote>
+<p><strong>The transaction id.</strong> A payment created from a booking has the placeholder <code>—</code>. Replace it with the real UTR / cheque number so the accounts team can trace it. It is displayed under the customer&#39;s name in the list.</p>
+</blockquote>
+<h3 id="545-the-reporting-caveat">5.4.5 The reporting caveat</h3>
+<p>In the <strong>Payments</strong> report tab, the pending bucket treats <code>Pending</code>, <code>Partially Paid</code> and <code>Overdue</code> together as &quot;not yet collected&quot; against &quot;collected&quot;. So a report that shows a large pending figure may include overdue money — check the Payments module itself for the split.</p>
+<hr>
+<h2 id="55-notifications">5.5 Notifications</h2>
+<p><strong>URL:</strong> <code>/admin/notifications</code> · <strong>Permission:</strong> none — every signed-in user has access</p>
+<h3 id="the-bell">The bell</h3>
+<p>The bell in the top bar shows your <strong>unread count</strong> as a badge. Click it to open the list, where you can:</p>
+<ul>
+<li>Click <strong>Mark all as read</strong> to clear the badge.</li>
+<li>Mark a single notification as read.</li>
+<li><strong>Click a notification to go to the record</strong> it refers to. Marking it read and navigating happen together.</li>
+</ul>
+<h3 id="what-generates-a-notification">What generates a notification</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Triggered by</th>
+<th>Goes to</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>lead.converted</code></td>
+<td>A lead is converted to a deal</td>
+<td>The lead&#39;s assigned agent</td>
+</tr>
+<tr>
+<td><code>site_visit.scheduled</code></td>
+<td>A lead&#39;s status becomes <em>Site Visit Scheduled</em></td>
+<td>The lead&#39;s assigned agent</td>
+</tr>
+<tr>
+<td><code>deal.created</code></td>
+<td>A deal is created with an agent assigned</td>
+<td>That agent</td>
+</tr>
+<tr>
+<td><code>booking.created</code></td>
+<td>A booking is created</td>
+<td>The person who created it</td>
+</tr>
+<tr>
+<td><code>payment.received</code></td>
+<td>A payment is recorded against a booking</td>
+<td>The customer/agent on that booking</td>
+</tr>
+<tr>
+<td><code>followup</code></td>
+<td>The daily 09:00 sweep finds a due or overdue follow-up</td>
+<td>The task&#39;s assignee</td>
+</tr>
+</tbody></table>
+<h3 id="the-12-hour-rule">The 12-hour rule</h3>
+<p>The follow-up sweep will not send a second <strong>unread</strong> notification for the same lead within 12 hours. If you dismiss a notification without reading it, you will not be chased again for that lead until the window passes.</p>
+<h3 id="not-in-app">Not in-app</h3>
+<p>QREX does <strong>not</strong> send email notifications for these events by default. The only emails it sends are password resets, new-user invitations, and the OTP codes for changing your email address. If your agency wants agents emailed as well, that is a configuration and development task, not a settings toggle.</p>
+<hr>
+<p><strong>Next:</strong> <a href="manual-06-modules-marketing-and-admin.html"><code>06-modules-marketing-and-admin.md</code></a> — Campaigns, Media Center, Reports, CMS, Users, Roles, Settings.</p>
+
+<div class="pager"><a href="manual-04-modules-sales.html">← 04. Modules Sales</a><a href="manual-06-modules-marketing-and-admin.html">06. Modules Marketing And Admin →</a></div>
+<div class="site-footer">QREX documentation · generated from the Markdown sources in <code>docs/</code> · build with <code>npm run docs:html</code></div>
+</main>
+</div>
+
+<script>
+function filterDocs(q){
+  q=(q||'').trim().toLowerCase();
+  document.querySelectorAll('#doc-nav .nav-group').forEach(function(g){
+    var visible=0;
+    g.querySelectorAll('a').forEach(function(a){
+      var hit=!q||a.getAttribute('data-title').indexOf(q)>-1;
+      a.classList.toggle('nav-hidden',!hit);
+      if(hit)visible++;
+    });
+    g.classList.toggle('nav-hidden',visible===0);
+    if(q)g.open=true;
+  });
+}
+document.querySelectorAll('.table-wrap').forEach(function(wrap){
+  var input=wrap.querySelector('.table-filter');
+  var table=wrap.querySelector('table');
+  var count=wrap.querySelector('.table-count');
+  if(!input||!table)return;
+  input.addEventListener('input',function(){
+    var q=input.value.trim().toLowerCase();
+    var shown=0,total=0;
+    table.querySelectorAll('tbody tr').forEach(function(row){
+      total++;
+      var hit=!q||row.textContent.toLowerCase().indexOf(q)>-1;
+      row.style.display=hit?'':'none';
+      if(hit)shown++;
+    });
+    if(count)count.textContent=q?shown+' of '+total+' rows':' '+total+' rows';
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 680" width="1000" height="680" style="max-width:100%;height:auto" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" role="img" aria-label="Public website — property listing screen wireframe">
+<rect x="0.5" y="0.5" width="999" height="679" rx="10" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/>
+<path d="M0 10 A10 10 0 0 1 10 0 L990 0 A10 10 0 0 1 1000 10 L1000 30 L0 30 Z" fill="#1f2733"/>
+<circle cx="18" cy="15" r="4" fill="#ff6b6b"/><circle cx="32" cy="15" r="4" fill="#ffd43b"/><circle cx="46" cy="15" r="4" fill="#51cf66"/>
+<text x="64" y="19" font-size="12" font-weight="700" fill="#ffffff">Public website — property listing</text>
+<text x="986" y="19" font-size="11" fill="#aeb8c4" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">/properties</text>
+<rect x="12" y="30" width="976" height="44" rx="6" fill="#1f2733" stroke="#1f2733" stroke-width="1.2"/><text x="24" y="46" text-anchor="start" font-size="11" fill="#ffffff" font-weight="600" opacity="0.95">Public header — logo · Home · Properties · About · Contact · Sign in</text>
+<rect x="12" y="86" width="976" height="40" rx="6" fill="#eef1f5" stroke="#d5dce5" stroke-width="1.2"/><text x="24" y="102" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Search — location · property type · transaction type · price range</text>
+<rect x="12" y="138" width="976" height="36" rx="6" fill="#f2f4f7" stroke="#dde3ea" stroke-width="1.2"/><text x="24" y="154" text-anchor="start" font-size="11" fill="#1f2733" font-weight="600" opacity="0.95">Results summary · sort by</text>
+<rect x="12" y="186" width="296" height="288" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/><text x="24" y="202" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Property card — image, title, type,</text><text x="24" y="216" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">price, area, location</text>
+<rect x="352" y="186" width="296" height="288" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/><text x="364" y="202" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Property card</text>
+<rect x="692" y="186" width="296" height="288" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/><text x="704" y="202" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Property card</text>
+<rect x="12" y="486" width="976" height="68" rx="6" fill="#fff8e8" stroke="#b5893b" stroke-dasharray="5 3" stroke-width="1.2"/><text x="24" y="502" text-anchor="start" font-size="11" fill="#5b4a22" font-weight="600" opacity="0.95">Enquiry form on the property page → POST /properties/{public_id}/enquiry → creates a Lead with source = Website</text>
+<rect x="12" y="566" width="976" height="72" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/><text x="24" y="582" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Footer — contact details, legal links</text>
+<line x1="12" y1="624" x2="988" y2="624" stroke="#c9d2dd" stroke-width="1"/>
+<circle cx="21" cy="640" r="9" fill="#0f5c4e"/><text x="21" y="644" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">1</text>
+<text x="38" y="644" font-size="11" fill="#5b6472">Only properties flagged is_website_visible are listed.</text>
+<circle cx="21" cy="658" r="9" fill="#0f5c4e"/><text x="21" y="662" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">2</text>
+<text x="38" y="662" font-size="11" fill="#5b6472">Every enquiry becomes a CRM lead with no human step — the entry point of the whole lifecycle.</text>
+</svg>

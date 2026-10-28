@@ -1,19 +1,23 @@
 import { useState } from 'react';
 import { useForm, Head, Link } from '@inertiajs/react';
+import { usePage } from '@/hooks/usePage';
 import { Building2, Eye, EyeOff, ArrowRight, Loader2 } from 'lucide-react';
 
-const roleDemoEmails: Record<string, string> = {
-    Admin: 'neha@example.com',
-    'Sales Executive': 'amit.v@example.com',
-    'Marketing User': 'rahul.m@example.com',
-    Accountant: 'priti.s@example.com',
+const roleDemoAccounts: Record<string, { email: string; password: string }> = {
+    'Super Admin': { email: 'tejas@qodeigence.com', password: '12345678' },
+    Admin: { email: 'neha@example.com', password: 'password' },
+    'Sales Executive': { email: 'amit.v@example.com', password: 'password' },
+    'Marketing User': { email: 'rahul.m@example.com', password: 'password' },
+    Accountant: { email: 'priti.s@example.com', password: 'password' },
 };
 
-export default function Login({ settings }: { settings?: { project_name?: string; tagline?: string } }) {
+export default function Login({ settings }: { settings?: { project_name?: string; agency_name?: string; tagline?: string } }) {
     const [showPassword, setShowPassword] = useState(false);
-    const [demoRole, setDemoRole] = useState('Admin');
-    const name = settings?.project_name || 'QREX';
+    const [demoRole, setDemoRole] = useState('Super Admin');
+    const { app } = usePage();
+    const name = settings?.project_name || settings?.agency_name || 'QREX';
     const tagline = settings?.tagline || 'Realty ERP & CRM';
+    const logoUrl = app?.logo;
     const { data, setData, post, processing, errors } = useForm({
         email: '',
         password: '',
@@ -38,8 +42,12 @@ export default function Login({ settings }: { settings?: { project_name?: string
                 <div className="absolute inset-0 bg-gradient-to-br from-[#0D1B3E]/80 via-[#0D1B3E]/60 to-[#1A3580]/80" />
 
                 <Link href="/" className="relative z-10 flex items-center gap-3">
-                    <div className="w-11 h-11 rounded-xl bg-gold-500 flex items-center justify-center">
-                        <Building2 size={22} className="text-white" />
+                    <div className="w-11 h-11 flex items-center justify-center overflow-hidden">
+                        {logoUrl ? (
+                            <img src={logoUrl} alt={name} className="w-full h-full object-contain" />
+                        ) : (
+                            <Building2 size={22} className="text-white" />
+                        )}
                     </div>
                     <div>
                         <div className="text-white font-bold text-xl tracking-tight">{name}</div>
@@ -75,8 +83,12 @@ export default function Login({ settings }: { settings?: { project_name?: string
             <div className="flex-1 flex items-center justify-center bg-[#F4F7FC] px-6">
                 <div className="w-full max-w-md">
                     <div className="lg:hidden flex items-center gap-3 mb-8">
-                        <div className="w-10 h-10 rounded-xl bg-[#0D1B3E] flex items-center justify-center">
-                            <Building2 size={18} className="text-gold-400" />
+                        <div className="w-10 h-10 flex items-center justify-center overflow-hidden">
+                            {logoUrl ? (
+                                <img src={logoUrl} alt={name} className="w-full h-full object-contain" />
+                            ) : (
+                                <Building2 size={18} className="text-[#0D1B3E]" />
+                            )}
                         </div>
                         <div className="text-[#0D1B3E] font-bold text-lg">{name}</div>
                     </div>
@@ -153,17 +165,18 @@ export default function Login({ settings }: { settings?: { project_name?: string
                             </button>
                         </form>
 
+                        {/* Demo accounts — select a role to autofill */}
                         <div className="mt-5 pt-5 border-t border-[#F0F4F8]">
                             <p className="text-[11px] text-gray-400 mb-2">Demo accounts — select a role to autofill</p>
                             <div className="flex flex-wrap gap-1.5">
-                                {Object.entries(roleDemoEmails).map(([role, email]) => (
+                                {Object.entries(roleDemoAccounts).map(([role, account]) => (
                                     <button
                                         key={role}
                                         className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors ${demoRole === role ? 'bg-[#0D1B3E] text-white' : 'bg-[#F4F7FC] text-gray-600 hover:bg-[#E9EEF6]'}`}
                                         onClick={() => {
                                             setDemoRole(role);
-                                            setData('email', email);
-                                            setData('password', 'password');
+                                            setData('email', account.email);
+                                            setData('password', account.password);
                                         }}
                                     >
                                         {role}

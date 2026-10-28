@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>5. Screen Designs · QREX</title>
+<style>
+:root{--bg:#f7f8fa;--panel:#fff;--ink:#1f2733;--muted:#5b6472;--line:#e3e7ee;--accent:#0f5c4e;--accent2:#b5893b;--code:#f2f4f7;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65;font-size:16px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.layout{display:flex;min-height:100vh}
+aside{width:280px;flex:0 0 280px;background:var(--panel);border-right:1px solid var(--line);padding:24px 20px;position:sticky;top:0;height:100vh;overflow-y:auto}
+aside h2{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:18px 0 8px}
+aside a{display:block;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.9rem}
+aside a:hover{background:var(--bg);text-decoration:none}
+aside a.active{background:var(--accent);color:#fff}
+aside .brand{font-weight:700;font-size:1.05rem;color:var(--accent);margin-bottom:4px}
+main{flex:1;min-width:0;padding:40px 56px;max-width:960px;margin:0 auto}
+main h1{font-size:2rem;line-height:1.25;margin:0 0 .5em;padding-bottom:.35em;border-bottom:2px solid var(--line)}
+main h2{font-size:1.45rem;margin:2em 0 .6em;padding-bottom:.25em;border-bottom:1px solid var(--line)}
+main h3{font-size:1.15rem;margin:1.6em 0 .5em}
+main h4{font-size:1rem;margin:1.3em 0 .4em}
+main p,main li{color:#2b3542}
+table{border-collapse:collapse;width:100%;margin:1.1em 0;font-size:.92rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+th{background:#eef1f5;font-weight:600}
+tr:nth-child(even) td{background:#fbfcfd}
+code{background:var(--code);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em}
+pre{background:#1e2530;color:#e6e9ef;padding:16px 18px;border-radius:8px;overflow-x:auto}
+pre code{background:none;color:inherit;padding:0}
+blockquote{margin:1.2em 0;padding:.6em 1.1em;background:#fff8e8;border-left:4px solid var(--accent2);color:#5b4a22;border-radius:0 6px 6px 0}
+blockquote p{margin:.4em 0}
+hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
+img{max-width:100%}
+.crumbs{font-size:.82rem;color:var(--muted);margin-bottom:18px}
+.pager{display:flex;justify-content:space-between;gap:16px;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{font-size:.9rem}
+.site-footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:24px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.card h3{margin:.2em 0 .4em;font-size:1.02rem}
+.card p{margin:.2em 0;font-size:.88rem;color:var(--muted)}
+/* --- Figures: diagrams and screen wireframes --- */
+.figure{margin:1.8em 0}
+.figure>svg{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px}
+.figure.diagram{overflow-x:auto}
+.figure.diagram.wide>svg{max-width:none;margin:0}
+.figure.wireframe>svg{border-color:#dbe2ea}
+figcaption{margin-top:.7em;font-size:.82rem;color:var(--muted);text-align:center;line-height:1.45}
+.art-missing{border-left:3px solid #c0392b}
+/* --- Long reference tables --- */
+.table-wrap{margin:1.1em 0}
+.table-filter{width:100%;max-width:300px;padding:7px 11px;margin-bottom:.55em;border:1px solid var(--line);border-radius:8px;font-size:.86rem;background:#fff;color:var(--ink);font-family:inherit}
+.table-filter:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.table-count{font-size:.78rem;color:var(--muted);margin-left:8px;vertical-align:middle}
+/* --- Documentation menu (sidebar) --- */
+.side-search{width:100%;padding:8px 10px;margin:10px 0 4px;border:1px solid var(--line);border-radius:8px;font-size:.85rem;background:var(--bg);color:var(--ink)}
+.side-search:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.home-link{display:block;font-size:.8rem;font-weight:600;color:var(--accent);margin-bottom:14px;padding:4px 0}
+.nav-group{border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:6px}
+.nav-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:10px 4px 6px;font-weight:700;user-select:none}
+.nav-group>summary::-webkit-details-marker{display:none}
+.nav-group>summary .chev{transition:transform .15s ease;font-size:.7rem;color:var(--muted)}
+.nav-group[open]>summary .chev{transform:rotate(90deg)}
+.nav-group .count{color:var(--muted);font-weight:400;margin-left:auto;font-size:.68rem}
+.nav-group a{display:flex;gap:8px;align-items:baseline;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.88rem;line-height:1.35}
+.nav-group a:hover{background:var(--bg);text-decoration:none}
+.nav-group a.active{background:var(--accent);color:#fff}
+.nav-group a.active .num{color:#d9ece7}
+.nav-group a .num{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.75rem;min-width:1.4em}
+.nav-hidden{display:none!important}
+.menu-toggle{display:none;position:fixed;top:12px;left:12px;z-index:50;width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:1.2rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.menu-backdrop{display:none}
+@media(max-width:900px){
+  .layout{flex-direction:column}
+  .menu-toggle{display:flex}
+  aside{position:fixed;top:0;left:0;z-index:60;width:290px;height:100vh;overflow-y:auto;border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .2s ease;box-shadow:0 0 24px rgba(0,0,0,.12)}
+  body.menu-open aside{transform:translateX(0)}
+  body.menu-open .menu-backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:55}
+  main{padding:64px 20px 24px}
+}
+@media print{
+  aside,.crumbs,.pager,.menu-toggle,.menu-backdrop{display:none}
+  body{background:#fff;font-size:11pt}
+  main{max-width:none;padding:0}
+  a{color:var(--ink)}
+  pre{background:#f2f4f7;color:#1f2733;border:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<button class="menu-toggle" aria-label="Open documentation menu" onclick="document.body.classList.toggle('menu-open')">☰</button>
+<div class="menu-backdrop" onclick="document.body.classList.remove('menu-open')"></div>
+<aside>
+  <a class="home-link" href="index.html">⌂ All documentation</a>
+  <div class="brand">QREX Documentation</div>
+  <div style="font-size:.78rem;color:var(--muted)">Qodeigence Infocircle Pvt. Ltd.</div>
+  <input class="side-search" type="search" placeholder="Search documents…" aria-label="Search documents" oninput="filterDocs(this.value)">
+  <nav id="doc-nav">
+    <details class="nav-group">
+<summary><span>User Manual</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="manual-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="overview and getting started" href="manual-01-overview-and-getting-started.html"><span class="num">01</span><span>Overview And Getting Started</span></a><a class="" data-title="roles and access" href="manual-02-roles-and-access.html"><span class="num">02</span><span>Roles And Access</span></a><a class="" data-title="sales lifecycle" href="manual-03-sales-lifecycle.html"><span class="num">03</span><span>Sales Lifecycle</span></a><a class="" data-title="modules sales" href="manual-04-modules-sales.html"><span class="num">04</span><span>Modules Sales</span></a><a class="" data-title="modules operations" href="manual-05-modules-operations.html"><span class="num">05</span><span>Modules Operations</span></a><a class="" data-title="modules marketing and admin" href="manual-06-modules-marketing-and-admin.html"><span class="num">06</span><span>Modules Marketing And Admin</span></a><a class="" data-title="public website" href="manual-07-public-website.html"><span class="num">07</span><span>Public Website</span></a><a class="" data-title="reference" href="manual-08-reference.html"><span class="num">08</span><span>Reference</span></a><a class="" data-title="troubleshooting and faq" href="manual-09-troubleshooting-and-faq.html"><span class="num">09</span><span>Troubleshooting And Faq</span></a></details><details class="nav-group" open>
+<summary><span>How QREX Works</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="explain-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="system at a glance" href="explain-01-system-at-a-glance.html"><span class="num">01</span><span>System At A Glance</span></a><a class="" data-title="sales lifecycle" href="explain-02-sales-lifecycle.html"><span class="num">02</span><span>Sales Lifecycle</span></a><a class="" data-title="data model" href="explain-03-data-model.html"><span class="num">03</span><span>Data Model</span></a><a class="" data-title="roles and permissions" href="explain-04-roles-and-permissions.html"><span class="num">04</span><span>Roles And Permissions</span></a><a class="active" data-title="screen designs" href="explain-05-screen-designs.html"><span class="num">05</span><span>Screen Designs</span></a><a class="" data-title="operations and automation" href="explain-06-operations-and-automation.html"><span class="num">06</span><span>Operations And Automation</span></a></details><details class="nav-group">
+<summary><span>Technical Documentation</span><span class="chev">▶</span></summary>
+<a class="" data-title="project scope" href="tech-01-project-scope.html"><span class="num">01</span><span>Project Scope</span></a><a class="" data-title="architecture" href="tech-02-architecture.html"><span class="num">02</span><span>Architecture</span></a><a class="" data-title="operations modules" href="tech-03-operations-modules.html"><span class="num">03</span><span>Operations Modules</span></a><a class="" data-title="roles permissions" href="tech-04-roles-permissions.html"><span class="num">04</span><span>Roles Permissions</span></a><a class="" data-title="database schema" href="tech-05-database-schema.html"><span class="num">05</span><span>Database Schema</span></a><a class="" data-title="operations" href="tech-06-operations.html"><span class="num">06</span><span>Operations</span></a><a class="" data-title="security hardening" href="tech-07-security-hardening.html"><span class="num">07</span><span>Security Hardening</span></a><a class="" data-title="glossary" href="tech-08-glossary.html"><span class="num">08</span><span>Glossary</span></a><a class="" data-title="project proposal" href="tech-09-project-proposal.html"><span class="num">09</span><span>Project Proposal</span></a><a class="" data-title="budget pricing mumbai" href="tech-10-budget-pricing-mumbai.html"><span class="num">10</span><span>Budget Pricing Mumbai</span></a></details>
+  </nav>
+  <details class="nav-group"><summary><span>Downloads</span><span class="chev">▶</span></summary>
+    <a href="../word/QREX-User-Manual.docx"><span class="num"></span><span>User Manual (.docx)</span></a>
+    <a href="../word/QREX-User-Manual.doc"><span class="num"></span><span>User Manual (.doc)</span></a>
+    <a href="../word/QREX-How-It-Works.docx"><span class="num"></span><span>How QREX Works (.docx)</span></a>
+    <a href="../word/QREX-How-It-Works.doc"><span class="num"></span><span>How QREX Works (.doc)</span></a>
+    <a href="../word/QREX-Technical-Documentation.docx"><span class="num"></span><span>Technical Docs (.docx)</span></a>
+    <a href="../word/QREX-Technical-Documentation.doc"><span class="num"></span><span>Technical Docs (.doc)</span></a>
+  </details>
+</aside>
+<main>
+<div class="crumbs">How QREX Works</div>
+<h1 id="5-screen-designs">5. Screen Designs</h1>
+<p><em>Annotated wireframes of the nine screens that matter most.</em></p>
+<p>These are not pixel-perfect mockups. They are <strong>layout diagrams</strong> drawn to scale — they show where each region of the screen sits, what it contains, and how the regions relate to one another. Read them alongside the captions; the labels inside each block are the annotation.</p>
+<hr>
+<h2 id="51-how-the-app-shell-is-put-together">5.1 How the app shell is put together</h2>
+<p>Every screen in QREX sits inside the same frame, and the frame is the same on every page.</p>
+<figure class="figure diagram"><svg id="qrex-18786caf7e79846f" xmlns="http://www.w3.org/2000/svg" class="flowchart" viewBox="4 4 603.890625 303" role="graphics-document document" aria-roledescription="flowchart-v2" width="604" height="303" style="max-width:100%;height:auto"><style>#qrex-18786caf7e79846f{font-family:Inter,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;fill:#1f2733;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#qrex-18786caf7e79846f .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#qrex-18786caf7e79846f .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#qrex-18786caf7e79846f .error-icon{fill:#fbfcfd;}#qrex-18786caf7e79846f .error-text{fill:#040302;stroke:#040302;}#qrex-18786caf7e79846f .edge-thickness-normal{stroke-width:1px;}#qrex-18786caf7e79846f .edge-thickness-thick{stroke-width:3.5px;}#qrex-18786caf7e79846f .edge-pattern-solid{stroke-dasharray:0;}#qrex-18786caf7e79846f .edge-thickness-invisible{stroke-width:0;fill:none;}#qrex-18786caf7e79846f .edge-pattern-dashed{stroke-dasharray:3;}#qrex-18786caf7e79846f .edge-pattern-dotted{stroke-dasharray:2;}#qrex-18786caf7e79846f .marker{fill:#5b6472;stroke:#5b6472;}#qrex-18786caf7e79846f .marker.cross{stroke:#5b6472;}#qrex-18786caf7e79846f svg{font-family:Inter,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:15px;}#qrex-18786caf7e79846f p{margin:0;}#qrex-18786caf7e79846f .label{font-family:Inter,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1f2733;}#qrex-18786caf7e79846f .cluster-label text{fill:#0f5c4e;}#qrex-18786caf7e79846f .cluster-label span{color:#0f5c4e;}#qrex-18786caf7e79846f .cluster-label span p{background-color:transparent;}#qrex-18786caf7e79846f .label text,#qrex-18786caf7e79846f span{fill:#1f2733;color:#1f2733;}#qrex-18786caf7e79846f .node rect,#qrex-18786caf7e79846f .node circle,#qrex-18786caf7e79846f .node ellipse,#qrex-18786caf7e79846f .node polygon,#qrex-18786caf7e79846f .node path{fill:#e8f1ee;stroke:#0f5c4e;stroke-width:1px;}#qrex-18786caf7e79846f .rough-node .label text,#qrex-18786caf7e79846f .node .label text,#qrex-18786caf7e79846f .image-shape .label,#qrex-18786caf7e79846f .icon-shape .label{text-anchor:middle;}#qrex-18786caf7e79846f .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#qrex-18786caf7e79846f .rough-node .label,#qrex-18786caf7e79846f .node .label,#qrex-18786caf7e79846f .image-shape .label,#qrex-18786caf7e79846f .icon-shape .label{text-align:center;}#qrex-18786caf7e79846f .node.clickable{cursor:pointer;}#qrex-18786caf7e79846f .root .anchor path{fill:#5b6472!important;stroke-width:0;stroke:#5b6472;}#qrex-18786caf7e79846f .arrowheadPath{fill:#0b0b0b;}#qrex-18786caf7e79846f .edgePaths .path{stroke:#5b6472;stroke-width:1px;}#qrex-18786caf7e79846f .flowchart-link{stroke:#5b6472;fill:none;}#qrex-18786caf7e79846f .edgeLabel{background-color:#ffffff;text-align:center;}#qrex-18786caf7e79846f .edgeLabel p{background-color:#ffffff;}#qrex-18786caf7e79846f .edgeLabel rect{opacity:0.5;background-color:#ffffff;fill:#ffffff;}#qrex-18786caf7e79846f .labelBkg{background-color:rgba(255, 255, 255, 0.5);}#qrex-18786caf7e79846f .cluster rect{fill:#f2f4f7;stroke:#c9d2dd;stroke-width:1px;}#qrex-18786caf7e79846f .cluster text{fill:#0f5c4e;}#qrex-18786caf7e79846f .cluster span{color:#0f5c4e;}#qrex-18786caf7e79846f .node .collapsed-indicator{fill:#c9d2dd;stroke:none;opacity:0.6;}#qrex-18786caf7e79846f .node .collapsed-separator{stroke:#c9d2dd;stroke-width:0.75px;}#qrex-18786caf7e79846f div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:Inter,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:12px;background:#fbfcfd;border:1px solid hsl(210, 0%, 88.8235294118%);border-radius:2px;pointer-events:none;z-index:100;}#qrex-18786caf7e79846f .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#1f2733;}#qrex-18786caf7e79846f rect.text{fill:none;stroke-width:0;}#qrex-18786caf7e79846f .icon-shape,#qrex-18786caf7e79846f .image-shape{background-color:#ffffff;text-align:center;}#qrex-18786caf7e79846f .icon-shape p,#qrex-18786caf7e79846f .image-shape p{background-color:#ffffff;padding:2px;}#qrex-18786caf7e79846f .icon-shape .label rect,#qrex-18786caf7e79846f .image-shape .label rect{opacity:0.5;background-color:#ffffff;fill:#ffffff;}#qrex-18786caf7e79846f .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#qrex-18786caf7e79846f .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#qrex-18786caf7e79846f .node .neo-node{stroke:#0f5c4e;}#qrex-18786caf7e79846f [data-look="neo"].node rect,#qrex-18786caf7e79846f [data-look="neo"].cluster rect,#qrex-18786caf7e79846f [data-look="neo"].node polygon{stroke:url(#qrex-18786caf7e79846f-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-18786caf7e79846f [data-look="neo"].swimlane.cluster rect{filter:none;}#qrex-18786caf7e79846f [data-look="neo"].node path{stroke:url(#qrex-18786caf7e79846f-gradient);stroke-width:1px;}#qrex-18786caf7e79846f [data-look="neo"].node .outer-path{filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-18786caf7e79846f [data-look="neo"].node .neo-line path{stroke:#0f5c4e;filter:none;}#qrex-18786caf7e79846f [data-look="neo"].node circle{stroke:url(#qrex-18786caf7e79846f-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-18786caf7e79846f [data-look="neo"].node circle .state-start{fill:#000000;}#qrex-18786caf7e79846f [data-look="neo"].icon-shape .icon{fill:url(#qrex-18786caf7e79846f-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-18786caf7e79846f [data-look="neo"].icon-shape .icon-neo path{stroke:url(#qrex-18786caf7e79846f-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#qrex-18786caf7e79846f :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g><marker id="qrex-18786caf7e79846f_flowchart-v2-pointEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-18786caf7e79846f_flowchart-v2-pointStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-18786caf7e79846f_flowchart-v2-pointEnd-margin" class="marker flowchart-v2" viewBox="0 0 11.5 14" refX="11.5" refY="7" markerUnits="userSpaceOnUse" markerWidth="10.5" markerHeight="14" orient="auto"><path d="M 0 0 L 11.5 7 L 0 14 z" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-18786caf7e79846f_flowchart-v2-pointStart-margin" class="marker flowchart-v2" viewBox="0 0 11.5 14" refX="1" refY="7" markerUnits="userSpaceOnUse" markerWidth="11.5" markerHeight="14" orient="auto"><polygon points="0,7 11.5,14 11.5,0" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></polygon></marker><marker id="qrex-18786caf7e79846f_flowchart-v2-circleEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="qrex-18786caf7e79846f_flowchart-v2-circleStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="qrex-18786caf7e79846f_flowchart-v2-circleEnd-margin" class="marker flowchart-v2" viewBox="0 0 10 10" refY="5" refX="12.25" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></circle></marker><marker id="qrex-18786caf7e79846f_flowchart-v2-circleStart-margin" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-2" refY="5" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 0; stroke-dasharray: 1, 0;"></circle></marker><marker id="qrex-18786caf7e79846f_flowchart-v2-crossEnd" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-18786caf7e79846f_flowchart-v2-crossStart" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="qrex-18786caf7e79846f_flowchart-v2-crossEnd-margin" class="marker cross flowchart-v2" viewBox="0 0 15 15" refX="17.7" refY="7.5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M 1,1 L 14,14 M 1,14 L 14,1" class="arrowMarkerPath" style="stroke-width: 2.5;"></path></marker><marker id="qrex-18786caf7e79846f_flowchart-v2-crossStart-margin" class="marker cross flowchart-v2" viewBox="0 0 15 15" refX="-3.5" refY="7.5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M 1,1 L 14,14 M 1,14 L 14,1" class="arrowMarkerPath" style="stroke-width: 2.5; stroke-dasharray: 1, 0;"></path></marker><g class="root"><g class="clusters"></g><g class="edges edgePaths"><path d="M278.33723958333337,81L278.33723958333337,93.92893218813452Q278.33723958333337,101 271.2661717714679,101L186.99294281186548,101Q179.921875,101 179.921875,108.07106781186548L179.921875,121" id="qrex-18786caf7e79846f-L_T_S_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style="stroke-dasharray: 0 0 133.08706665039062 0; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_T_S_0" data-points="W3sieCI6Mjc4LjMzNzIzOTU4MzMzMzM3LCJ5Ijo4MX0seyJ4IjoyNzguMzM3MjM5NTgzMzMzMzcsInkiOjEwMX0seyJ4IjoxNzkuOTIxODc1LCJ5IjoxMDF9LHsieCI6MTc5LjkyMTg3NSwieSI6MTIxfV0=" data-look="neo"></path><path d="M395.4518229166667,81L395.4518229166667,93.92893218813452Q395.4518229166667,101 402.52289072853216,101L486.7961196881345,101Q493.8671875,101 493.8671875,108.07106781186548L493.8671875,121" id="qrex-18786caf7e79846f-L_T_H_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style="stroke-dasharray: 0 0 133.08706665039062 0; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_T_H_0" data-points="W3sieCI6Mzk1LjQ1MTgyMjkxNjY2NjcsInkiOjgxfSx7IngiOjM5NS40NTE4MjI5MTY2NjY3LCJ5IjoxMDF9LHsieCI6NDkzLjg2NzE4NzUsInkiOjEwMX0seyJ4Ijo0OTMuODY3MTg3NSwieSI6MTIxfV0=" data-look="neo"></path><path d="M179.921875,190L179.921875,202.92893218813452Q179.921875,210 186.99294281186548,210L307.8234634381345,210Q314.89453125,210 314.89453125,217.07106781186548L314.89453125,230" id="qrex-18786caf7e79846f-L_S_C_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style="stroke-dasharray: 0 0 169.6443634033203 0; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_S_C_0" data-points="W3sieCI6MTc5LjkyMTg3NSwieSI6MTkwfSx7IngiOjE3OS45MjE4NzUsInkiOjIxMH0seyJ4IjozMTQuODk0NTMxMjUsInkiOjIxMH0seyJ4IjozMTQuODk0NTMxMjUsInkiOjIzMH1d" data-look="neo"></path><path d="M493.8671875,190L493.8671875,202.92893218813452Q493.8671875,210 486.7961196881345,210L365.9655990618655,210Q358.89453125,210 358.89453125,217.07106781186548L358.89453125,230" id="qrex-18786caf7e79846f-L_H_C_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style="stroke-dasharray: 0 0 169.64437866210938 0; stroke-dashoffset: 0;;" data-edge="true" data-et="edge" data-id="L_H_C_0" data-points="W3sieCI6NDkzLjg2NzE4NzUsInkiOjE5MH0seyJ4Ijo0OTMuODY3MTg3NSwieSI6MjEwfSx7IngiOjM1OC44OTQ1MzEyNSwieSI6MjEwfSx7IngiOjM1OC44OTQ1MzEyNSwieSI6MjMwfV0=" data-look="neo"></path></g><g class="edgeLabels"></g><g class="nodes"><g class="node default" id="qrex-18786caf7e79846f-flowchart-T-0" data-look="neo" transform="translate(336.89453125, 46.5)"><rect class="basic label-container" style="fill:#1f2733 !important;stroke:#1f2733 !important" x="-185.671875" y="-34.5" width="371.34375" height="69"></rect><g class="label" style="color:#ffffff !important" transform="translate(-169.671875, -22.5)"><rect></rect><foreignObject width="339.34375" height="45"><div style="color: rgb(255, 255, 255) !important; display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center;" xmlns="http://www.w3.org/1999/xhtml"><span style="color:#ffffff !important" class="nodeLabel"><p>Top bar<br>agency name · global search · notifications · profile</p></span></div></foreignObject></g></g><g class="node default" id="qrex-18786caf7e79846f-flowchart-S-1" data-look="neo" transform="translate(179.921875, 155.5)"><rect class="basic label-container" style="fill:#eef1f5 !important;stroke:#c9d2dd !important" x="-167.921875" y="-34.5" width="335.84375" height="69"></rect><g class="label" style="" transform="translate(-151.921875, -22.5)"><rect></rect><foreignObject width="303.84375" height="45"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center;"><span class="nodeLabel"><p>Sidebar<br>17 modules, filtered by the user's permissions</p></span></div></foreignObject></g></g><g class="node default" id="qrex-18786caf7e79846f-flowchart-H-2" data-look="neo" transform="translate(493.8671875, 155.5)"><rect class="basic label-container" style="" x="-106.0234375" y="-34.5" width="212.046875" height="69"></rect><g class="label" style="" transform="translate(-90.0234375, -22.5)"><rect></rect><foreignObject width="180.046875" height="45"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center;"><span class="nodeLabel"><p>Page header<br>title · filters · primary action</p></span></div></foreignObject></g></g><g class="node default" id="qrex-18786caf7e79846f-flowchart-C-3" data-look="neo" transform="translate(336.89453125, 264.5)"><rect class="basic label-container" style="" x="-76" y="-34.5" width="152" height="69"></rect><g class="label" style="" transform="translate(-60, -22.5)"><rect></rect><foreignObject width="120" height="45"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table; white-space: nowrap; line-height: 1.5; max-width: 460px; text-align: center; width: 120px;"><span class="nodeLabel"><p>Page content<br>the working area</p></span></div></foreignObject></g></g></g></g></g><defs><filter id="qrex-18786caf7e79846f-drop-shadow" height="130%" width="130%"><feDropShadow dx="4" dy="4" stdDeviation="0" flood-opacity="0.06" flood-color="#000000"></feDropShadow></filter></defs><defs><filter id="qrex-18786caf7e79846f-drop-shadow-small" height="150%" width="150%"><feDropShadow dx="2" dy="2" stdDeviation="0" flood-opacity="0.06" flood-color="#000000"></feDropShadow></filter></defs><linearGradient id="qrex-18786caf7e79846f-gradient" gradientUnits="objectBoundingBox" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#0f5c4e" stop-opacity="1"></stop><stop offset="100%" stop-color="hsl(214.2857142857, 0%, 84.7058823529%)" stop-opacity="1"></stop></linearGradient></svg><figcaption>The app shell, the same on every page.</figcaption></figure>
+<table>
+<thead>
+<tr>
+<th>Region</th>
+<th>Always present</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Top bar</strong></td>
+<td>Yes</td>
+<td>Agency name, global search, notification bell with unread count, user menu</td>
+</tr>
+<tr>
+<td><strong>Sidebar</strong></td>
+<td>Yes</td>
+<td>Overview, Sales, Operations and Administration groups — a module you lack permission for is not drawn</td>
+</tr>
+<tr>
+<td><strong>Page header</strong></td>
+<td>Yes</td>
+<td>Page title, contextual filters, the primary action button</td>
+</tr>
+<tr>
+<td><strong>Content</strong></td>
+<td>Varies</td>
+<td>Tables, forms, boards, charts and panels</td>
+</tr>
+</tbody></table>
+<p>The four nav groups hold seventeen modules in total:</p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Modules</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Overview</strong></td>
+<td>Dashboard</td>
+</tr>
+<tr>
+<td><strong>Sales</strong></td>
+<td>Properties · Leads · Customers · Sales Pipeline · Site Visits · Tasks &amp; Follow-ups · Bookings · Payments</td>
+</tr>
+<tr>
+<td><strong>Operations</strong></td>
+<td>Media Center · Marketing · Reports &amp; Analytics · CMS / Website</td>
+</tr>
+<tr>
+<td><strong>Administration</strong></td>
+<td>Users · Roles &amp; Permissions · Amenities · Settings</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="52-dashboard">5.2 Dashboard</h2>
+<figure class="figure wireframe"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 738" width="1000" height="738" style="max-width:100%;height:auto" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" role="img" aria-label="Dashboard screen wireframe">
+<rect x="0.5" y="0.5" width="999" height="737" rx="10" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/>
+<path d="M0 10 A10 10 0 0 1 10 0 L990 0 A10 10 0 0 1 1000 10 L1000 30 L0 30 Z" fill="#1f2733"/>
+<circle cx="18" cy="15" r="4" fill="#ff6b6b"/><circle cx="32" cy="15" r="4" fill="#ffd43b"/><circle cx="46" cy="15" r="4" fill="#51cf66"/>
+<text x="64" y="19" font-size="12" font-weight="700" fill="#ffffff">Dashboard</text>
+<text x="986" y="19" font-size="11" fill="#aeb8c4" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">/admin/dashboard</text>
+<rect x="12" y="30" width="976" height="32" rx="6" fill="#1f2733" stroke="#1f2733" stroke-width="1.2"/><text x="24" y="46" text-anchor="start" font-size="11" fill="#ffffff" font-weight="600" opacity="0.95">Top bar — agency name · global search · notifications · profile</text>
+<rect x="12" y="74" width="186" height="604" rx="6" fill="#eef1f5" stroke="#d5dce5" stroke-width="1.2"/><text x="24" y="90" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Sidebar — 17 modules,</text><text x="24" y="104" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">filtered by permission</text>
+<rect x="222" y="74" width="766" height="34" rx="6" fill="#f2f4f7" stroke="#dde3ea" stroke-width="1.2"/><text x="234" y="90" text-anchor="start" font-size="11" fill="#1f2733" font-weight="600" opacity="0.95">Dashboard · date-range filter · quick actions</text>
+<rect x="240" y="136" width="152" height="62" rx="6" fill="#e8f1ee" stroke="#0f5c4e" stroke-width="1.2"/><rect x="256" y="150" width="60" height="9" rx="4" fill="#0f5c4e" opacity="0.45"/><rect x="256" y="168" width="86" height="16" rx="4" fill="#0f5c4e" opacity="0.75"/><rect x="256" y="190" width="48" height="6" rx="3" fill="#c3ccd7"/><text x="316" y="152" text-anchor="middle" font-size="11" fill="#0f5c4e" font-weight="600" opacity="0.95">New leads</text>
+<rect x="432" y="136" width="152" height="62" rx="6" fill="#e8f1ee" stroke="#0f5c4e" stroke-width="1.2"/><rect x="448" y="150" width="60" height="9" rx="4" fill="#0f5c4e" opacity="0.45"/><rect x="448" y="168" width="86" height="16" rx="4" fill="#0f5c4e" opacity="0.75"/><rect x="448" y="190" width="48" height="6" rx="3" fill="#c3ccd7"/><text x="508" y="152" text-anchor="middle" font-size="11" fill="#0f5c4e" font-weight="600" opacity="0.95">Site visits due</text>
+<rect x="624" y="136" width="152" height="62" rx="6" fill="#e8f1ee" stroke="#0f5c4e" stroke-width="1.2"/><rect x="640" y="150" width="60" height="9" rx="4" fill="#0f5c4e" opacity="0.45"/><rect x="640" y="168" width="86" height="16" rx="4" fill="#0f5c4e" opacity="0.75"/><rect x="640" y="190" width="48" height="6" rx="3" fill="#c3ccd7"/><text x="700" y="152" text-anchor="middle" font-size="11" fill="#0f5c4e" font-weight="600" opacity="0.95">Deals in pipeline</text>
+<rect x="816" y="136" width="152" height="62" rx="6" fill="#e8f1ee" stroke="#0f5c4e" stroke-width="1.2"/><rect x="832" y="150" width="60" height="9" rx="4" fill="#0f5c4e" opacity="0.45"/><rect x="832" y="168" width="86" height="16" rx="4" fill="#0f5c4e" opacity="0.75"/><rect x="832" y="190" width="48" height="6" rx="3" fill="#c3ccd7"/><text x="892" y="152" text-anchor="middle" font-size="11" fill="#0f5c4e" font-weight="600" opacity="0.95">Revenue this month</text>
+<rect x="240" y="226" width="342" height="198" rx="6" fill="#fbfcfd" stroke="#c9d2dd" stroke-dasharray="4 3" stroke-width="1.2"/><path d="M 260 322.64 L 310.3333333333333 350.8 L 360.6666666666667 309.84000000000003 L 411 363.6 L 461.33333333333337 331.6 L 511.6666666666667 373.84 L 562 340.56" fill="none" stroke="#0f5c4e" stroke-width="2" opacity="0.75" stroke-linecap="round"/><line x1="254" y1="402" x2="568" y2="402" stroke="#c9d2dd" stroke-width="1"/><text x="252" y="242" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Revenue by month (area)</text>
+<rect x="626" y="226" width="342" height="198" rx="6" fill="#fbfcfd" stroke="#c9d2dd" stroke-dasharray="4 3" stroke-width="1.2"/><path d="M 646 322.64 L 696.3333333333334 350.8 L 746.6666666666666 309.84000000000003 L 797 363.6 L 847.3333333333334 331.6 L 897.6666666666667 373.84 L 948 340.56" fill="none" stroke="#0f5c4e" stroke-width="2" opacity="0.75" stroke-linecap="round"/><line x1="640" y1="402" x2="954" y2="402" stroke="#c9d2dd" stroke-width="1"/><text x="638" y="242" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Lead sources (pie)</text>
+<rect x="240" y="452" width="342" height="206" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/><rect x="250" y="474" width="322" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="478" width="103" height="7" rx="3" fill="#dbe2ea"/><rect x="369" y="478" width="62" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="498" width="322" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="502" width="103" height="7" rx="3" fill="#dbe2ea"/><rect x="369" y="502" width="62" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="522" width="322" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="526" width="103" height="7" rx="3" fill="#dbe2ea"/><rect x="369" y="526" width="62" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="546" width="322" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="550" width="103" height="7" rx="3" fill="#dbe2ea"/><rect x="369" y="550" width="62" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="570" width="322" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="574" width="103" height="7" rx="3" fill="#dbe2ea"/><rect x="369" y="574" width="62" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="594" width="322" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="598" width="103" height="7" rx="3" fill="#dbe2ea"/><rect x="369" y="598" width="62" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="460" width="103" height="7" rx="3" fill="#c3ccd7"/><text x="252" y="470" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Recent leads</text>
+<rect x="626" y="452" width="342" height="206" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/><rect x="636" y="474" width="322" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="642" y="478" width="103" height="7" rx="3" fill="#dbe2ea"/><rect x="755" y="478" width="62" height="7" rx="3" fill="#e6ebf1"/><rect x="636" y="498" width="322" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="642" y="502" width="103" height="7" rx="3" fill="#dbe2ea"/><rect x="755" y="502" width="62" height="7" rx="3" fill="#e6ebf1"/><rect x="636" y="522" width="322" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="642" y="526" width="103" height="7" rx="3" fill="#dbe2ea"/><rect x="755" y="526" width="62" height="7" rx="3" fill="#e6ebf1"/><rect x="636" y="546" width="322" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="642" y="550" width="103" height="7" rx="3" fill="#dbe2ea"/><rect x="755" y="550" width="62" height="7" rx="3" fill="#e6ebf1"/><rect x="636" y="570" width="322" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="642" y="574" width="103" height="7" rx="3" fill="#dbe2ea"/><rect x="755" y="574" width="62" height="7" rx="3" fill="#e6ebf1"/><rect x="636" y="594" width="322" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="642" y="598" width="103" height="7" rx="3" fill="#dbe2ea"/><rect x="755" y="598" width="62" height="7" rx="3" fill="#e6ebf1"/><rect x="636" y="460" width="103" height="7" rx="3" fill="#c3ccd7"/><text x="638" y="470" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Follow-ups due today</text>
+<line x1="12" y1="664" x2="988" y2="664" stroke="#c9d2dd" stroke-width="1"/>
+<circle cx="21" cy="680" r="9" fill="#0f5c4e"/><text x="21" y="684" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">1</text>
+<text x="38" y="684" font-size="11" fill="#5b6472">Every panel is permission-scoped: an agent sees their own rows, a manager sees the branch.</text>
+<circle cx="21" cy="698" r="9" fill="#0f5c4e"/><text x="21" y="702" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">2</text>
+<text x="38" y="702" font-size="11" fill="#5b6472">Charts read live aggregates from DashboardController — no cached snapshot.</text>
+<circle cx="21" cy="716" r="9" fill="#0f5c4e"/><text x="21" y="720" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">3</text>
+<text x="38" y="720" font-size="11" fill="#5b6472">Quick actions (Add Property, Add Lead, New Task, New Booking) are the four most-used writes.</text>
+</svg><figcaption>Dashboard — the daily landing page. Four headline numbers, two charts, and the two lists that need action today.</figcaption></figure>
+<table>
+<thead>
+<tr>
+<th>Region</th>
+<th>What it shows</th>
+<th>Why it is there</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Stat cards</strong></td>
+<td>New leads · Site visits due · Deals in pipeline · Revenue this month</td>
+<td>The four numbers a manager opens the app to check</td>
+</tr>
+<tr>
+<td><strong>Revenue by month</strong></td>
+<td>Area chart of won revenue over time</td>
+<td>Is the month ahead of or behind the last one?</td>
+</tr>
+<tr>
+<td><strong>Lead sources</strong></td>
+<td>Pie chart grouped by the lead&#39;s source</td>
+<td>Where is the business coming from?</td>
+</tr>
+<tr>
+<td><strong>Recent leads</strong></td>
+<td>The newest leads, whoever owns them</td>
+<td>What just arrived while I was away?</td>
+</tr>
+<tr>
+<td><strong>Follow-ups due today</strong></td>
+<td>Overdue and today&#39;s follow-ups</td>
+<td>What will I be chased about if I do nothing?</td>
+</tr>
+</tbody></table>
+<p>The stat cards respond to the date-range filter in the header. Everything on this page is permission-filtered — a role without <code>reports.view</code> sees the cards and the lists but no chart data it is not entitled to.</p>
+<hr>
+<h2 id="53-leads-list">5.3 Leads list</h2>
+<figure class="figure wireframe"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 720" width="1000" height="720" style="max-width:100%;height:auto" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" role="img" aria-label="Leads screen wireframe">
+<rect x="0.5" y="0.5" width="999" height="719" rx="10" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/>
+<path d="M0 10 A10 10 0 0 1 10 0 L990 0 A10 10 0 0 1 1000 10 L1000 30 L0 30 Z" fill="#1f2733"/>
+<circle cx="18" cy="15" r="4" fill="#ff6b6b"/><circle cx="32" cy="15" r="4" fill="#ffd43b"/><circle cx="46" cy="15" r="4" fill="#51cf66"/>
+<text x="64" y="19" font-size="12" font-weight="700" fill="#ffffff">Leads</text>
+<text x="986" y="19" font-size="11" fill="#aeb8c4" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">/admin/leads</text>
+<rect x="12" y="30" width="976" height="32" rx="6" fill="#1f2733" stroke="#1f2733" stroke-width="1.2"/><text x="24" y="46" text-anchor="start" font-size="11" fill="#ffffff" font-weight="600" opacity="0.95">Top bar</text>
+<rect x="12" y="74" width="186" height="604" rx="6" fill="#eef1f5" stroke="#d5dce5" stroke-width="1.2"/><text x="24" y="90" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Sidebar</text>
+<rect x="222" y="74" width="766" height="34" rx="6" fill="#f2f4f7" stroke="#dde3ea" stroke-width="1.2"/><text x="234" y="90" text-anchor="start" font-size="11" fill="#1f2733" font-weight="600" opacity="0.95">Leads · count · Import CSV · Add Lead</text>
+<rect x="240" y="136" width="730" height="28" rx="6" fill="#eef1f5" stroke="#d5dce5" stroke-width="1.2"/><text x="252" y="152" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Filters — status · source · assigned agent · date range · search</text>
+<rect x="240" y="192" width="730" height="288" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/><rect x="250" y="214" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="218" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="218" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="238" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="242" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="242" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="262" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="266" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="266" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="286" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="290" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="290" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="310" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="314" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="314" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="334" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="338" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="338" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="358" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="362" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="362" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="382" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="386" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="386" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="200" width="235" height="7" rx="3" fill="#c3ccd7"/><text x="252" y="210" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Lead rows — ID, name, source, status, agent, next follow-up, value</text>
+<rect x="240" y="508" width="730" height="28" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/><text x="252" y="524" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Pagination · rows per page</text>
+<rect x="240" y="564" width="342" height="94" rx="6" fill="#fff8e8" stroke="#b5893b" stroke-dasharray="5 3" stroke-width="1.2"/><text x="252" y="580" text-anchor="start" font-size="11" fill="#5b4a22" font-weight="600" opacity="0.95">CSV import resolves agents, campaigns and</text><text x="252" y="594" text-anchor="start" font-size="11" fill="#5b4a22" font-weight="600" opacity="0.95">properties by name</text>
+<rect x="626" y="564" width="344" height="94" rx="6" fill="#fff8e8" stroke="#b5893b" stroke-dasharray="5 3" stroke-width="1.2"/><text x="638" y="580" text-anchor="start" font-size="11" fill="#5b4a22" font-weight="600" opacity="0.95">Row-level scope: agents only see their own and</text><text x="638" y="594" text-anchor="start" font-size="11" fill="#5b4a22" font-weight="600" opacity="0.95">their branch’s leads</text>
+<line x1="12" y1="664" x2="988" y2="664" stroke="#c9d2dd" stroke-width="1"/>
+<circle cx="21" cy="680" r="9" fill="#0f5c4e"/><text x="21" y="684" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">1</text>
+<text x="38" y="684" font-size="11" fill="#5b6472">Status, source and follow-up are the three columns that decide what an agent does next.</text>
+<circle cx="21" cy="698" r="9" fill="#0f5c4e"/><text x="21" y="702" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">2</text>
+<text x="38" y="702" font-size="11" fill="#5b6472">The import template is downloadable from the same screen (leads.import-template).</text>
+</svg><figcaption>Leads — the working list. Filter, scan, act.</figcaption></figure>
+<table>
+<thead>
+<tr>
+<th>Region</th>
+<th>What it shows</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Filters</strong></td>
+<td>Status · source · assigned agent · date range · free-text search</td>
+</tr>
+<tr>
+<td><strong>Rows</strong></td>
+<td>ID · name · source · status · agent · next follow-up · value</td>
+</tr>
+<tr>
+<td><strong>Pagination</strong></td>
+<td>Page size and page navigation</td>
+</tr>
+<tr>
+<td><strong>Import note</strong></td>
+<td>CSV import resolves agents, campaigns and properties by name, and reports what it could not resolve</td>
+</tr>
+<tr>
+<td><strong>Scope note</strong></td>
+<td>Row-level scope — an agent sees their own leads and their branch&#39;s leads; a manager sees everything</td>
+</tr>
+</tbody></table>
+<p>The <strong>next follow-up</strong> column is the column to sort by. A lead with no follow-up date is the most common way a sale dies quietly.</p>
+<hr>
+<h2 id="54-lead-detail">5.4 Lead detail</h2>
+<figure class="figure wireframe"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 738" width="1000" height="738" style="max-width:100%;height:auto" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" role="img" aria-label="Lead detail screen wireframe">
+<rect x="0.5" y="0.5" width="999" height="737" rx="10" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/>
+<path d="M0 10 A10 10 0 0 1 10 0 L990 0 A10 10 0 0 1 1000 10 L1000 30 L0 30 Z" fill="#1f2733"/>
+<circle cx="18" cy="15" r="4" fill="#ff6b6b"/><circle cx="32" cy="15" r="4" fill="#ffd43b"/><circle cx="46" cy="15" r="4" fill="#51cf66"/>
+<text x="64" y="19" font-size="12" font-weight="700" fill="#ffffff">Lead detail</text>
+<text x="986" y="19" font-size="11" fill="#aeb8c4" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">/admin/leads/{lead}</text>
+<rect x="12" y="30" width="976" height="32" rx="6" fill="#1f2733" stroke="#1f2733" stroke-width="1.2"/><text x="24" y="46" text-anchor="start" font-size="11" fill="#ffffff" font-weight="600" opacity="0.95">Top bar</text>
+<rect x="12" y="74" width="186" height="604" rx="6" fill="#eef1f5" stroke="#d5dce5" stroke-width="1.2"/><text x="24" y="90" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Sidebar</text>
+<rect x="222" y="74" width="766" height="44" rx="6" fill="#f2f4f7" stroke="#dde3ea" stroke-width="1.2"/><text x="234" y="90" text-anchor="start" font-size="11" fill="#1f2733" font-weight="600" opacity="0.95">L-006 · Priya Sharma · status chip · Reassign · Convert to deal</text>
+<rect x="240" y="148" width="336" height="178" rx="6" fill="#fbfcfd" stroke="#c9d2dd" stroke-width="1.2"/><rect x="254" y="188" width="60" height="6" rx="3" fill="#c3ccd7"/><rect x="254" y="198" width="248" height="12" rx="3" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="254" y="216" width="60" height="6" rx="3" fill="#c3ccd7"/><rect x="254" y="226" width="171" height="12" rx="3" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="254" y="244" width="60" height="6" rx="3" fill="#c3ccd7"/><rect x="254" y="254" width="248" height="12" rx="3" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="254" y="272" width="60" height="6" rx="3" fill="#c3ccd7"/><rect x="254" y="282" width="171" height="12" rx="3" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><text x="252" y="164" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Lead fields — source, score, phone, email,</text><text x="252" y="178" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">budget, requirements</text>
+<rect x="616" y="148" width="354" height="178" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/><text x="628" y="164" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Next follow-up date · schedule site visit · linked</text><text x="628" y="178" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">property</text>
+<rect x="240" y="354" width="730" height="204" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/><circle cx="260" cy="401" r="4" fill="#0f5c4e" opacity="0.55"/><rect x="272" y="397" width="330" height="7" rx="3" fill="#dbe2ea"/><rect x="272" y="409" width="475" height="6" rx="3" fill="#eef1f5"/><circle cx="260" cy="429" r="4" fill="#0f5c4e" opacity="0.55"/><rect x="272" y="425" width="330" height="7" rx="3" fill="#dbe2ea"/><rect x="272" y="437" width="475" height="6" rx="3" fill="#eef1f5"/><circle cx="260" cy="457" r="4" fill="#0f5c4e" opacity="0.55"/><rect x="272" y="453" width="330" height="7" rx="3" fill="#dbe2ea"/><rect x="272" y="465" width="475" height="6" rx="3" fill="#eef1f5"/><circle cx="260" cy="485" r="4" fill="#0f5c4e" opacity="0.55"/><rect x="272" y="481" width="330" height="7" rx="3" fill="#dbe2ea"/><rect x="272" y="493" width="475" height="6" rx="3" fill="#eef1f5"/><circle cx="260" cy="513" r="4" fill="#0f5c4e" opacity="0.55"/><rect x="272" y="509" width="330" height="7" rx="3" fill="#dbe2ea"/><rect x="272" y="521" width="475" height="6" rx="3" fill="#eef1f5"/><text x="252" y="370" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Activity timeline — calls, WhatsApp, SMS, e-mail, notes, auto-generated events</text>
+<rect x="240" y="586" width="730" height="72" rx="6" fill="#0f5c4e" stroke="#0f5c4e" stroke-width="1.2"/><rect x="258" y="604" width="150" height="22" rx="11" fill="rgba(255,255,255,.22)"/><rect x="422" y="604" width="110" height="22" rx="11" fill="rgba(255,255,255,.16)"/><text x="252" y="602" text-anchor="start" font-size="11" fill="#ffffff" font-weight="600" opacity="0.95">Log activity · Change status · Convert to deal</text>
+<line x1="12" y1="664" x2="988" y2="664" stroke="#c9d2dd" stroke-width="1"/>
+<circle cx="21" cy="680" r="9" fill="#0f5c4e"/><text x="21" y="684" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">1</text>
+<text x="38" y="684" font-size="11" fill="#5b6472">Setting a next follow-up date creates or updates a Follow-up task for the assigned agent.</text>
+<circle cx="21" cy="698" r="9" fill="#0f5c4e"/><text x="21" y="702" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">2</text>
+<text x="38" y="702" font-size="11" fill="#5b6472">Status → “Site Visit Scheduled” auto-creates the site visit and notifies the agent.</text>
+<circle cx="21" cy="716" r="9" fill="#0f5c4e"/><text x="21" y="720" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">3</text>
+<text x="38" y="720" font-size="11" fill="#5b6472">Conversion is transactional: it locks the lead, creates the deal and records a Conversion activity.</text>
+</svg><figcaption>Lead detail — the record of one person, and the place the work happens.</figcaption></figure>
+<table>
+<thead>
+<tr>
+<th>Region</th>
+<th>What it shows</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Header</strong></td>
+<td>Lead ID, name, status chip, and the two consequential actions: <em>Reassign</em> and <em>Convert to deal</em></td>
+</tr>
+<tr>
+<td><strong>Lead fields</strong></td>
+<td>Source, score, phone, email, budget, requirements — each editable only if your role holds that field permission</td>
+</tr>
+<tr>
+<td><strong>Follow-up panel</strong></td>
+<td>Next follow-up date, schedule a site visit, linked property</td>
+</tr>
+<tr>
+<td><strong>Activity timeline</strong></td>
+<td>Calls, WhatsApp, SMS, e-mail, notes and the auto-generated events, newest first</td>
+</tr>
+<tr>
+<td><strong>Action bar</strong></td>
+<td>Log activity · Change status · Convert to deal</td>
+</tr>
+</tbody></table>
+<p>The timeline is the part that matters most. It is written to be read by somebody who was not there: what was said, what was agreed, and what happens next.</p>
+<hr>
+<h2 id="55-sales-pipeline-board">5.5 Sales pipeline board</h2>
+<figure class="figure wireframe"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 698" width="1000" height="698" style="max-width:100%;height:auto" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" role="img" aria-label="Sales Pipeline (Kanban) screen wireframe">
+<rect x="0.5" y="0.5" width="999" height="697" rx="10" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/>
+<path d="M0 10 A10 10 0 0 1 10 0 L990 0 A10 10 0 0 1 1000 10 L1000 30 L0 30 Z" fill="#1f2733"/>
+<circle cx="18" cy="15" r="4" fill="#ff6b6b"/><circle cx="32" cy="15" r="4" fill="#ffd43b"/><circle cx="46" cy="15" r="4" fill="#51cf66"/>
+<text x="64" y="19" font-size="12" font-weight="700" fill="#ffffff">Sales Pipeline (Kanban)</text>
+<text x="986" y="19" font-size="11" fill="#aeb8c4" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">/admin/pipeline</text>
+<rect x="12" y="30" width="976" height="32" rx="6" fill="#1f2733" stroke="#1f2733" stroke-width="1.2"/><text x="24" y="46" text-anchor="start" font-size="11" fill="#ffffff" font-weight="600" opacity="0.95">Top bar</text>
+<rect x="12" y="74" width="186" height="564" rx="6" fill="#eef1f5" stroke="#d5dce5" stroke-width="1.2"/><text x="24" y="90" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Sidebar</text>
+<rect x="222" y="74" width="766" height="34" rx="6" fill="#f2f4f7" stroke="#dde3ea" stroke-width="1.2"/><text x="234" y="90" text-anchor="start" font-size="11" fill="#1f2733" font-weight="600" opacity="0.95">Pipeline · stage filter · owner filter</text>
+<rect x="240" y="136" width="94" height="478" rx="6" fill="#f2f4f7" stroke="#c9d2dd" stroke-width="1.2"/><rect x="248" y="176" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="256" y="186" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="256" y="200" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="256" y="213" width="24" height="6" rx="3" fill="#eef1f5"/><rect x="248" y="246" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="256" y="256" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="256" y="270" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="256" y="283" width="24" height="6" rx="3" fill="#eef1f5"/><rect x="248" y="316" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="256" y="326" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="256" y="340" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="256" y="353" width="24" height="6" rx="3" fill="#eef1f5"/><rect x="248" y="386" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="256" y="396" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="256" y="410" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="256" y="423" width="24" height="6" rx="3" fill="#eef1f5"/><rect x="248" y="456" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="256" y="466" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="256" y="480" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="256" y="493" width="24" height="6" rx="3" fill="#eef1f5"/><text x="252" y="154" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">New Lead</text>
+<rect x="364" y="136" width="94" height="478" rx="6" fill="#f2f4f7" stroke="#c9d2dd" stroke-width="1.2"/><rect x="372" y="176" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="380" y="186" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="380" y="200" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="380" y="213" width="24" height="6" rx="3" fill="#eef1f5"/><rect x="372" y="246" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="380" y="256" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="380" y="270" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="380" y="283" width="24" height="6" rx="3" fill="#eef1f5"/><rect x="372" y="316" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="380" y="326" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="380" y="340" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="380" y="353" width="24" height="6" rx="3" fill="#eef1f5"/><rect x="372" y="386" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="380" y="396" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="380" y="410" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="380" y="423" width="24" height="6" rx="3" fill="#eef1f5"/><rect x="372" y="456" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="380" y="466" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="380" y="480" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="380" y="493" width="24" height="6" rx="3" fill="#eef1f5"/><text x="376" y="154" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Contacted</text>
+<rect x="488" y="136" width="94" height="478" rx="6" fill="#f2f4f7" stroke="#c9d2dd" stroke-width="1.2"/><rect x="496" y="176" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="504" y="186" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="504" y="200" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="504" y="213" width="24" height="6" rx="3" fill="#eef1f5"/><rect x="496" y="246" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="504" y="256" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="504" y="270" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="504" y="283" width="24" height="6" rx="3" fill="#eef1f5"/><rect x="496" y="316" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="504" y="326" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="504" y="340" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="504" y="353" width="24" height="6" rx="3" fill="#eef1f5"/><rect x="496" y="386" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="504" y="396" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="504" y="410" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="504" y="423" width="24" height="6" rx="3" fill="#eef1f5"/><rect x="496" y="456" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="504" y="466" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="504" y="480" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="504" y="493" width="24" height="6" rx="3" fill="#eef1f5"/><text x="500" y="154" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Qualified</text>
+<rect x="612" y="136" width="94" height="478" rx="6" fill="#f2f4f7" stroke="#c9d2dd" stroke-width="1.2"/><rect x="620" y="176" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="628" y="186" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="628" y="200" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="628" y="213" width="24" height="6" rx="3" fill="#eef1f5"/><rect x="620" y="246" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="628" y="256" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="628" y="270" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="628" y="283" width="24" height="6" rx="3" fill="#eef1f5"/><rect x="620" y="316" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="628" y="326" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="628" y="340" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="628" y="353" width="24" height="6" rx="3" fill="#eef1f5"/><rect x="620" y="386" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="628" y="396" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="628" y="410" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="628" y="423" width="24" height="6" rx="3" fill="#eef1f5"/><rect x="620" y="456" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="628" y="466" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="628" y="480" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="628" y="493" width="24" height="6" rx="3" fill="#eef1f5"/><text x="624" y="154" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Shortlisted</text>
+<rect x="736" y="136" width="94" height="478" rx="6" fill="#f2f4f7" stroke="#c9d2dd" stroke-width="1.2"/><rect x="744" y="176" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="752" y="186" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="752" y="200" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="752" y="213" width="24" height="6" rx="3" fill="#eef1f5"/><rect x="744" y="246" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="752" y="256" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="752" y="270" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="752" y="283" width="24" height="6" rx="3" fill="#eef1f5"/><rect x="744" y="316" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="752" y="326" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="752" y="340" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="752" y="353" width="24" height="6" rx="3" fill="#eef1f5"/><rect x="744" y="386" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="752" y="396" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="752" y="410" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="752" y="423" width="24" height="6" rx="3" fill="#eef1f5"/><rect x="744" y="456" width="78" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="752" y="466" width="34" height="7" rx="3" fill="#c3ccd7"/><rect x="752" y="480" width="17" height="6" rx="3" fill="#e6ebf1"/><rect x="752" y="493" width="24" height="6" rx="3" fill="#eef1f5"/><text x="748" y="154" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Negotiation</text>
+<rect x="860" y="136" width="110" height="478" rx="6" fill="#f2f4f7" stroke="#c9d2dd" stroke-width="1.2"/><rect x="868" y="176" width="94" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="876" y="186" width="50" height="7" rx="3" fill="#c3ccd7"/><rect x="876" y="200" width="25" height="6" rx="3" fill="#e6ebf1"/><rect x="876" y="213" width="35" height="6" rx="3" fill="#eef1f5"/><rect x="868" y="246" width="94" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="876" y="256" width="50" height="7" rx="3" fill="#c3ccd7"/><rect x="876" y="270" width="25" height="6" rx="3" fill="#e6ebf1"/><rect x="876" y="283" width="35" height="6" rx="3" fill="#eef1f5"/><rect x="868" y="316" width="94" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="876" y="326" width="50" height="7" rx="3" fill="#c3ccd7"/><rect x="876" y="340" width="25" height="6" rx="3" fill="#e6ebf1"/><rect x="876" y="353" width="35" height="6" rx="3" fill="#eef1f5"/><rect x="868" y="386" width="94" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="876" y="396" width="50" height="7" rx="3" fill="#c3ccd7"/><rect x="876" y="410" width="25" height="6" rx="3" fill="#e6ebf1"/><rect x="876" y="423" width="35" height="6" rx="3" fill="#eef1f5"/><rect x="868" y="456" width="94" height="56" rx="5" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="876" y="466" width="50" height="7" rx="3" fill="#c3ccd7"/><rect x="876" y="480" width="25" height="6" rx="3" fill="#e6ebf1"/><rect x="876" y="493" width="35" height="6" rx="3" fill="#eef1f5"/><text x="872" y="154" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Booking →</text><text x="872" y="168" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Payment →</text>
+<line x1="12" y1="624" x2="988" y2="624" stroke="#c9d2dd" stroke-width="1"/>
+<circle cx="21" cy="640" r="9" fill="#0f5c4e"/><text x="21" y="644" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">1</text>
+<text x="38" y="644" font-size="11" fill="#5b6472">Twelve canonical stages; the board shows the first six, each column holding deal cards.</text>
+<circle cx="21" cy="658" r="9" fill="#0f5c4e"/><text x="21" y="662" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">2</text>
+<text x="38" y="662" font-size="11" fill="#5b6472">A card carries value, probability and days-in-stage — the ageing signal for a stalled deal.</text>
+<circle cx="21" cy="676" r="9" fill="#0f5c4e"/><text x="21" y="680" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">3</text>
+<text x="38" y="680" font-size="11" fill="#5b6472">Moving a card is a single PUT that stamps stage_changed_at, so days-in-stage is derived, never stored.</text>
+</svg><figcaption>Sales pipeline — twelve stages, six columns visible at a time, cards dragged between stages.</figcaption></figure>
+<table>
+<thead>
+<tr>
+<th>Region</th>
+<th>What it shows</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Header</strong></td>
+<td>Stage filter and owner filter</td>
+</tr>
+<tr>
+<td><strong>Columns</strong></td>
+<td>The twelve stages, grouped into six columns; the last column holds Booking, Payment and Closed</td>
+</tr>
+<tr>
+<td><strong>Cards</strong></td>
+<td>Deal name, value, property, agent, days in stage</td>
+</tr>
+<tr>
+<td><strong>Summary bar</strong></td>
+<td>Total · pipeline value · active count · expected revenue · won value · lost value · conversion rate</td>
+</tr>
+</tbody></table>
+<p>Dragging a card changes the stage, resets the <em>days in stage</em> counter and raises a confirmation. The expected-revenue figure is the weighted one — value × probability — and it is the number to plan against.</p>
+<hr>
+<h2 id="56-property-create-and-edit">5.6 Property create and edit</h2>
+<figure class="figure wireframe"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 738" width="1000" height="738" style="max-width:100%;height:auto" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" role="img" aria-label="Property create / edit screen wireframe">
+<rect x="0.5" y="0.5" width="999" height="737" rx="10" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/>
+<path d="M0 10 A10 10 0 0 1 10 0 L990 0 A10 10 0 0 1 1000 10 L1000 30 L0 30 Z" fill="#1f2733"/>
+<circle cx="18" cy="15" r="4" fill="#ff6b6b"/><circle cx="32" cy="15" r="4" fill="#ffd43b"/><circle cx="46" cy="15" r="4" fill="#51cf66"/>
+<text x="64" y="19" font-size="12" font-weight="700" fill="#ffffff">Property create / edit</text>
+<text x="986" y="19" font-size="11" fill="#aeb8c4" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">/admin/properties/create</text>
+<rect x="12" y="30" width="976" height="32" rx="6" fill="#1f2733" stroke="#1f2733" stroke-width="1.2"/><text x="24" y="46" text-anchor="start" font-size="11" fill="#ffffff" font-weight="600" opacity="0.95">Top bar</text>
+<rect x="12" y="74" width="186" height="604" rx="6" fill="#eef1f5" stroke="#d5dce5" stroke-width="1.2"/><text x="24" y="90" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Sidebar</text>
+<rect x="222" y="74" width="766" height="34" rx="6" fill="#f2f4f7" stroke="#dde3ea" stroke-width="1.2"/><text x="234" y="90" text-anchor="start" font-size="11" fill="#1f2733" font-weight="600" opacity="0.95">Add property · Save · Cancel</text>
+<rect x="240" y="136" width="342" height="238" rx="6" fill="#fbfcfd" stroke="#c9d2dd" stroke-width="1.2"/><rect x="254" y="176" width="60" height="6" rx="3" fill="#c3ccd7"/><rect x="254" y="186" width="254" height="12" rx="3" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="254" y="204" width="60" height="6" rx="3" fill="#c3ccd7"/><rect x="254" y="214" width="175" height="12" rx="3" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="254" y="232" width="60" height="6" rx="3" fill="#c3ccd7"/><rect x="254" y="242" width="254" height="12" rx="3" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="254" y="260" width="60" height="6" rx="3" fill="#c3ccd7"/><rect x="254" y="270" width="175" height="12" rx="3" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="254" y="288" width="60" height="6" rx="3" fill="#c3ccd7"/><rect x="254" y="298" width="254" height="12" rx="3" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="254" y="316" width="60" height="6" rx="3" fill="#c3ccd7"/><rect x="254" y="326" width="175" height="12" rx="3" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><text x="252" y="152" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Core — title, property type, transaction type,</text><text x="252" y="166" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">status</text>
+<rect x="626" y="136" width="344" height="238" rx="6" fill="#fbfcfd" stroke="#c9d2dd" stroke-width="1.2"/><rect x="640" y="176" width="60" height="6" rx="3" fill="#c3ccd7"/><rect x="640" y="186" width="256" height="12" rx="3" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="640" y="204" width="60" height="6" rx="3" fill="#c3ccd7"/><rect x="640" y="214" width="176" height="12" rx="3" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="640" y="232" width="60" height="6" rx="3" fill="#c3ccd7"/><rect x="640" y="242" width="256" height="12" rx="3" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="640" y="260" width="60" height="6" rx="3" fill="#c3ccd7"/><rect x="640" y="270" width="176" height="12" rx="3" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="640" y="288" width="60" height="6" rx="3" fill="#c3ccd7"/><rect x="640" y="298" width="256" height="12" rx="3" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><rect x="640" y="316" width="60" height="6" rx="3" fill="#c3ccd7"/><rect x="640" y="326" width="176" height="12" rx="3" fill="#ffffff" stroke="#c9d2dd" stroke-width="1"/><text x="638" y="152" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Commercial — price, area, location, agency,</text><text x="638" y="166" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">featured, website-visible</text>
+<rect x="240" y="402" width="342" height="118" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/><text x="252" y="418" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Type-driven spec fields — shown/required per</text><text x="252" y="432" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">property type</text>
+<rect x="626" y="402" width="344" height="118" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/><text x="638" y="418" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Amenities — chosen from the catalogue for that</text><text x="638" y="432" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">property type</text>
+<rect x="240" y="548" width="730" height="110" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/><circle cx="260" cy="595" r="4" fill="#0f5c4e" opacity="0.55"/><rect x="272" y="591" width="330" height="7" rx="3" fill="#dbe2ea"/><rect x="272" y="603" width="475" height="6" rx="3" fill="#eef1f5"/><circle cx="260" cy="623" r="4" fill="#0f5c4e" opacity="0.55"/><rect x="272" y="619" width="330" height="7" rx="3" fill="#dbe2ea"/><rect x="272" y="631" width="475" height="6" rx="3" fill="#eef1f5"/><text x="252" y="564" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Image gallery — upload, reorder, choose cover, delete</text>
+<line x1="12" y1="664" x2="988" y2="664" stroke="#c9d2dd" stroke-width="1"/>
+<circle cx="21" cy="680" r="9" fill="#0f5c4e"/><text x="21" y="684" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">1</text>
+<text x="38" y="684" font-size="11" fill="#5b6472">The form is data-driven: the property type decides which spec fields appear and which are mandatory.</text>
+<circle cx="21" cy="698" r="9" fill="#0f5c4e"/><text x="21" y="702" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">2</text>
+<text x="38" y="702" font-size="11" fill="#5b6472">is_website_visible controls whether the listing appears on the public site.</text>
+<circle cx="21" cy="716" r="9" fill="#0f5c4e"/><text x="21" y="720" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">3</text>
+<text x="38" y="720" font-size="11" fill="#5b6472">Properties soft-delete, so a removed listing stays queryable for reports and audit.</text>
+</svg><figcaption>Property form — core details, commercial details, type-driven specifications, amenities and the image gallery.</figcaption></figure>
+<table>
+<thead>
+<tr>
+<th>Region</th>
+<th>What it shows</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Core</strong></td>
+<td>Title, property type, transaction type, status</td>
+</tr>
+<tr>
+<td><strong>Commercial</strong></td>
+<td>Price, area, location, agency, featured, website-visible</td>
+</tr>
+<tr>
+<td><strong>Specifications</strong></td>
+<td>Which specification fields appear is driven by the chosen property type — an apartment is asked for floor and lift; a plot is asked for facing and boundary</td>
+</tr>
+<tr>
+<td><strong>Amenities</strong></td>
+<td>Chosen from the catalogue of amenities for that property type</td>
+</tr>
+<tr>
+<td><strong>Gallery</strong></td>
+<td>Upload, reorder, choose the cover image, delete</td>
+</tr>
+</tbody></table>
+<p><code>Website visible</code> decides whether the property appears on the public site at all. <code>Featured</code> decides whether it is highlighted there. Both are one tick away, so it is worth knowing which one you are clicking.</p>
+<hr>
+<h2 id="57-bookings-and-payments">5.7 Bookings and payments</h2>
+<figure class="figure wireframe"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 680" width="1000" height="680" style="max-width:100%;height:auto" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" role="img" aria-label="Bookings &amp; Payments screen wireframe">
+<rect x="0.5" y="0.5" width="999" height="679" rx="10" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/>
+<path d="M0 10 A10 10 0 0 1 10 0 L990 0 A10 10 0 0 1 1000 10 L1000 30 L0 30 Z" fill="#1f2733"/>
+<circle cx="18" cy="15" r="4" fill="#ff6b6b"/><circle cx="32" cy="15" r="4" fill="#ffd43b"/><circle cx="46" cy="15" r="4" fill="#51cf66"/>
+<text x="64" y="19" font-size="12" font-weight="700" fill="#ffffff">Bookings &amp; Payments</text>
+<text x="986" y="19" font-size="11" fill="#aeb8c4" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">/admin/bookings · /admin/payments</text>
+<rect x="12" y="30" width="976" height="32" rx="6" fill="#1f2733" stroke="#1f2733" stroke-width="1.2"/><text x="24" y="46" text-anchor="start" font-size="11" fill="#ffffff" font-weight="600" opacity="0.95">Top bar</text>
+<rect x="12" y="74" width="186" height="564" rx="6" fill="#eef1f5" stroke="#d5dce5" stroke-width="1.2"/><text x="24" y="90" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Sidebar</text>
+<rect x="222" y="74" width="766" height="34" rx="6" fill="#f2f4f7" stroke="#dde3ea" stroke-width="1.2"/><text x="234" y="90" text-anchor="start" font-size="11" fill="#1f2733" font-weight="600" opacity="0.95">Bookings · status filter · new booking</text>
+<rect x="240" y="136" width="730" height="198" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/><rect x="250" y="158" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="162" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="162" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="182" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="186" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="186" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="206" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="210" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="210" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="230" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="234" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="234" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="254" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="258" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="258" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="278" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="282" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="282" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="144" width="235" height="7" rx="3" fill="#c3ccd7"/><text x="252" y="154" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Booking rows — ID, customer, property, value, agreement status, possession status</text>
+<rect x="240" y="362" width="730" height="34" rx="6" fill="#f2f4f7" stroke="#dde3ea" stroke-width="1.2"/><text x="252" y="378" text-anchor="start" font-size="11" fill="#1f2733" font-weight="600" opacity="0.95">Payments · status filter · record payment</text>
+<rect x="240" y="424" width="730" height="194" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/><rect x="250" y="446" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="450" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="450" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="470" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="474" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="474" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="494" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="498" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="498" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="518" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="522" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="522" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="542" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="546" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="546" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="566" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="570" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="570" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="432" width="235" height="7" rx="3" fill="#c3ccd7"/><text x="252" y="442" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Payment rows — ID, booking, amount, due date, paid date, status</text>
+<line x1="12" y1="624" x2="988" y2="624" stroke="#c9d2dd" stroke-width="1"/>
+<circle cx="21" cy="640" r="9" fill="#0f5c4e"/><text x="21" y="644" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">1</text>
+<text x="38" y="644" font-size="11" fill="#5b6472">A booking carries three independent tracks: status, agreement status and possession status.</text>
+<circle cx="21" cy="658" r="9" fill="#0f5c4e"/><text x="21" y="662" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">2</text>
+<text x="38" y="662" font-size="11" fill="#5b6472">Payment status drives the outstanding figure in reports — Pending, Overdue and Partially Paid all count as outstanding.</text>
+</svg><figcaption>Bookings and payments — the commitment on top, the money underneath.</figcaption></figure>
+<table>
+<thead>
+<tr>
+<th>Region</th>
+<th>What it shows</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Bookings table</strong></td>
+<td>ID · customer · property · value · agreement status · possession status</td>
+</tr>
+<tr>
+<td><strong>Payments table</strong></td>
+<td>ID · booking · amount · due date · paid date · status</td>
+</tr>
+<tr>
+<td><strong>Booking status filter</strong></td>
+<td>Pending · Confirmed · Under Agreement · Agreement Signed</td>
+</tr>
+<tr>
+<td><strong>Payment status filter</strong></td>
+<td>Pending · Partially Paid · Paid · Overdue</td>
+</tr>
+</tbody></table>
+<p>The booking row carries <strong>three</strong> status columns, because the booking, the agreement and the possession progress independently. A booking can be confirmed while the agreement is still under review — that is normal, and the columns let you see it.</p>
+<p>Recording a payment from here creates a <code>PAY-###</code> record linked to the booking. QREX records the money; it never collects it.</p>
+<hr>
+<h2 id="58-reports-and-analytics">5.8 Reports and analytics</h2>
+<figure class="figure wireframe"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" width="1000" height="700" style="max-width:100%;height:auto" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" role="img" aria-label="Reports &amp; Analytics screen wireframe">
+<rect x="0.5" y="0.5" width="999" height="699" rx="10" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/>
+<path d="M0 10 A10 10 0 0 1 10 0 L990 0 A10 10 0 0 1 1000 10 L1000 30 L0 30 Z" fill="#1f2733"/>
+<circle cx="18" cy="15" r="4" fill="#ff6b6b"/><circle cx="32" cy="15" r="4" fill="#ffd43b"/><circle cx="46" cy="15" r="4" fill="#51cf66"/>
+<text x="64" y="19" font-size="12" font-weight="700" fill="#ffffff">Reports &amp; Analytics</text>
+<text x="986" y="19" font-size="11" fill="#aeb8c4" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">/admin/reports</text>
+<rect x="12" y="30" width="976" height="32" rx="6" fill="#1f2733" stroke="#1f2733" stroke-width="1.2"/><text x="24" y="46" text-anchor="start" font-size="11" fill="#ffffff" font-weight="600" opacity="0.95">Top bar</text>
+<rect x="12" y="74" width="186" height="584" rx="6" fill="#eef1f5" stroke="#d5dce5" stroke-width="1.2"/><text x="24" y="90" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Sidebar</text>
+<rect x="222" y="74" width="766" height="34" rx="6" fill="#f2f4f7" stroke="#dde3ea" stroke-width="1.2"/><text x="234" y="90" text-anchor="start" font-size="11" fill="#1f2733" font-weight="600" opacity="0.95">Reports · date range · Export CSV · Export PDF</text>
+<rect x="240" y="136" width="730" height="30" rx="6" fill="#eef1f5" stroke="#d5dce5" stroke-width="1.2"/><text x="252" y="152" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Report tabs — sales, leads, pipeline, payments, agents, properties, site visits, bookings</text>
+<rect x="240" y="194" width="342" height="202" rx="6" fill="#fbfcfd" stroke="#c9d2dd" stroke-dasharray="4 3" stroke-width="1.2"/><path d="M 260 292.15999999999997 L 310.3333333333333 321.2 L 360.6666666666667 278.96000000000004 L 411 334.4 L 461.33333333333337 301.4 L 511.6666666666667 344.96 L 562 310.64" fill="none" stroke="#0f5c4e" stroke-width="2" opacity="0.75" stroke-linecap="round"/><line x1="254" y1="374" x2="568" y2="374" stroke="#c9d2dd" stroke-width="1"/><text x="252" y="210" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Trend chart</text>
+<rect x="626" y="194" width="344" height="202" rx="6" fill="#fbfcfd" stroke="#c9d2dd" stroke-dasharray="4 3" stroke-width="1.2"/><path d="M 646 292.15999999999997 L 696.6666666666666 321.2 L 747.3333333333334 278.96000000000004 L 798 334.4 L 848.6666666666666 301.4 L 899.3333333333333 344.96 L 950 310.64" fill="none" stroke="#0f5c4e" stroke-width="2" opacity="0.75" stroke-linecap="round"/><line x1="640" y1="374" x2="956" y2="374" stroke="#c9d2dd" stroke-width="1"/><text x="638" y="210" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Breakdown chart</text>
+<rect x="240" y="424" width="730" height="214" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/><rect x="250" y="446" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="450" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="450" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="470" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="474" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="474" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="494" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="498" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="498" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="518" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="522" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="522" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="542" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="546" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="546" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="566" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="570" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="570" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="590" width="710" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="256" y="594" width="235" height="7" rx="3" fill="#dbe2ea"/><rect x="501" y="594" width="147" height="7" rx="3" fill="#e6ebf1"/><rect x="250" y="432" width="235" height="7" rx="3" fill="#c3ccd7"/><text x="252" y="442" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Report rows — the same dataset the chart summarises</text>
+<line x1="12" y1="644" x2="988" y2="644" stroke="#c9d2dd" stroke-width="1"/>
+<circle cx="21" cy="660" r="9" fill="#0f5c4e"/><text x="21" y="664" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">1</text>
+<text x="38" y="664" font-size="11" fill="#5b6472">Ten report builders feed the tabs; the CSV and PDF exports run the same query as the table.</text>
+<circle cx="21" cy="678" r="9" fill="#0f5c4e"/><text x="21" y="682" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">2</text>
+<text x="38" y="682" font-size="11" fill="#5b6472">PDF is rendered with DomPDF, so what you export matches what you see.</text>
+</svg><figcaption>Reports — eight report families behind one page, each exportable as CSV or PDF.</figcaption></figure>
+<table>
+<thead>
+<tr>
+<th>Report family</th>
+<th>Answers</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Sales</strong></td>
+<td>What did we sell, and when?</td>
+</tr>
+<tr>
+<td><strong>Leads</strong></td>
+<td>Where did the leads come from, and how many converted?</td>
+</tr>
+<tr>
+<td><strong>Pipeline</strong></td>
+<td>How much is in flight, and at what stage?</td>
+</tr>
+<tr>
+<td><strong>Payments</strong></td>
+<td>What is due, what is overdue, what is settled?</td>
+</tr>
+<tr>
+<td><strong>Agents</strong></td>
+<td>How is each agent performing?</td>
+</tr>
+<tr>
+<td><strong>Properties</strong></td>
+<td>Which properties get attention, and which get none?</td>
+</tr>
+<tr>
+<td><strong>Site visits</strong></td>
+<td>How many visits were scheduled, completed, cancelled or rescheduled?</td>
+</tr>
+<tr>
+<td><strong>Bookings</strong></td>
+<td>What is committed, and in what state?</td>
+</tr>
+</tbody></table>
+<p>The report tabs sit in a filter strip above the content, with the date range and the two export buttons in the header. Every chart is backed by a table view of the same numbers, so nothing can only be seen as a picture.</p>
+<hr>
+<h2 id="59-roles-and-permissions">5.9 Roles and permissions</h2>
+<figure class="figure wireframe"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 718" width="1000" height="718" style="max-width:100%;height:auto" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" role="img" aria-label="Roles &amp; Permissions screen wireframe">
+<rect x="0.5" y="0.5" width="999" height="717" rx="10" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/>
+<path d="M0 10 A10 10 0 0 1 10 0 L990 0 A10 10 0 0 1 1000 10 L1000 30 L0 30 Z" fill="#1f2733"/>
+<circle cx="18" cy="15" r="4" fill="#ff6b6b"/><circle cx="32" cy="15" r="4" fill="#ffd43b"/><circle cx="46" cy="15" r="4" fill="#51cf66"/>
+<text x="64" y="19" font-size="12" font-weight="700" fill="#ffffff">Roles &amp; Permissions</text>
+<text x="986" y="19" font-size="11" fill="#aeb8c4" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">/admin/roles</text>
+<rect x="12" y="30" width="976" height="32" rx="6" fill="#1f2733" stroke="#1f2733" stroke-width="1.2"/><text x="24" y="46" text-anchor="start" font-size="11" fill="#ffffff" font-weight="600" opacity="0.95">Top bar</text>
+<rect x="12" y="74" width="186" height="584" rx="6" fill="#eef1f5" stroke="#d5dce5" stroke-width="1.2"/><text x="24" y="90" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Sidebar</text>
+<rect x="222" y="74" width="766" height="34" rx="6" fill="#f2f4f7" stroke="#dde3ea" stroke-width="1.2"/><text x="234" y="90" text-anchor="start" font-size="11" fill="#1f2733" font-weight="600" opacity="0.95">Roles · list, create, edit, delete</text>
+<rect x="240" y="136" width="226" height="502" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/><circle cx="260" cy="183" r="4" fill="#0f5c4e" opacity="0.55"/><rect x="272" y="179" width="78" height="7" rx="3" fill="#dbe2ea"/><rect x="272" y="191" width="112" height="6" rx="3" fill="#eef1f5"/><circle cx="260" cy="211" r="4" fill="#0f5c4e" opacity="0.55"/><rect x="272" y="207" width="78" height="7" rx="3" fill="#dbe2ea"/><rect x="272" y="219" width="112" height="6" rx="3" fill="#eef1f5"/><circle cx="260" cy="239" r="4" fill="#0f5c4e" opacity="0.55"/><rect x="272" y="235" width="78" height="7" rx="3" fill="#dbe2ea"/><rect x="272" y="247" width="112" height="6" rx="3" fill="#eef1f5"/><circle cx="260" cy="267" r="4" fill="#0f5c4e" opacity="0.55"/><rect x="272" y="263" width="78" height="7" rx="3" fill="#dbe2ea"/><rect x="272" y="275" width="112" height="6" rx="3" fill="#eef1f5"/><circle cx="260" cy="295" r="4" fill="#0f5c4e" opacity="0.55"/><rect x="272" y="291" width="78" height="7" rx="3" fill="#dbe2ea"/><rect x="272" y="303" width="112" height="6" rx="3" fill="#eef1f5"/><circle cx="260" cy="323" r="4" fill="#0f5c4e" opacity="0.55"/><rect x="272" y="319" width="78" height="7" rx="3" fill="#dbe2ea"/><rect x="272" y="331" width="112" height="6" rx="3" fill="#eef1f5"/><circle cx="260" cy="351" r="4" fill="#0f5c4e" opacity="0.55"/><rect x="272" y="347" width="78" height="7" rx="3" fill="#dbe2ea"/><rect x="272" y="359" width="112" height="6" rx="3" fill="#eef1f5"/><circle cx="260" cy="379" r="4" fill="#0f5c4e" opacity="0.55"/><rect x="272" y="375" width="78" height="7" rx="3" fill="#dbe2ea"/><rect x="272" y="387" width="112" height="6" rx="3" fill="#eef1f5"/><circle cx="260" cy="407" r="4" fill="#0f5c4e" opacity="0.55"/><rect x="272" y="403" width="78" height="7" rx="3" fill="#dbe2ea"/><rect x="272" y="415" width="112" height="6" rx="3" fill="#eef1f5"/><circle cx="260" cy="435" r="4" fill="#0f5c4e" opacity="0.55"/><rect x="272" y="431" width="78" height="7" rx="3" fill="#dbe2ea"/><rect x="272" y="443" width="112" height="6" rx="3" fill="#eef1f5"/><circle cx="260" cy="463" r="4" fill="#0f5c4e" opacity="0.55"/><rect x="272" y="459" width="78" height="7" rx="3" fill="#dbe2ea"/><rect x="272" y="471" width="112" height="6" rx="3" fill="#eef1f5"/><circle cx="260" cy="491" r="4" fill="#0f5c4e" opacity="0.55"/><rect x="272" y="487" width="78" height="7" rx="3" fill="#dbe2ea"/><rect x="272" y="499" width="112" height="6" rx="3" fill="#eef1f5"/><circle cx="260" cy="519" r="4" fill="#0f5c4e" opacity="0.55"/><rect x="272" y="515" width="78" height="7" rx="3" fill="#dbe2ea"/><rect x="272" y="527" width="112" height="6" rx="3" fill="#eef1f5"/><circle cx="260" cy="547" r="4" fill="#0f5c4e" opacity="0.55"/><rect x="272" y="543" width="78" height="7" rx="3" fill="#dbe2ea"/><rect x="272" y="555" width="112" height="6" rx="3" fill="#eef1f5"/><circle cx="260" cy="575" r="4" fill="#0f5c4e" opacity="0.55"/><rect x="272" y="571" width="78" height="7" rx="3" fill="#dbe2ea"/><rect x="272" y="583" width="112" height="6" rx="3" fill="#eef1f5"/><text x="252" y="152" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Role list — Admin, Agent,</text><text x="252" y="166" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Senior Agent, Marketing,</text>
+<rect x="506" y="136" width="464" height="502" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/><rect x="516" y="158" width="444" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="522" y="162" width="144" height="7" rx="3" fill="#dbe2ea"/><rect x="676" y="162" width="89" height="7" rx="3" fill="#e6ebf1"/><rect x="516" y="182" width="444" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="522" y="186" width="144" height="7" rx="3" fill="#dbe2ea"/><rect x="676" y="186" width="89" height="7" rx="3" fill="#e6ebf1"/><rect x="516" y="206" width="444" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="522" y="210" width="144" height="7" rx="3" fill="#dbe2ea"/><rect x="676" y="210" width="89" height="7" rx="3" fill="#e6ebf1"/><rect x="516" y="230" width="444" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="522" y="234" width="144" height="7" rx="3" fill="#dbe2ea"/><rect x="676" y="234" width="89" height="7" rx="3" fill="#e6ebf1"/><rect x="516" y="254" width="444" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="522" y="258" width="144" height="7" rx="3" fill="#dbe2ea"/><rect x="676" y="258" width="89" height="7" rx="3" fill="#e6ebf1"/><rect x="516" y="278" width="444" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="522" y="282" width="144" height="7" rx="3" fill="#dbe2ea"/><rect x="676" y="282" width="89" height="7" rx="3" fill="#e6ebf1"/><rect x="516" y="302" width="444" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="522" y="306" width="144" height="7" rx="3" fill="#dbe2ea"/><rect x="676" y="306" width="89" height="7" rx="3" fill="#e6ebf1"/><rect x="516" y="326" width="444" height="15" rx="3" fill="#fbfcfd" stroke="#eef1f5" stroke-width="1"/><rect x="522" y="330" width="144" height="7" rx="3" fill="#dbe2ea"/><rect x="676" y="330" width="89" height="7" rx="3" fill="#e6ebf1"/><rect x="516" y="144" width="144" height="7" rx="3" fill="#c3ccd7"/><text x="518" y="154" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Permission matrix — 17 modules × actions, with field-level</text><text x="518" y="168" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">switches</text>
+<line x1="12" y1="644" x2="988" y2="644" stroke="#c9d2dd" stroke-width="1"/>
+<circle cx="21" cy="660" r="9" fill="#0f5c4e"/><text x="21" y="664" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">1</text>
+<text x="38" y="664" font-size="11" fill="#5b6472">Only Super Admin can reach this screen by default.</text>
+<circle cx="21" cy="678" r="9" fill="#0f5c4e"/><text x="21" y="682" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">2</text>
+<text x="38" y="682" font-size="11" fill="#5b6472">Each permission is module + action, optionally narrowed to a field (e.g. leads.phone.read_only).</text>
+<circle cx="21" cy="696" r="9" fill="#0f5c4e"/><text x="21" y="700" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">3</text>
+<text x="38" y="700" font-size="11" fill="#5b6472">The same matrix is served to the frontend so nav items and buttons hide consistently.</text>
+</svg><figcaption>Roles — six roles, seventeen modules, and a matrix of actions and fields.</figcaption></figure>
+<table>
+<thead>
+<tr>
+<th>Region</th>
+<th>What it shows</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Role list</strong></td>
+<td>The six roles, with the system roles marked</td>
+</tr>
+<tr>
+<td><strong>Module rows</strong></td>
+<td>One row per module, one checkbox per action</td>
+</tr>
+<tr>
+<td><strong>Field rows</strong></td>
+<td>Nested under the module, one checkbox per editable field</td>
+</tr>
+<tr>
+<td><strong>Save</strong></td>
+<td>Replaces the role&#39;s permission set wholesale</td>
+</tr>
+</tbody></table>
+<p>The screen is dense on purpose. This is the one page where a single mis-click changes what a colleague can see for the rest of the day, and where the safest habit is to expand one module at a time.</p>
+<hr>
+<h2 id="510-the-public-website">5.10 The public website</h2>
+<figure class="figure wireframe"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 680" width="1000" height="680" style="max-width:100%;height:auto" font-family="Inter, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" role="img" aria-label="Public website — property listing screen wireframe">
+<rect x="0.5" y="0.5" width="999" height="679" rx="10" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/>
+<path d="M0 10 A10 10 0 0 1 10 0 L990 0 A10 10 0 0 1 1000 10 L1000 30 L0 30 Z" fill="#1f2733"/>
+<circle cx="18" cy="15" r="4" fill="#ff6b6b"/><circle cx="32" cy="15" r="4" fill="#ffd43b"/><circle cx="46" cy="15" r="4" fill="#51cf66"/>
+<text x="64" y="19" font-size="12" font-weight="700" fill="#ffffff">Public website — property listing</text>
+<text x="986" y="19" font-size="11" fill="#aeb8c4" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">/properties</text>
+<rect x="12" y="30" width="976" height="44" rx="6" fill="#1f2733" stroke="#1f2733" stroke-width="1.2"/><text x="24" y="46" text-anchor="start" font-size="11" fill="#ffffff" font-weight="600" opacity="0.95">Public header — logo · Home · Properties · About · Contact · Sign in</text>
+<rect x="12" y="86" width="976" height="40" rx="6" fill="#eef1f5" stroke="#d5dce5" stroke-width="1.2"/><text x="24" y="102" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Search — location · property type · transaction type · price range</text>
+<rect x="12" y="138" width="976" height="36" rx="6" fill="#f2f4f7" stroke="#dde3ea" stroke-width="1.2"/><text x="24" y="154" text-anchor="start" font-size="11" fill="#1f2733" font-weight="600" opacity="0.95">Results summary · sort by</text>
+<rect x="12" y="186" width="296" height="288" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/><text x="24" y="202" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Property card — image, title, type,</text><text x="24" y="216" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">price, area, location</text>
+<rect x="352" y="186" width="296" height="288" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/><text x="364" y="202" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Property card</text>
+<rect x="692" y="186" width="296" height="288" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/><text x="704" y="202" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Property card</text>
+<rect x="12" y="486" width="976" height="68" rx="6" fill="#fff8e8" stroke="#b5893b" stroke-dasharray="5 3" stroke-width="1.2"/><text x="24" y="502" text-anchor="start" font-size="11" fill="#5b4a22" font-weight="600" opacity="0.95">Enquiry form on the property page → POST /properties/{public_id}/enquiry → creates a Lead with source = Website</text>
+<rect x="12" y="566" width="976" height="72" rx="6" fill="#ffffff" stroke="#c9d2dd" stroke-width="1.2"/><text x="24" y="582" text-anchor="start" font-size="11" fill="#5b6472" font-weight="600" opacity="0.95">Footer — contact details, legal links</text>
+<line x1="12" y1="624" x2="988" y2="624" stroke="#c9d2dd" stroke-width="1"/>
+<circle cx="21" cy="640" r="9" fill="#0f5c4e"/><text x="21" y="644" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">1</text>
+<text x="38" y="644" font-size="11" fill="#5b6472">Only properties flagged is_website_visible are listed.</text>
+<circle cx="21" cy="658" r="9" fill="#0f5c4e"/><text x="21" y="662" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle">2</text>
+<text x="38" y="662" font-size="11" fill="#5b6472">Every enquiry becomes a CRM lead with no human step — the entry point of the whole lifecycle.</text>
+</svg><figcaption>Public website — the only part of QREX an unauthenticated visitor ever sees.</figcaption></figure>
+<table>
+<thead>
+<tr>
+<th>Region</th>
+<th>What it shows</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Header</strong></td>
+<td>Agency branding from settings, navigation, phone number</td>
+</tr>
+<tr>
+<td><strong>Hero</strong></td>
+<td>The headline, the search entry point</td>
+</tr>
+<tr>
+<td><strong>Property grid</strong></td>
+<td>Only properties flagged <code>website visible</code></td>
+</tr>
+<tr>
+<td><strong>Property card</strong></td>
+<td>Cover image, title, type, price, area, location</td>
+</tr>
+<tr>
+<td><strong>Enquiry form</strong></td>
+<td>The source of every website lead in the system</td>
+</tr>
+</tbody></table>
+<p>Three things are worth knowing about the public site:</p>
+<ol>
+<li><strong>Visibility is opt-in.</strong> A property is invisible to the public until <code>website visible</code> is ticked. Newly created properties are not automatically published.</li>
+<li><strong>Enquiries are throttled</strong> — a maximum of five submissions per ten minutes per source. Beyond that, further submissions are rejected rather than queued.</li>
+<li><strong>Every enquiry becomes a lead</strong> with <code>source = Website</code>, <code>status = New</code> and score <code>0</code>. No human touches it until somebody picks it up.</li>
+</ol>
+<hr>
+<p><strong>Next:</strong> <a href="explain-06-operations-and-automation.html">06 — Operations and Automation</a></p>
+
+<div class="pager"><a href="explain-04-roles-and-permissions.html">← 04. Roles And Permissions</a><a href="explain-06-operations-and-automation.html">06. Operations And Automation →</a></div>
+<div class="site-footer">QREX documentation · generated from the Markdown sources in <code>docs/</code> · build with <code>npm run docs:html</code></div>
+</main>
+</div>
+
+<script>
+function filterDocs(q){
+  q=(q||'').trim().toLowerCase();
+  document.querySelectorAll('#doc-nav .nav-group').forEach(function(g){
+    var visible=0;
+    g.querySelectorAll('a').forEach(function(a){
+      var hit=!q||a.getAttribute('data-title').indexOf(q)>-1;
+      a.classList.toggle('nav-hidden',!hit);
+      if(hit)visible++;
+    });
+    g.classList.toggle('nav-hidden',visible===0);
+    if(q)g.open=true;
+  });
+}
+document.querySelectorAll('.table-wrap').forEach(function(wrap){
+  var input=wrap.querySelector('.table-filter');
+  var table=wrap.querySelector('table');
+  var count=wrap.querySelector('.table-count');
+  if(!input||!table)return;
+  input.addEventListener('input',function(){
+    var q=input.value.trim().toLowerCase();
+    var shown=0,total=0;
+    table.querySelectorAll('tbody tr').forEach(function(row){
+      total++;
+      var hit=!q||row.textContent.toLowerCase().indexOf(q)>-1;
+      row.style.display=hit?'':'none';
+      if(hit)shown++;
+    });
+    if(count)count.textContent=q?shown+' of '+total+' rows':' '+total+' rows';
+  });
+});
+</script>
+</body>
+</html>

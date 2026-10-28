@@ -2,18 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\ValidatesPropertyPayload;
 use App\Models\Property;
+use App\Models\PropertyImage;
 use App\Models\User;
+use App\Services\PropertyTypeCatalog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class PropertyController extends Controller
 {
-    public function index(Request $request)
+    use ValidatesPropertyPayload;
+
+    public function index(Request $request, PropertyTypeCatalog $catalog)
     {
-        $query = Property::query()->with('agent');
+        $query = Property::query()->with(['agent', 'images']);
 
         if ($request->filled('search')) {
             $query->where(fn ($q) => $q
@@ -40,125 +46,134 @@ class PropertyController extends Controller
         return Inertia::render('admin/Properties', [
             'properties' => $properties,
             'filters' => $request->only(['search', 'status', 'type', 'featured']),
-            'types' => ['All', 'Apartment', 'Villa', 'Plot', 'Commercial', 'Office', 'Shop', 'Warehouse', 'Farm/Land', 'Other'],
+            'types' => $catalog->namesWithAll(),
             'statuses' => ['All', 'Available', 'Reserved', 'Under Negotiation', 'Sold', 'Draft', 'Rented', 'Inactive'],
         ]);
     }
 
-    public function create()
+    public function create(PropertyTypeCatalog $catalog)
     {
         return Inertia::render('admin/PropertyForm', [
             'property' => null,
             'agents' => User::whereIn('role', ['Sales Executive', 'Senior Agent'])->get(['id', 'name']),
+            'typeCatalog' => $catalog->all(),
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, PropertyTypeCatalog $catalog)
     {
-        $data = $this->validateProperty($request);
+        $data = $this->validateProperty($request, $catalog);
         $data['property_id'] = $this->nextId('PROP');
         $data['price_label'] = $this->label($data['price'] ?? 0);
         $data['slug'] = Str::slug($data['title']);
-        if ($request->hasFile('image')) {
-            $request->validate(['image' => 'required|image|mimes:jpg,jpeg,png,webp,gif|max:5120']);
-            $data['image'] = $this->storeImage($request->file('image'));
-        } elseif ($request->filled('image')) {
-            $request->validate(['image' => 'nullable|string']);
-            $data['image'] = $request->input('image');
-        }
 
-        Property::create($data);
+        $property = Property::create($data);
+
+        $this->persistGallery(
+            $property,
+            $request->file('new_images') ?? [],
+            $request->filled('cover_new_index') ? (int) $request->input('cover_new_index') : null,
+            null,
+        );
 
         return redirect()->route('admin.properties.index')->with('success', 'Property created successfully.');
     }
 
-    public function show(Property $property)
+    public function show(Property $property, PropertyTypeCatalog $catalog)
     {
-        $property->load('agent');
+        $property->load(['agent', 'images']);
 
-        $relatedLeads = $property->leads()->with('assignedAgent')->get();
+        $relatedLeads = $property->leads()->visibleTo(Auth::user())->with('assignedAgent')->get();
 
         return Inertia::render('admin/PropertyDetail', [
             'property' => $property,
             'leads' => $relatedLeads,
+            'spec' => $catalog->specRules($property->type),
+            'typeAmenities' => $catalog->amenitiesFor($property->type),
         ]);
     }
 
-    public function edit(Property $property)
+    public function edit(Property $property, PropertyTypeCatalog $catalog)
     {
+        $property->load('images');
+
         return Inertia::render('admin/PropertyForm', [
             'property' => $property,
             'agents' => User::whereIn('role', ['Sales Executive', 'Senior Agent'])->get(['id', 'name']),
+            'typeCatalog' => $catalog->all(),
         ]);
     }
 
-    public function update(Request $request, Property $property)
+    public function update(Request $request, Property $property, PropertyTypeCatalog $catalog)
     {
-        $data = $this->validateProperty($request);
+        $data = $this->validateProperty($request, $catalog);
         $data['price_label'] = $this->label($data['price'] ?? 0);
-        if ($request->hasFile('image')) {
-            $request->validate(['image' => 'required|image|mimes:jpg,jpeg,png,webp,gif|max:5120']);
-            $data['image'] = $this->storeImage($request->file('image'));
-        } elseif ($request->filled('image')) {
-            $request->validate(['image' => 'nullable|string']);
-            $data['image'] = $request->input('image');
-        } else {
-            unset($data['image']);
-        }
 
         $property->update($data);
+
+        foreach ((array) $request->input('remove_image_ids', []) as $id) {
+            $image = PropertyImage::where('property_id', $property->id)->find($id);
+            if ($image) {
+                Storage::disk('public')->delete($image->path);
+                $image->delete();
+            }
+        }
+
+        $this->persistGallery(
+            $property,
+            $request->file('new_images') ?? [],
+            $request->filled('cover_new_index') ? (int) $request->input('cover_new_index') : null,
+            $request->filled('cover_image_id') ? (int) $request->input('cover_image_id') : null,
+        );
 
         return redirect()->route('admin.properties.show', $property)->with('success', 'Property updated successfully.');
     }
 
     public function destroy(Property $property)
     {
+        if ($property->image) {
+            Storage::disk('public')->delete($property->image);
+        }
+        foreach ($property->images as $image) {
+            Storage::disk('public')->delete($image->path);
+            $image->delete();
+        }
+
         $property->delete();
 
         return redirect()->route('admin.properties.index')->with('success', 'Property deleted.');
     }
 
-    private function validateProperty(Request $request): array
+    private function persistGallery(Property $property, array $files, ?int $coverNewIndex = null, ?int $coverImageId = null): void
     {
-        $data = $request->validate([
-            'title' => 'required|string',
-            'type' => 'required|string',
-            'transaction_type' => 'required|string',
-            'description' => 'nullable|string',
-            'status' => 'required|string',
-            'price' => 'required|numeric',
-            'area' => 'required|numeric',
-            'bedrooms' => 'nullable|integer',
-            'bathrooms' => 'nullable|integer',
-            'floors' => 'nullable|integer',
-            'parking' => 'nullable|integer',
-            'furnishing' => 'nullable|string',
-            'possession_date' => 'nullable|string',
-            'address' => 'nullable|string',
-            'city' => 'nullable|string',
-            'state' => 'nullable|string',
-            'country' => 'nullable|string',
-            'pincode' => 'nullable|string',
-            'amenities' => 'nullable|array',
-            'featured' => 'nullable|boolean',
-            'is_website_visible' => 'nullable|boolean',
-            'seo_title' => 'nullable|string',
-            'meta_description' => 'nullable|string',
-            'agent_id' => 'nullable|integer',
-        ]);
+        $existingCount = $property->images()->count();
+        $files = array_slice($files, 0, max(0, 15 - $existingCount));
 
-        $data['bedrooms'] = (int) ($data['bedrooms'] ?? 0);
-        $data['bathrooms'] = (int) ($data['bathrooms'] ?? 0);
-        $data['floors'] = (int) ($data['floors'] ?? 1);
-        $data['parking'] = (int) ($data['parking'] ?? 0);
+        $created = [];
+        foreach ($files as $index => $file) {
+            $path = $file->store('properties', 'public');
+            $created[] = PropertyImage::create([
+                'property_id' => $property->id,
+                'path' => Storage::disk('public')->url($path),
+                'type' => 'image',
+                'is_cover' => false,
+                'sort_order' => $existingCount + $index,
+            ]);
+        }
 
-        return $data;
-    }
+        $images = $property->images();
 
-    private function storeImage($file): string
-    {
-        $path = $file->store('properties', 'public');
-        return Storage::disk('public')->url($path);
+        if ($coverNewIndex !== null && isset($created[$coverNewIndex])) {
+            $images->update(['is_cover' => false]);
+            $created[$coverNewIndex]->update(['is_cover' => true]);
+        } elseif ($coverImageId) {
+            $images->update(['is_cover' => false]);
+            $images->whereKey($coverImageId)->update(['is_cover' => true]);
+        }
+
+        if ($property->images()->where('is_cover', true)->doesntExist() && $property->images()->exists()) {
+            $property->images()->orderBy('sort_order')->first()->update(['is_cover' => true]);
+        }
     }
 
     private function label($amount): string

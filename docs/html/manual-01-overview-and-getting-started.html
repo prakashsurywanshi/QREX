@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1. Overview & Getting Started · QREX</title>
+<style>
+:root{--bg:#f7f8fa;--panel:#fff;--ink:#1f2733;--muted:#5b6472;--line:#e3e7ee;--accent:#0f5c4e;--accent2:#b5893b;--code:#f2f4f7;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65;font-size:16px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.layout{display:flex;min-height:100vh}
+aside{width:280px;flex:0 0 280px;background:var(--panel);border-right:1px solid var(--line);padding:24px 20px;position:sticky;top:0;height:100vh;overflow-y:auto}
+aside h2{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:18px 0 8px}
+aside a{display:block;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.9rem}
+aside a:hover{background:var(--bg);text-decoration:none}
+aside a.active{background:var(--accent);color:#fff}
+aside .brand{font-weight:700;font-size:1.05rem;color:var(--accent);margin-bottom:4px}
+main{flex:1;min-width:0;padding:40px 56px;max-width:960px;margin:0 auto}
+main h1{font-size:2rem;line-height:1.25;margin:0 0 .5em;padding-bottom:.35em;border-bottom:2px solid var(--line)}
+main h2{font-size:1.45rem;margin:2em 0 .6em;padding-bottom:.25em;border-bottom:1px solid var(--line)}
+main h3{font-size:1.15rem;margin:1.6em 0 .5em}
+main h4{font-size:1rem;margin:1.3em 0 .4em}
+main p,main li{color:#2b3542}
+table{border-collapse:collapse;width:100%;margin:1.1em 0;font-size:.92rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+th{background:#eef1f5;font-weight:600}
+tr:nth-child(even) td{background:#fbfcfd}
+code{background:var(--code);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em}
+pre{background:#1e2530;color:#e6e9ef;padding:16px 18px;border-radius:8px;overflow-x:auto}
+pre code{background:none;color:inherit;padding:0}
+blockquote{margin:1.2em 0;padding:.6em 1.1em;background:#fff8e8;border-left:4px solid var(--accent2);color:#5b4a22;border-radius:0 6px 6px 0}
+blockquote p{margin:.4em 0}
+hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
+img{max-width:100%}
+.crumbs{font-size:.82rem;color:var(--muted);margin-bottom:18px}
+.pager{display:flex;justify-content:space-between;gap:16px;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{font-size:.9rem}
+.site-footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:24px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.card h3{margin:.2em 0 .4em;font-size:1.02rem}
+.card p{margin:.2em 0;font-size:.88rem;color:var(--muted)}
+/* --- Figures: diagrams and screen wireframes --- */
+.figure{margin:1.8em 0}
+.figure>svg{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px}
+.figure.diagram{overflow-x:auto}
+.figure.diagram.wide>svg{max-width:none;margin:0}
+.figure.wireframe>svg{border-color:#dbe2ea}
+figcaption{margin-top:.7em;font-size:.82rem;color:var(--muted);text-align:center;line-height:1.45}
+.art-missing{border-left:3px solid #c0392b}
+/* --- Long reference tables --- */
+.table-wrap{margin:1.1em 0}
+.table-filter{width:100%;max-width:300px;padding:7px 11px;margin-bottom:.55em;border:1px solid var(--line);border-radius:8px;font-size:.86rem;background:#fff;color:var(--ink);font-family:inherit}
+.table-filter:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.table-count{font-size:.78rem;color:var(--muted);margin-left:8px;vertical-align:middle}
+/* --- Documentation menu (sidebar) --- */
+.side-search{width:100%;padding:8px 10px;margin:10px 0 4px;border:1px solid var(--line);border-radius:8px;font-size:.85rem;background:var(--bg);color:var(--ink)}
+.side-search:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.home-link{display:block;font-size:.8rem;font-weight:600;color:var(--accent);margin-bottom:14px;padding:4px 0}
+.nav-group{border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:6px}
+.nav-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:10px 4px 6px;font-weight:700;user-select:none}
+.nav-group>summary::-webkit-details-marker{display:none}
+.nav-group>summary .chev{transition:transform .15s ease;font-size:.7rem;color:var(--muted)}
+.nav-group[open]>summary .chev{transform:rotate(90deg)}
+.nav-group .count{color:var(--muted);font-weight:400;margin-left:auto;font-size:.68rem}
+.nav-group a{display:flex;gap:8px;align-items:baseline;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.88rem;line-height:1.35}
+.nav-group a:hover{background:var(--bg);text-decoration:none}
+.nav-group a.active{background:var(--accent);color:#fff}
+.nav-group a.active .num{color:#d9ece7}
+.nav-group a .num{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.75rem;min-width:1.4em}
+.nav-hidden{display:none!important}
+.menu-toggle{display:none;position:fixed;top:12px;left:12px;z-index:50;width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:1.2rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.menu-backdrop{display:none}
+@media(max-width:900px){
+  .layout{flex-direction:column}
+  .menu-toggle{display:flex}
+  aside{position:fixed;top:0;left:0;z-index:60;width:290px;height:100vh;overflow-y:auto;border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .2s ease;box-shadow:0 0 24px rgba(0,0,0,.12)}
+  body.menu-open aside{transform:translateX(0)}
+  body.menu-open .menu-backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:55}
+  main{padding:64px 20px 24px}
+}
+@media print{
+  aside,.crumbs,.pager,.menu-toggle,.menu-backdrop{display:none}
+  body{background:#fff;font-size:11pt}
+  main{max-width:none;padding:0}
+  a{color:var(--ink)}
+  pre{background:#f2f4f7;color:#1f2733;border:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<button class="menu-toggle" aria-label="Open documentation menu" onclick="document.body.classList.toggle('menu-open')">☰</button>
+<div class="menu-backdrop" onclick="document.body.classList.remove('menu-open')"></div>
+<aside>
+  <a class="home-link" href="index.html">⌂ All documentation</a>
+  <div class="brand">QREX Documentation</div>
+  <div style="font-size:.78rem;color:var(--muted)">Qodeigence Infocircle Pvt. Ltd.</div>
+  <input class="side-search" type="search" placeholder="Search documents…" aria-label="Search documents" oninput="filterDocs(this.value)">
+  <nav id="doc-nav">
+    <details class="nav-group" open>
+<summary><span>User Manual</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="manual-README.html"><span class="num"></span><span>Index — start here</span></a><a class="active" data-title="overview and getting started" href="manual-01-overview-and-getting-started.html"><span class="num">01</span><span>Overview And Getting Started</span></a><a class="" data-title="roles and access" href="manual-02-roles-and-access.html"><span class="num">02</span><span>Roles And Access</span></a><a class="" data-title="sales lifecycle" href="manual-03-sales-lifecycle.html"><span class="num">03</span><span>Sales Lifecycle</span></a><a class="" data-title="modules sales" href="manual-04-modules-sales.html"><span class="num">04</span><span>Modules Sales</span></a><a class="" data-title="modules operations" href="manual-05-modules-operations.html"><span class="num">05</span><span>Modules Operations</span></a><a class="" data-title="modules marketing and admin" href="manual-06-modules-marketing-and-admin.html"><span class="num">06</span><span>Modules Marketing And Admin</span></a><a class="" data-title="public website" href="manual-07-public-website.html"><span class="num">07</span><span>Public Website</span></a><a class="" data-title="reference" href="manual-08-reference.html"><span class="num">08</span><span>Reference</span></a><a class="" data-title="troubleshooting and faq" href="manual-09-troubleshooting-and-faq.html"><span class="num">09</span><span>Troubleshooting And Faq</span></a></details><details class="nav-group">
+<summary><span>How QREX Works</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="explain-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="system at a glance" href="explain-01-system-at-a-glance.html"><span class="num">01</span><span>System At A Glance</span></a><a class="" data-title="sales lifecycle" href="explain-02-sales-lifecycle.html"><span class="num">02</span><span>Sales Lifecycle</span></a><a class="" data-title="data model" href="explain-03-data-model.html"><span class="num">03</span><span>Data Model</span></a><a class="" data-title="roles and permissions" href="explain-04-roles-and-permissions.html"><span class="num">04</span><span>Roles And Permissions</span></a><a class="" data-title="screen designs" href="explain-05-screen-designs.html"><span class="num">05</span><span>Screen Designs</span></a><a class="" data-title="operations and automation" href="explain-06-operations-and-automation.html"><span class="num">06</span><span>Operations And Automation</span></a></details><details class="nav-group">
+<summary><span>Technical Documentation</span><span class="chev">▶</span></summary>
+<a class="" data-title="project scope" href="tech-01-project-scope.html"><span class="num">01</span><span>Project Scope</span></a><a class="" data-title="architecture" href="tech-02-architecture.html"><span class="num">02</span><span>Architecture</span></a><a class="" data-title="operations modules" href="tech-03-operations-modules.html"><span class="num">03</span><span>Operations Modules</span></a><a class="" data-title="roles permissions" href="tech-04-roles-permissions.html"><span class="num">04</span><span>Roles Permissions</span></a><a class="" data-title="database schema" href="tech-05-database-schema.html"><span class="num">05</span><span>Database Schema</span></a><a class="" data-title="operations" href="tech-06-operations.html"><span class="num">06</span><span>Operations</span></a><a class="" data-title="security hardening" href="tech-07-security-hardening.html"><span class="num">07</span><span>Security Hardening</span></a><a class="" data-title="glossary" href="tech-08-glossary.html"><span class="num">08</span><span>Glossary</span></a><a class="" data-title="project proposal" href="tech-09-project-proposal.html"><span class="num">09</span><span>Project Proposal</span></a><a class="" data-title="budget pricing mumbai" href="tech-10-budget-pricing-mumbai.html"><span class="num">10</span><span>Budget Pricing Mumbai</span></a></details>
+  </nav>
+  <details class="nav-group"><summary><span>Downloads</span><span class="chev">▶</span></summary>
+    <a href="../word/QREX-User-Manual.docx"><span class="num"></span><span>User Manual (.docx)</span></a>
+    <a href="../word/QREX-User-Manual.doc"><span class="num"></span><span>User Manual (.doc)</span></a>
+    <a href="../word/QREX-How-It-Works.docx"><span class="num"></span><span>How QREX Works (.docx)</span></a>
+    <a href="../word/QREX-How-It-Works.doc"><span class="num"></span><span>How QREX Works (.doc)</span></a>
+    <a href="../word/QREX-Technical-Documentation.docx"><span class="num"></span><span>Technical Docs (.docx)</span></a>
+    <a href="../word/QREX-Technical-Documentation.doc"><span class="num"></span><span>Technical Docs (.doc)</span></a>
+  </details>
+</aside>
+<main>
+<div class="crumbs">QREX User Manual</div>
+<h1 id="1-overview-getting-started">1. Overview & Getting Started</h1>
+<h2 id="11-what-qrex-is">1.1 What QREX Is</h2>
+<p>QREX is a <strong>property management and sales CRM</strong> for a real-estate agency. It is one application that serves three audiences from one source of truth:</p>
+<table>
+<thead>
+<tr>
+<th>Surface</th>
+<th>Where</th>
+<th>Who uses it</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Public website</strong></td>
+<td><code>/</code></td>
+<td>Prospective buyers and sellers</td>
+<td>Browse the listing portfolio, view photos and specs, submit enquiries</td>
+</tr>
+<tr>
+<td><strong>Admin CRM</strong></td>
+<td><code>/admin</code></td>
+<td>Your team</td>
+<td>Everything the business does: leads, deals, properties, visits, bookings, payments, marketing, reports, administration</td>
+</tr>
+<tr>
+<td><strong>JSON API</strong></td>
+<td><code>/api</code></td>
+<td>Integrations and mobile clients</td>
+<td>The same admin data, programmatically (token-authenticated)</td>
+</tr>
+</tbody></table>
+<p>The crucial thing to understand is that <strong>the public website and the admin CRM are connected</strong>. When a visitor fills in the contact form or the enquiry form on a property page, a <strong>Lead</strong> is created inside the CRM automatically, with the visitor&#39;s message stored against it. The marketing team does not re-key anything.</p>
+<hr>
+<h2 id="12-how-a-sale-actually-works-one-paragraph">1.2 How a Sale Actually Works (one paragraph)</h2>
+<p>A visitor submits an enquiry → the system creates a <strong>Lead</strong> → an agent picks it up, logs calls and meetings on its timeline, and moves its status along → a <strong>Site Visit</strong> is auto-scheduled when the lead reaches &quot;Site Visit Scheduled&quot; → once the buyer is serious, the lead is <strong>converted into a Deal</strong> which appears on the <strong>Sales Pipeline</strong> board → when the deal is won, a <strong>Booking</strong> is raised that tracks the agreement and the possession separately → money is recorded as <strong>Payments</strong> against that booking → management watches it all roll up on the <strong>Dashboard</strong> and in <strong>Reports</strong>.</p>
+<p>The full journey is documented step by step in <a href="manual-03-sales-lifecycle.html"><code>03-sales-lifecycle.md</code></a>.</p>
+<hr>
+<h2 id="13-signing-in">1.3 Signing In</h2>
+<ol>
+<li>Open the site and go to <strong><code>/login</code></strong>.</li>
+<li>Enter your <strong>email address</strong> and <strong>password</strong>.</li>
+<li>Tick <strong>Remember me</strong> on a personal device you trust to keep you signed in.</li>
+<li>Click <strong>Sign in</strong>.</li>
+</ol>
+<p>On success you land on the <strong>Dashboard</strong> at <code>/admin/dashboard</code>.</p>
+<h3 id="rules-the-system-enforces-on-sign-in">Rules the system enforces on sign-in</h3>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>What you experience</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Rate limiting</strong></td>
+<td>Only <strong>5 sign-in attempts per minute</strong> from your IP. A 6th attempt is rejected. Wait a minute and try again.</td>
+</tr>
+<tr>
+<td><strong>Account must be Active</strong></td>
+<td>If an Admin has set your account to <strong>Inactive</strong>, sign-in is refused even with the right password. See <a href="manual-09-troubleshooting-and-faq.html"><code>09-troubleshooting-and-faq.md</code></a>.</td>
+</tr>
+<tr>
+<td><strong>Session expiry</strong></td>
+<td>You are signed out after a period of inactivity. Unsaved form data is lost. Save long edits first.</td>
+</tr>
+<tr>
+<td><strong>Last login recorded</strong></td>
+<td>Your <code>last login</code> timestamp updates on every successful sign-in; Admins can see it on your user record.</td>
+</tr>
+</tbody></table>
+<h3 id="forgot-your-password">Forgot your password?</h3>
+<ol>
+<li>Click <strong>Forgot password?</strong> on the login page.</li>
+<li>Enter your email address and submit.</li>
+<li>A reset link is emailed to you. (Rate limited to <strong>5 requests per minute</strong>.)</li>
+<li>Open the link — it lands on a <strong>Reset Password</strong> form at <code>/reset-password/{token}</code>.</li>
+<li>Choose a new password of at least <strong>8 characters</strong>, confirm it, and submit.</li>
+<li>You are signed in with the new password. Use it immediately, and never share it.</li>
+</ol>
+<blockquote>
+<p>If the reset email never arrives, the agency&#39;s outgoing mail is not configured. Only a <strong>Super Admin</strong> can configure SMTP — see <a href="manual-06-modules-marketing-and-admin.html#67-settings"><code>06-modules-marketing-and-admin.md</code></a>.</p>
+</blockquote>
+<h3 id="signing-out">Signing out</h3>
+<p>Click the <strong>profile menu</strong> in the top-right corner (your initials) → <strong>Logout</strong>. Always sign out on a shared or public machine.</p>
+<hr>
+<h2 id="14-your-first-tour-of-the-admin-area">1.4 Your First Tour of the Admin Area</h2>
+<p>When you sign in, you land on the <strong>Dashboard</strong>. Five things to know:</p>
+<h3 id="141-the-sidebar-left">1.4.1 The sidebar (left)</h3>
+<p>Your sidebar is <strong>built for your role</strong>. QREX checks the permissions attached to your role and only shows the modules you can actually open. Groups with nothing you can access are dropped entirely.</p>
+<pre><code>OVERVIEW        Dashboard
+SALES           Properties · Leads · Customers · Sales Pipeline · Site Visits
+                Tasks &amp; Follow-ups · Bookings · Payments
+OPERATIONS      Media Center · Marketing · Reports &amp; Analytics · CMS / Website
+ADMINISTRATION  Users · Roles &amp; Permissions · Amenities · Settings
+</code></pre>
+<p>A <strong>Senior Agent</strong> sees no &quot;Users&quot;, &quot;Roles&quot;, &quot;Amenities&quot; or &quot;Settings&quot;. A <strong>Marketing User</strong> sees no &quot;Bookings&quot; or &quot;Payments&quot;.</p>
+<p>At the very bottom of the sidebar there is a <strong>View Public Website</strong> link — handy for checking how a listing looks to a buyer without opening a new browser profile.</p>
+<h3 id="142-the-top-bar">1.4.2 The top bar</h3>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>☰ / sidebar toggle</strong></td>
+<td>Collapses the sidebar (desktop) or opens it as a drawer (mobile)</td>
+</tr>
+<tr>
+<td><strong>Search box</strong></td>
+<td>A shortcut area for the public site</td>
+</tr>
+<tr>
+<td><strong>Public-site launcher</strong></td>
+<td>Opens the public website in a new tab</td>
+</tr>
+<tr>
+<td><strong>Quick Add ▾</strong></td>
+<td>The fastest way to create a record — <em>Add Property</em>, <em>Add Lead</em>, <em>New Task</em>, <em>New Booking</em>. Items shown depend on your permissions</td>
+</tr>
+<tr>
+<td><strong>🔔 Notification bell</strong></td>
+<td>Shows your unread count. Click to open the notification list; each item links to the record it refers to. <strong>Mark all as read</strong> clears the badge</td>
+</tr>
+<tr>
+<td><strong>Profile menu</strong></td>
+<td><em>My Profile</em>, <em>Settings</em>, <em>Logout</em></td>
+</tr>
+</tbody></table>
+<h3 id="143-the-dashboard">1.4.3 The Dashboard</h3>
+<p>Six KPI cards across the top:</p>
+<table>
+<thead>
+<tr>
+<th>Card</th>
+<th>Sub-text</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Total Properties</strong></td>
+<td><em>n available</em></td>
+<td>Every listing in the system and how many are still on the market</td>
+</tr>
+<tr>
+<td><strong>Active Leads</strong></td>
+<td><em>n new</em></td>
+<td>Open leads and how many have never been contacted</td>
+</tr>
+<tr>
+<td><strong>Active Deals</strong></td>
+<td><em>in pipeline</em></td>
+<td>Deals sitting on the pipeline board, not yet won or lost</td>
+</tr>
+<tr>
+<td><strong>Site Visits</strong></td>
+<td><em>current</em></td>
+<td>Visits on the books</td>
+</tr>
+<tr>
+<td><strong>Revenue Won</strong></td>
+<td><em>closed deals</em></td>
+<td>Total value of <strong>Closed Won</strong> deals</td>
+</tr>
+<tr>
+<td><strong>Pending Payments</strong></td>
+<td><em>to collect</em></td>
+<td>Money that is due but not yet received</td>
+</tr>
+</tbody></table>
+<p>Below the cards: charts for revenue by month, lead sources, the pipeline funnel, agent performance and monthly bookings, plus lists of recent leads, upcoming visits, recent bookings, recent payments, follow-ups due, recent activity and featured properties.</p>
+<p>A <strong>range switcher</strong> at the top of the page (Today / 7 Days / 30 Days / 90 Days / YTD / All) reloads every figure on the page for that period.</p>
+<blockquote>
+<p><strong>Scoping note.</strong> Sales Executives and Senior Agents see figures restricted to their own book of business. Admins and Super Admins see the whole agency&#39;s numbers.</p>
+</blockquote>
+<h3 id="144-the-notification-bell">1.4.4 The notification bell</h3>
+<p>QREX notifies you in-app about things that need your attention:</p>
+<table>
+<thead>
+<tr>
+<th>Notification</th>
+<th>Triggered when</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Lead converted to deal</strong></td>
+<td>One of your leads is converted</td>
+</tr>
+<tr>
+<td><strong>Site visit scheduled</strong></td>
+<td>A lead you own is moved to <em>Site Visit Scheduled</em></td>
+</tr>
+<tr>
+<td><strong>New deal assigned</strong></td>
+<td>A deal is created with you as the agent</td>
+</tr>
+<tr>
+<td><strong>Booking created</strong></td>
+<td>A booking is created (you are notified as the creator)</td>
+</tr>
+<tr>
+<td><strong>₹ amount received</strong></td>
+<td>A payment is recorded against a booking</td>
+</tr>
+<tr>
+<td><strong>Follow-up due today / Follow-up overdue</strong></td>
+<td>The daily 09:00 sweep finds a follow-up task that is due or late</td>
+</tr>
+</tbody></table>
+<p>Clicking a notification marks it read and jumps to the related record.</p>
+<h3 id="145-flash-messages">1.4.5 Flash messages</h3>
+<p>Every action gives immediate feedback:</p>
+<ul>
+<li><strong>Green toast</strong> — success (&quot;Lead created successfully.&quot;, &quot;Status updated.&quot;, &quot;Deal moved to Booking&quot;).</li>
+<li><strong>Red toast</strong> — refusal (&quot;You do not have permission to perform this action.&quot;, &quot;This lead cannot be converted in its current status.&quot;).</li>
+</ul>
+<p>Toasts auto-hide after about 3.5 seconds. If you need to read one again, check the record itself — failed actions do not change anything.</p>
+<hr>
+<h2 id="15-managing-your-own-profile">1.5 Managing Your Own Profile</h2>
+<p>Go to the profile menu → <strong>My Profile</strong> (or the URL <code>/profile</code>).</p>
+<h3 id="personal-information">Personal information</h3>
+<p>Update your <strong>name</strong> and <strong>phone number</strong> and save. These are the details buyers and colleagues see.</p>
+<h3 id="changing-your-password">Changing your password</h3>
+<ol>
+<li>Open the <strong>Change Password</strong> section.</li>
+<li>Enter your <strong>current password</strong>.</li>
+<li>Enter a <strong>new password</strong> and confirm it.</li>
+<li>Save.</li>
+</ol>
+<blockquote>
+<p>The password <em>reset</em> flow (by email) and the <em>change</em> flow (here) are different. Changing it here requires you to know the old one.</p>
+</blockquote>
+<h3 id="changing-your-email-address-a-four-step-otp-protected-process">Changing your email address — a four-step, OTP-protected process</h3>
+<p>Email is the identity you sign in with, so the system does not let you simply overwrite it. The change is proved in two directions: you must prove you own the <strong>old</strong> inbox and the <strong>new</strong> one.</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>What you do</th>
+<th>What the system does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Click <strong>Send code to current email</strong></td>
+<td>Sends a 6-digit OTP to your <strong>current</strong> address</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Type the 6-digit code and verify</td>
+<td>Marks the current email as proven. The step always appears to succeed, even if the address is wrong — this prevents anyone discovering which addresses exist</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Enter the <strong>new email address</strong> and click <strong>Send code to new email</strong></td>
+<td>Sends a 6-digit OTP to the <strong>new</strong> address</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Type the 6-digit code and verify</td>
+<td>Saves the new address as your login email</td>
+</tr>
+</tbody></table>
+<p><strong>Rules for the codes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Code length</td>
+<td>6 digits</td>
+</tr>
+<tr>
+<td>Code lifetime</td>
+<td><strong>10 minutes</strong></td>
+</tr>
+<tr>
+<td>Resend cooldown</td>
+<td><strong>60 seconds</strong> between requests</td>
+</tr>
+<tr>
+<td>Verification attempts</td>
+<td><strong>5</strong> per hour, then you must request a new code</td>
+</tr>
+<tr>
+<td>A code is single-use</td>
+<td>It is consumed the moment it verifies successfully</td>
+</tr>
+</tbody></table>
+<p>If a code stops working, wait out the 10 minutes and request a new one rather than retrying the same digits — repeated wrong entries exhaust your 5 attempts.</p>
+<hr>
+<h2 id="16-demo-accounts-evaluation-and-training-only">1.6 Demo Accounts (evaluation and training only)</h2>
+<blockquote>
+<p><strong>These accounts exist only in a freshly seeded demo database.</strong> They are listed here so reviewers and trainers can log in as each persona. In a live agency instance they do not exist, and you should never leave a demo account enabled.</p>
+</blockquote>
+<h3 id="accounts-created-by-the-database-seeder">Accounts created by the database seeder</h3>
+<p>The seeder creates these eight users. <strong>All of them use the password <code>password</code>.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Role</th>
+<th>Branch</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Vikram Malhotra</td>
+<td><code>vikram@example.in</code></td>
+<td>Super Admin</td>
+<td>HQ Mumbai</td>
+<td>Active</td>
+<td>Full access</td>
+</tr>
+<tr>
+<td>Neha Sharma</td>
+<td><code>neha@example.in</code></td>
+<td>Admin</td>
+<td>Mumbai</td>
+<td>Active</td>
+<td>All but two system permissions</td>
+</tr>
+<tr>
+<td>Amit Verma</td>
+<td><code>amit.v@example.in</code></td>
+<td>Sales Executive</td>
+<td>Mumbai</td>
+<td>Active</td>
+<td>Scoped to own leads</td>
+</tr>
+<tr>
+<td>Sneha Kapoor</td>
+<td><code>sneha.k@example.in</code></td>
+<td>Sales Executive</td>
+<td>Bangalore</td>
+<td>Active</td>
+<td>Scoped to own leads</td>
+</tr>
+<tr>
+<td>Rajesh Gupta</td>
+<td><code>rajesh.g@example.in</code></td>
+<td>Senior Agent</td>
+<td>Mumbai</td>
+<td>Active</td>
+<td>Sales Executive + pipeline</td>
+</tr>
+<tr>
+<td>Pooja Iyer</td>
+<td><code>pooja.i@example.in</code></td>
+<td>Sales Executive</td>
+<td>Gurugram</td>
+<td>Active</td>
+<td>Scoped to own leads</td>
+</tr>
+<tr>
+<td>Rahul Mehta</td>
+<td><code>rahul.m@example.in</code></td>
+<td>Marketing User</td>
+<td>HQ Mumbai</td>
+<td>Active</td>
+<td>Campaigns, CMS, media</td>
+</tr>
+<tr>
+<td>Priti Shah</td>
+<td><code>priti.s@example.in</code></td>
+<td>Accountant</td>
+<td>HQ Mumbai</td>
+<td><strong>Inactive</strong></td>
+<td>Deliberately inactive — cannot sign in. This is a useful thing to demonstrate</td>
+</tr>
+</tbody></table>
+<h3 id="accounts-hard-coded-on-the-login-screen">Accounts hard-coded on the login screen</h3>
+<p>The login page also shows clickable &quot;demo account&quot; chips for Super Admin, Admin, Sales Executive, Marketing User and Accountant. <strong>These use a different set of credentials than the seeder:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Role chip</th>
+<th>Email on the login screen</th>
+<th>Password</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Super Admin</td>
+<td><code>tejas@qodeigence.com</code></td>
+<td><code>12345678</code></td>
+</tr>
+<tr>
+<td>Admin</td>
+<td><code>neha@example.com</code></td>
+<td><code>password</code></td>
+</tr>
+<tr>
+<td>Sales Executive</td>
+<td><code>amit.v@example.com</code></td>
+<td><code>password</code></td>
+</tr>
+<tr>
+<td>Marketing User</td>
+<td><code>rahul.m@example.com</code></td>
+<td><code>password</code></td>
+</tr>
+<tr>
+<td>Accountant</td>
+<td><code>priti.s@example.in</code></td>
+<td><code>password</code></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Known discrepancy — please read before a demo.</strong> The login-screen chips use the <code>@example.com</code> domain while the seeder creates <code>@example.in</code> addresses. The two sets do not line up:</p>
+<ul>
+<li>The <strong>seeder</strong> addresses are guaranteed to exist after <code>php artisan db:seed</code>.</li>
+<li>The <strong>login-screen</strong> addresses may or may not exist depending on how the database was populated. If a chip does not work, use the seeder table above instead.</li>
+</ul>
+<p>Also note the Accountant chip points at <code>priti.s@example.in</code>, which the seeder deliberately creates as <strong>Inactive</strong> — that chip will be refused at sign-in. This is expected behaviour, not a bug.</p>
+</blockquote>
+<p><strong>Best practice for a live deployment:</strong> delete or deactivate the demo accounts, and set a real password for every remaining account.</p>
+<hr>
+<h2 id="17-conventions-you-will-meet-every-day">1.7 Conventions You Will Meet Every Day</h2>
+<p><strong>Money.</strong> Amounts are stored as whole rupees and shown in Indian notation:</p>
+<table>
+<thead>
+<tr>
+<th>Stored</th>
+<th>Displayed</th>
+<th>Read as</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>18,500,000</code></td>
+<td><strong>₹1.85 Cr</strong></td>
+<td>one crore eighty-five lakh</td>
+</tr>
+<tr>
+<td><code>750,000</code></td>
+<td><strong>₹7.50 L</strong></td>
+<td>seven and a half lakh</td>
+</tr>
+<tr>
+<td><code>45,000</code></td>
+<td><strong>₹45,000</strong></td>
+<td>forty-five thousand</td>
+</tr>
+</tbody></table>
+<p>Check the unit before you quote a number. Reports often switch between &quot;in L&quot; and &quot;in Cr&quot; — the column heading tells you which.</p>
+<p><strong>Dates.</strong> Displayed as <code>21 Oct 2026</code> (day, month, year). Follow-up dates carry a time as well, e.g. <code>21 Oct 2026, 10:00 AM</code>.</p>
+<p><strong>Record IDs.</strong> Every record has a short ID (<code>L-006</code>, <code>DL-012</code>, <code>TSK-005</code>, <code>SV-003</code>, <code>B-001</code>, <code>PAY-001</code>, <code>CAM-001</code>, <code>C-001</code>, <code>PROP-001</code>). Use these in emails, chats and reports — they are unambiguous.</p>
+<p><strong>Status dropdowns.</strong> Use the values offered in the dropdown. The complete vocabulary for every module is in <a href="manual-08-reference.html"><code>08-reference.md</code></a>.</p>
+<hr>
+<p><strong>Next:</strong> <a href="manual-02-roles-and-access.html"><code>02-roles-and-access.md</code></a> — what your role can and cannot do, and how row-level scoping works.</p>
+
+<div class="pager"><a href="manual-README.html">← Index — start here</a><a href="manual-02-roles-and-access.html">02. Roles And Access →</a></div>
+<div class="site-footer">QREX documentation · generated from the Markdown sources in <code>docs/</code> · build with <code>npm run docs:html</code></div>
+</main>
+</div>
+
+<script>
+function filterDocs(q){
+  q=(q||'').trim().toLowerCase();
+  document.querySelectorAll('#doc-nav .nav-group').forEach(function(g){
+    var visible=0;
+    g.querySelectorAll('a').forEach(function(a){
+      var hit=!q||a.getAttribute('data-title').indexOf(q)>-1;
+      a.classList.toggle('nav-hidden',!hit);
+      if(hit)visible++;
+    });
+    g.classList.toggle('nav-hidden',visible===0);
+    if(q)g.open=true;
+  });
+}
+document.querySelectorAll('.table-wrap').forEach(function(wrap){
+  var input=wrap.querySelector('.table-filter');
+  var table=wrap.querySelector('table');
+  var count=wrap.querySelector('.table-count');
+  if(!input||!table)return;
+  input.addEventListener('input',function(){
+    var q=input.value.trim().toLowerCase();
+    var shown=0,total=0;
+    table.querySelectorAll('tbody tr').forEach(function(row){
+      total++;
+      var hit=!q||row.textContent.toLowerCase().indexOf(q)>-1;
+      row.style.display=hit?'':'none';
+      if(hit)shown++;
+    });
+    if(count)count.textContent=q?shown+' of '+total+' rows':' '+total+' rows';
+  });
+});
+</script>
+</body>
+</html>

@@ -40,10 +40,12 @@ class CMSController extends Controller
         $featuredIds = json_decode(Setting::allAsArray()['featured_properties'] ?? 'null', true);
 
         return Inertia::render('admin/CMS', [
-            'featuredProperties' => $featuredIds
-                ? Property::whereIn('id', $featuredIds)->get()
-                : Property::where('featured', true)->get(),
-            'allProperties' => Property::take(10)->get(['id', 'title', 'image', 'price_label', 'status']),
+            'featuredProperties' => ($featuredIds
+                ? Property::whereIn('id', $featuredIds)->with('images')->get()
+                : Property::where('featured', true)->with('images')->get())
+                ->map(fn ($p) => $p->setAttribute('image', $p->coverOrImage())),
+            'allProperties' => Property::with('images')->take(10)->get(['id', 'title', 'image', 'price_label', 'status'])
+                ->map(fn ($p) => $p->setAttribute('image', $p->coverOrImage())),
             'agents' => User::whereIn('role', ['Sales Executive', 'Senior Agent'])->get(['id', 'name', 'role', 'branch']),
             'sections' => $sections,
             'featuredIds' => $featuredIds ?? Property::where('featured', true)->pluck('id')->all(),

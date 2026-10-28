@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4. Sales Modules · QREX</title>
+<style>
+:root{--bg:#f7f8fa;--panel:#fff;--ink:#1f2733;--muted:#5b6472;--line:#e3e7ee;--accent:#0f5c4e;--accent2:#b5893b;--code:#f2f4f7;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65;font-size:16px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.layout{display:flex;min-height:100vh}
+aside{width:280px;flex:0 0 280px;background:var(--panel);border-right:1px solid var(--line);padding:24px 20px;position:sticky;top:0;height:100vh;overflow-y:auto}
+aside h2{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:18px 0 8px}
+aside a{display:block;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.9rem}
+aside a:hover{background:var(--bg);text-decoration:none}
+aside a.active{background:var(--accent);color:#fff}
+aside .brand{font-weight:700;font-size:1.05rem;color:var(--accent);margin-bottom:4px}
+main{flex:1;min-width:0;padding:40px 56px;max-width:960px;margin:0 auto}
+main h1{font-size:2rem;line-height:1.25;margin:0 0 .5em;padding-bottom:.35em;border-bottom:2px solid var(--line)}
+main h2{font-size:1.45rem;margin:2em 0 .6em;padding-bottom:.25em;border-bottom:1px solid var(--line)}
+main h3{font-size:1.15rem;margin:1.6em 0 .5em}
+main h4{font-size:1rem;margin:1.3em 0 .4em}
+main p,main li{color:#2b3542}
+table{border-collapse:collapse;width:100%;margin:1.1em 0;font-size:.92rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+th{background:#eef1f5;font-weight:600}
+tr:nth-child(even) td{background:#fbfcfd}
+code{background:var(--code);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em}
+pre{background:#1e2530;color:#e6e9ef;padding:16px 18px;border-radius:8px;overflow-x:auto}
+pre code{background:none;color:inherit;padding:0}
+blockquote{margin:1.2em 0;padding:.6em 1.1em;background:#fff8e8;border-left:4px solid var(--accent2);color:#5b4a22;border-radius:0 6px 6px 0}
+blockquote p{margin:.4em 0}
+hr{border:none;border-top:1px solid var(--line);margin:2.2em 0}
+img{max-width:100%}
+.crumbs{font-size:.82rem;color:var(--muted);margin-bottom:18px}
+.pager{display:flex;justify-content:space-between;gap:16px;margin-top:48px;padding-top:20px;border-top:1px solid var(--line)}
+.pager a{font-size:.9rem}
+.site-footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:24px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.card h3{margin:.2em 0 .4em;font-size:1.02rem}
+.card p{margin:.2em 0;font-size:.88rem;color:var(--muted)}
+/* --- Figures: diagrams and screen wireframes --- */
+.figure{margin:1.8em 0}
+.figure>svg{display:block;max-width:100%;height:auto;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px}
+.figure.diagram{overflow-x:auto}
+.figure.diagram.wide>svg{max-width:none;margin:0}
+.figure.wireframe>svg{border-color:#dbe2ea}
+figcaption{margin-top:.7em;font-size:.82rem;color:var(--muted);text-align:center;line-height:1.45}
+.art-missing{border-left:3px solid #c0392b}
+/* --- Long reference tables --- */
+.table-wrap{margin:1.1em 0}
+.table-filter{width:100%;max-width:300px;padding:7px 11px;margin-bottom:.55em;border:1px solid var(--line);border-radius:8px;font-size:.86rem;background:#fff;color:var(--ink);font-family:inherit}
+.table-filter:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.table-count{font-size:.78rem;color:var(--muted);margin-left:8px;vertical-align:middle}
+/* --- Documentation menu (sidebar) --- */
+.side-search{width:100%;padding:8px 10px;margin:10px 0 4px;border:1px solid var(--line);border-radius:8px;font-size:.85rem;background:var(--bg);color:var(--ink)}
+.side-search:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.home-link{display:block;font-size:.8rem;font-weight:600;color:var(--accent);margin-bottom:14px;padding:4px 0}
+.nav-group{border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:6px}
+.nav-group>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:10px 4px 6px;font-weight:700;user-select:none}
+.nav-group>summary::-webkit-details-marker{display:none}
+.nav-group>summary .chev{transition:transform .15s ease;font-size:.7rem;color:var(--muted)}
+.nav-group[open]>summary .chev{transform:rotate(90deg)}
+.nav-group .count{color:var(--muted);font-weight:400;margin-left:auto;font-size:.68rem}
+.nav-group a{display:flex;gap:8px;align-items:baseline;padding:6px 8px;border-radius:6px;color:var(--ink);font-size:.88rem;line-height:1.35}
+.nav-group a:hover{background:var(--bg);text-decoration:none}
+.nav-group a.active{background:var(--accent);color:#fff}
+.nav-group a.active .num{color:#d9ece7}
+.nav-group a .num{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.75rem;min-width:1.4em}
+.nav-hidden{display:none!important}
+.menu-toggle{display:none;position:fixed;top:12px;left:12px;z-index:50;width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:1.2rem;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.menu-backdrop{display:none}
+@media(max-width:900px){
+  .layout{flex-direction:column}
+  .menu-toggle{display:flex}
+  aside{position:fixed;top:0;left:0;z-index:60;width:290px;height:100vh;overflow-y:auto;border-right:1px solid var(--line);transform:translateX(-105%);transition:transform .2s ease;box-shadow:0 0 24px rgba(0,0,0,.12)}
+  body.menu-open aside{transform:translateX(0)}
+  body.menu-open .menu-backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:55}
+  main{padding:64px 20px 24px}
+}
+@media print{
+  aside,.crumbs,.pager,.menu-toggle,.menu-backdrop{display:none}
+  body{background:#fff;font-size:11pt}
+  main{max-width:none;padding:0}
+  a{color:var(--ink)}
+  pre{background:#f2f4f7;color:#1f2733;border:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<button class="menu-toggle" aria-label="Open documentation menu" onclick="document.body.classList.toggle('menu-open')">☰</button>
+<div class="menu-backdrop" onclick="document.body.classList.remove('menu-open')"></div>
+<aside>
+  <a class="home-link" href="index.html">⌂ All documentation</a>
+  <div class="brand">QREX Documentation</div>
+  <div style="font-size:.78rem;color:var(--muted)">Qodeigence Infocircle Pvt. Ltd.</div>
+  <input class="side-search" type="search" placeholder="Search documents…" aria-label="Search documents" oninput="filterDocs(this.value)">
+  <nav id="doc-nav">
+    <details class="nav-group" open>
+<summary><span>User Manual</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="manual-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="overview and getting started" href="manual-01-overview-and-getting-started.html"><span class="num">01</span><span>Overview And Getting Started</span></a><a class="" data-title="roles and access" href="manual-02-roles-and-access.html"><span class="num">02</span><span>Roles And Access</span></a><a class="" data-title="sales lifecycle" href="manual-03-sales-lifecycle.html"><span class="num">03</span><span>Sales Lifecycle</span></a><a class="active" data-title="modules sales" href="manual-04-modules-sales.html"><span class="num">04</span><span>Modules Sales</span></a><a class="" data-title="modules operations" href="manual-05-modules-operations.html"><span class="num">05</span><span>Modules Operations</span></a><a class="" data-title="modules marketing and admin" href="manual-06-modules-marketing-and-admin.html"><span class="num">06</span><span>Modules Marketing And Admin</span></a><a class="" data-title="public website" href="manual-07-public-website.html"><span class="num">07</span><span>Public Website</span></a><a class="" data-title="reference" href="manual-08-reference.html"><span class="num">08</span><span>Reference</span></a><a class="" data-title="troubleshooting and faq" href="manual-09-troubleshooting-and-faq.html"><span class="num">09</span><span>Troubleshooting And Faq</span></a></details><details class="nav-group">
+<summary><span>How QREX Works</span><span class="chev">▶</span></summary>
+<a class="" data-title="index — start here" href="explain-README.html"><span class="num"></span><span>Index — start here</span></a><a class="" data-title="system at a glance" href="explain-01-system-at-a-glance.html"><span class="num">01</span><span>System At A Glance</span></a><a class="" data-title="sales lifecycle" href="explain-02-sales-lifecycle.html"><span class="num">02</span><span>Sales Lifecycle</span></a><a class="" data-title="data model" href="explain-03-data-model.html"><span class="num">03</span><span>Data Model</span></a><a class="" data-title="roles and permissions" href="explain-04-roles-and-permissions.html"><span class="num">04</span><span>Roles And Permissions</span></a><a class="" data-title="screen designs" href="explain-05-screen-designs.html"><span class="num">05</span><span>Screen Designs</span></a><a class="" data-title="operations and automation" href="explain-06-operations-and-automation.html"><span class="num">06</span><span>Operations And Automation</span></a></details><details class="nav-group">
+<summary><span>Technical Documentation</span><span class="chev">▶</span></summary>
+<a class="" data-title="project scope" href="tech-01-project-scope.html"><span class="num">01</span><span>Project Scope</span></a><a class="" data-title="architecture" href="tech-02-architecture.html"><span class="num">02</span><span>Architecture</span></a><a class="" data-title="operations modules" href="tech-03-operations-modules.html"><span class="num">03</span><span>Operations Modules</span></a><a class="" data-title="roles permissions" href="tech-04-roles-permissions.html"><span class="num">04</span><span>Roles Permissions</span></a><a class="" data-title="database schema" href="tech-05-database-schema.html"><span class="num">05</span><span>Database Schema</span></a><a class="" data-title="operations" href="tech-06-operations.html"><span class="num">06</span><span>Operations</span></a><a class="" data-title="security hardening" href="tech-07-security-hardening.html"><span class="num">07</span><span>Security Hardening</span></a><a class="" data-title="glossary" href="tech-08-glossary.html"><span class="num">08</span><span>Glossary</span></a><a class="" data-title="project proposal" href="tech-09-project-proposal.html"><span class="num">09</span><span>Project Proposal</span></a><a class="" data-title="budget pricing mumbai" href="tech-10-budget-pricing-mumbai.html"><span class="num">10</span><span>Budget Pricing Mumbai</span></a></details>
+  </nav>
+  <details class="nav-group"><summary><span>Downloads</span><span class="chev">▶</span></summary>
+    <a href="../word/QREX-User-Manual.docx"><span class="num"></span><span>User Manual (.docx)</span></a>
+    <a href="../word/QREX-User-Manual.doc"><span class="num"></span><span>User Manual (.doc)</span></a>
+    <a href="../word/QREX-How-It-Works.docx"><span class="num"></span><span>How QREX Works (.docx)</span></a>
+    <a href="../word/QREX-How-It-Works.doc"><span class="num"></span><span>How QREX Works (.doc)</span></a>
+    <a href="../word/QREX-Technical-Documentation.docx"><span class="num"></span><span>Technical Docs (.docx)</span></a>
+    <a href="../word/QREX-Technical-Documentation.doc"><span class="num"></span><span>Technical Docs (.doc)</span></a>
+  </details>
+</aside>
+<main>
+<div class="crumbs">QREX User Manual</div>
+<h1 id="4-sales-modules">4. Sales Modules</h1>
+<p>Covers <strong>Dashboard</strong>, <strong>Properties</strong>, <strong>Amenities</strong>, <strong>Leads</strong>, <strong>Customers</strong> and <strong>Site Visits</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Who can see it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Dashboard</td>
+<td>Everyone with a login</td>
+</tr>
+<tr>
+<td>Properties</td>
+<td>Super Admin, Admin, Sales Executive, Senior Agent</td>
+</tr>
+<tr>
+<td>Amenities</td>
+<td>Super Admin, Admin</td>
+</tr>
+<tr>
+<td>Leads</td>
+<td>Super Admin, Admin, Sales Executive, Senior Agent, Marketing User (view + create)</td>
+</tr>
+<tr>
+<td>Customers</td>
+<td>Super Admin, Admin, Sales Executive, Senior Agent, Accountant (view)</td>
+</tr>
+<tr>
+<td>Site Visits</td>
+<td>Super Admin, Admin, Sales Executive, Senior Agent</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="41-dashboard">4.1 Dashboard</h2>
+<p><strong>URL:</strong> <code>/admin/dashboard</code> · <strong>Permission:</strong> <code>dashboard.view</code></p>
+<h3 id="layout">Layout</h3>
+<p><strong>Six KPI cards</strong> (see <a href="manual-01-overview-and-getting-started.html#143-the-dashboard"><code>01-overview-and-getting-started.md</code></a> for what each measures).</p>
+<p><strong>Range switcher</strong> — Today · 7 Days · 30 Days · 90 Days · YTD · All. Every figure and chart on the page follows the selected range. It applies to the whole page, not just the charts.</p>
+<p><strong>Five chart groups</strong></p>
+<table>
+<thead>
+<tr>
+<th>Chart</th>
+<th>What it answers</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Revenue by month</td>
+<td>Are we trending up?</td>
+</tr>
+<tr>
+<td>Lead sources</td>
+<td>Where is demand coming from?</td>
+</tr>
+<tr>
+<td>Pipeline funnel</td>
+<td>Where are deals getting stuck?</td>
+</tr>
+<tr>
+<td>Agent performance</td>
+<td>How is each agent doing?</td>
+</tr>
+<tr>
+<td>Monthly bookings</td>
+<td>How many bookings are we closing per month?</td>
+</tr>
+</tbody></table>
+<p><strong>Six lists</strong></p>
+<table>
+<thead>
+<tr>
+<th>Panel</th>
+<th>Use it for</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Recent leads</td>
+<td>Picking up where you left off</td>
+</tr>
+<tr>
+<td>Upcoming visits</td>
+<td>Today&#39;s and tomorrow&#39;s site visits</td>
+</tr>
+<tr>
+<td>Recent bookings</td>
+<td>Newly booked business</td>
+</tr>
+<tr>
+<td>Recent payments</td>
+<td>Money that just landed</td>
+</tr>
+<tr>
+<td>Follow-ups due</td>
+<td>Your overdue and due-today follow-ups</td>
+</tr>
+<tr>
+<td>Recent activity</td>
+<td>A live feed of what the team has been doing</td>
+</tr>
+</tbody></table>
+<p>Plus <strong>Featured properties</strong>, so you can see at a glance what is being pushed on the public site.</p>
+<h3 id="scoping">Scoping</h3>
+<p>Sales Executives and Senior Agents see figures for their own book of business only. Admins and Super Admins see the whole agency.</p>
+<hr>
+<h2 id="42-properties">4.2 Properties</h2>
+<p><strong>URL:</strong> <code>/admin/properties</code> · <strong>Permissions:</strong> <code>properties.view</code> / <code>.create</code> / <code>.edit</code> / <code>.delete</code></p>
+<p>Properties are the inventory. They feed the public website, the pipeline (a deal points at a property), and the reports.</p>
+<h3 id="421-the-list">4.2.1 The list</h3>
+<p><strong>Filters</strong> (stick in the URL, so a filtered view can be bookmarked or shared):</p>
+<table>
+<thead>
+<tr>
+<th>Filter</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Search</strong></td>
+<td>Matches title, city and type</td>
+</tr>
+<tr>
+<td><strong>Status</strong></td>
+<td>All · Available · Reserved · Under Negotiation · Sold · Draft · Rented · Inactive</td>
+</tr>
+<tr>
+<td><strong>Type</strong></td>
+<td>All · Apartment · Villa · Plot · Commercial · Office · Shop · Warehouse · Farm/Land · Other</td>
+</tr>
+<tr>
+<td><strong>Featured</strong></td>
+<td>All · Featured · Not featured</td>
+</tr>
+</tbody></table>
+<p>The grid shows each property&#39;s <strong>cover image</strong> (the image flagged as cover, otherwise the first image, otherwise a placeholder), its title, city and price label. <strong>Delete</strong> is available where you hold <code>properties.delete</code> and asks for confirmation.</p>
+<h3 id="422-creating-a-property-a-five-step-wizard">4.2.2 Creating a property — a five-step wizard</h3>
+<p><strong>Properties</strong> → <strong>Add Property</strong> (or the <em>Add Property</em> item in the <strong>Quick Add</strong> menu).</p>
+<p>The wizard has five steps. You can jump back and forth freely using the stepper at the top, but you must complete all five before the property is saved.</p>
+<h4 id="step-1-basic-info">Step 1 — Basic Info</h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Title</strong></td>
+<td>The headline. Appears on the public site and in every dropdown. Be specific: <em>&quot;Skyline Heights — 3BHK&quot;</em> beats <em>&quot;Skyline Heights&quot;</em></td>
+</tr>
+<tr>
+<td><strong>Type</strong></td>
+<td>Apartment · Villa · Plot · Commercial · Office · Shop · Warehouse · Farm/Land · Other. <strong>This choice drives step 2 and step 4</strong></td>
+</tr>
+<tr>
+<td><strong>Transaction type</strong></td>
+<td>Buy · Rent · Lease</td>
+</tr>
+<tr>
+<td><strong>Description</strong></td>
+<td>The long copy on the public page. Include the sell points, the locality, the reason to buy</td>
+</tr>
+<tr>
+<td><strong>Status</strong></td>
+<td>Available · Reserved · Under Negotiation · Sold · Draft · Rented · Inactive. Leave it <strong>Available</strong> until the property is really on the market; use <strong>Draft</strong> for a listing you are not publishing yet</td>
+</tr>
+</tbody></table>
+<h4 id="step-2-pricing-specs">Step 2 — Pricing & Specs</h4>
+<p>Which fields appear depends on the <strong>type</strong> chosen in step 1. The catalogue decides what is shown, what is required, and even what the area input is called:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Fields shown</th>
+<th>Area label</th>
+<th>Not shown</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Apartment</strong></td>
+<td>price, area, bedrooms, bathrooms, floors, parking, furnishing, possession date</td>
+<td>Built-up Area (sq.ft)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Villa</strong></td>
+<td>price, area, bedrooms, bathrooms, floors, parking, furnishing, possession date</td>
+<td>Built-up Area (sq.ft)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Plot</strong></td>
+<td>price, area, parking, possession date</td>
+<td><strong>Plot Area (sq.ft)</strong></td>
+<td>bedrooms, bathrooms, floors, furnishing</td>
+</tr>
+<tr>
+<td><strong>Commercial</strong></td>
+<td>price, area, bathrooms, floors, parking, possession date</td>
+<td><strong>Carpet Area (sq.ft)</strong></td>
+<td>bedrooms, furnishing</td>
+</tr>
+<tr>
+<td><strong>Office</strong></td>
+<td>price, area, bathrooms, floors, parking, furnishing, possession date</td>
+<td><strong>Carpet Area (sq.ft)</strong></td>
+<td>bedrooms</td>
+</tr>
+<tr>
+<td><strong>Shop</strong></td>
+<td>price, area, bathrooms, parking, possession date</td>
+<td><strong>Carpet Area (sq.ft)</strong></td>
+<td>bedrooms, floors, furnishing</td>
+</tr>
+<tr>
+<td><strong>Warehouse</strong></td>
+<td>price, area, parking, possession date</td>
+<td><strong>Carpet Area (sq.ft)</strong></td>
+<td>bedrooms, bathrooms, floors, furnishing</td>
+</tr>
+<tr>
+<td><strong>Farm/Land</strong></td>
+<td>price, area, possession date</td>
+<td><strong>Land Area (acres)</strong></td>
+<td>bedrooms, bathrooms, floors, parking, furnishing</td>
+</tr>
+<tr>
+<td><strong>Other</strong></td>
+<td>all of them</td>
+<td><strong>Area (sq.ft)</strong></td>
+<td>—</td>
+</tr>
+</tbody></table>
+<p><strong>Price and area are always required.</strong> The rest depends on the type.</p>
+<blockquote>
+<p>The area unit is a <em>label</em>, not a conversion. If your type is Farm/Land the box says &quot;Land Area (acres)&quot; but the value is stored as entered — so for a 5-acre plot, enter <code>5</code>, not <code>217,800</code>.</p>
+</blockquote>
+<p><strong>Furnishing</strong> values: Unfurnished · Semi-Furnished · Fully Furnished.</p>
+<p><strong>Price</strong> is entered in whole rupees (<code>18500000</code> for ₹1.85 Cr) and displayed short automatically.</p>
+<h4 id="step-3-location">Step 3 — Location</h4>
+<p>Address · City · State · Country · Pincode. <strong>City</strong> matters most — the public site&#39;s filter and the home-page city list are driven by it. The cities the public search offers by default are Mumbai, Bangalore, Pune and Gurugram; other cities still work, they just are not offered in the quick filter.</p>
+<h4 id="step-4-amenities">Step 4 — Amenities</h4>
+<p>A checklist of the amenities that are valid for the chosen property type, plus a free-text box for anything custom.</p>
+<ul>
+<li><strong>Amenities not valid for the type are pruned automatically.</strong> If you switch from Apartment to Plot after ticking &quot;Swimming Pool&quot;, the form tells you it was removed and unsaves it.</li>
+<li><strong>Custom amenities you typed yourself are never pruned</strong> — they stay.</li>
+<li>The list of valid amenities per type is maintained in the <strong>Amenities</strong> module (see §4.3).</li>
+</ul>
+<h4 id="step-5-gallery-website">Step 5 — Gallery & Website</h4>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Photos</strong></td>
+<td>Upload several at once. The first one is the cover by default; you can set another as cover</td>
+</tr>
+<tr>
+<td><strong>Remove photos</strong></td>
+<td>Tick the ones to drop when you save. Existing photos can also be removed individually</td>
+</tr>
+<tr>
+<td><strong>Featured</strong></td>
+<td>Featured properties appear in the featured block on the public home page</td>
+</tr>
+<tr>
+<td><strong>Show on website</strong></td>
+<td>The master switch. <strong>A property with this off is invisible to the public</strong>, even on a direct link</td>
+</tr>
+<tr>
+<td><strong>SEO title</strong></td>
+<td>Overrides the page title in search results. Leave blank to use the property title</td>
+</tr>
+<tr>
+<td><strong>Meta description</strong></td>
+<td>The blurb under the title in search results</td>
+</tr>
+<tr>
+<td><strong>Assigned agent</strong></td>
+<td>The agent shown on the public property page, with their name, phone and email</td>
+</tr>
+</tbody></table>
+<p>Save and you land back on the list with a green <em>&quot;Property created successfully.&quot;</em></p>
+<h3 id="423-the-property-detail-page">4.2.3 The property detail page</h3>
+<p>Gallery · specifications (grouped into cards, following the type&#39;s rules) · amenities · the <strong>leads</strong> interested in this property · the <strong>share link</strong> for the public page · and the <strong>Edit</strong> / <strong>Delete</strong> actions.</p>
+<h3 id="424-property-status-what-each-one-means">4.2.4 Property status — what each one means</h3>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+<th>Effect on the public site</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Available</strong></td>
+<td>On the market</td>
+<td>Listed</td>
+</tr>
+<tr>
+<td><strong>Reserved</strong></td>
+<td>Someone has an option on it</td>
+<td>Still listed, but not really available</td>
+</tr>
+<tr>
+<td><strong>Under Negotiation</strong></td>
+<td>Deals in progress</td>
+<td>Still listed</td>
+</tr>
+<tr>
+<td><strong>Sold</strong></td>
+<td>Done</td>
+<td>Usually still listed as a sold listing</td>
+</tr>
+<tr>
+<td><strong>Rented</strong></td>
+<td>Let, not sold</td>
+<td>Listed</td>
+</tr>
+<tr>
+<td><strong>Draft</strong></td>
+<td>Not ready</td>
+<td>Not published</td>
+</tr>
+<tr>
+<td><strong>Inactive</strong></td>
+<td>Withdrawn</td>
+<td>Not published</td>
+</tr>
+</tbody></table>
+<p><strong>Visibility is controlled separately</strong> by the <em>Show on website</em> toggle in step 5. A property can be <code>Available</code> but not visible, and a property can be <code>Sold</code> and still visible as a sold listing.</p>
+<hr>
+<h2 id="43-amenities">4.3 Amenities</h2>
+<p><strong>URL:</strong> <code>/admin/amenities</code> · <strong>Permissions:</strong> <code>amenities.view</code> / <code>.create</code> / <code>.edit</code> / <code>.delete</code></p>
+<p>Amenities are the <strong>catalogue</strong> of features that can be attached to a property. The catalogue is <strong>per property type</strong> — &quot;Swimming Pool&quot; is valid for an Apartment and a Villa, but not for a Plot or a Warehouse.</p>
+<h3 id="using-it">Using it</h3>
+<ol>
+<li><strong>Pick a property type</strong> at the top of the page. The list below switches to that type&#39;s amenities.</li>
+<li><strong>Add one</strong> — name, optional icon, active by default.</li>
+<li><strong>Bulk add</strong> — paste a list of names separated by <strong>newlines or commas</strong>, and they are created in one go. This is the fast way to set up a new property type.</li>
+<li><strong>Edit</strong> any amenity — rename it, change its icon, set its <strong>sort order</strong> (controls the order it appears in the property form&#39;s checklist), or toggle it <strong>active/inactive</strong>.</li>
+<li><strong>Delete</strong> one if it is no longer offered.</li>
+</ol>
+<blockquote>
+<p><strong>Active vs inactive.</strong> An inactive amenity is not offered in the property form, but it stays on properties that already have it — so existing listings are not broken. Deactivate rather than delete if you might need it again.</p>
+</blockquote>
+<blockquote>
+<p><strong>Governance.</strong> Only Super Admins and Admins can change the amenity catalogue. If a Sales Executive tells you an amenity is missing from the checklist, it is an Admin task.</p>
+</blockquote>
+<hr>
+<h2 id="44-leads">4.4 Leads</h2>
+<p><strong>URL:</strong> <code>/admin/leads</code> · <strong>Permissions:</strong> <code>leads.view</code> / <code>.create</code> / <code>.edit</code> / <code>.delete</code></p>
+<p>A lead is a person who has shown interest. This is the busiest module in the system.</p>
+<h3 id="441-the-list">4.4.1 The list</h3>
+<p><strong>Filters:</strong> Search (name, phone, email) · Status · Source · Campaign. 10 records per page, newest first.</p>
+<p><strong>Columns</strong> typically show the lead&#39;s ID, name, phone, source, status, budget, assigned agent and next follow-up.</p>
+<h3 id="442-creating-a-lead-by-hand">4.4.2 Creating a lead by hand</h3>
+<p><strong>Leads</strong> → <strong>New lead</strong> (or <em>Add Lead</em> in the <strong>Quick Add</strong> menu):</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Name</strong></td>
+<td>Required</td>
+</tr>
+<tr>
+<td><strong>Phone</strong></td>
+<td>Required. <strong>Treated as the unique key</strong> — a phone already in the system is flagged as a duplicate on import</td>
+</tr>
+<tr>
+<td><strong>Email</strong></td>
+<td>Optional</td>
+</tr>
+<tr>
+<td><strong>Source</strong></td>
+<td>Where they came from. <strong>Set this correctly at creation</strong> — it drives the lead-source and campaign reports</td>
+</tr>
+<tr>
+<td><strong>Status</strong></td>
+<td>Normally <strong>New</strong></td>
+</tr>
+<tr>
+<td><strong>Budget</strong></td>
+<td>Free text, e.g. &quot;1.5 Cr&quot; or &quot;50-60 L&quot;</td>
+</tr>
+<tr>
+<td><strong>Preferred location</strong></td>
+<td>Free text</td>
+</tr>
+<tr>
+<td><strong>Score</strong></td>
+<td>0–100. A manual priority indicator — there is <strong>no automatic scoring engine</strong></td>
+</tr>
+<tr>
+<td><strong>Assigned agent</strong></td>
+<td>Who owns it</td>
+</tr>
+<tr>
+<td><strong>Interested property</strong></td>
+<td>Which listing they asked about</td>
+</tr>
+<tr>
+<td><strong>Next follow-up</strong></td>
+<td>Creates the follow-up task automatically</td>
+</tr>
+</tbody></table>
+<p><strong>Sources:</strong> Website · Facebook · Instagram · Google · Referral · Walk-in · Phone · WhatsApp · Campaign · Other</p>
+<p><strong>Statuses:</strong> New · Contacted · Qualified · Site Visit Scheduled · Site Visit Completed · Negotiation · Converted · Lost</p>
+<h3 id="443-the-lead-detail-page">4.4.3 The lead detail page</h3>
+<p>Four things live here:</p>
+<ol>
+<li><strong>The activity timeline</strong> — every call, message, meeting, status change, handover and conversion, oldest first. It is the mechanism described in <a href="manual-03-sales-lifecycle.html#331-the-activity-timeline"><code>03-sales-lifecycle.md</code></a>.</li>
+<li><strong>Log an activity</strong> — the form described in <a href="manual-03-sales-lifecycle.html#33-step-3-make-contact-and-log-it"><code>03-sales-lifecycle.md</code></a>.</li>
+<li><strong>Edit the lead</strong> — name, phone, email, source, status, budget, preferred location, assigned agent, owner, campaign, next follow-up, score.</li>
+<li><strong>Actions</strong> — change status, hand over, convert to deal.</li>
+</ol>
+<h3 id="444-changing-the-status">4.4.4 Changing the status</h3>
+<p>Use the status control on the lead. The rules:</p>
+<ul>
+<li>Valid values are enforced — an invalid status is rejected with a validation error.</li>
+<li>Every change is logged as a <em>Status Change</em> activity.</li>
+<li>Setting <strong>Site Visit Scheduled</strong> auto-creates a Site Visit and notifies the agent (once per lead).</li>
+<li>Setting <strong>Converted</strong> or <strong>Lost</strong> is a terminal state — the lead can still be edited, but it can no longer be converted to a deal.</li>
+</ul>
+<h3 id="445-handing-a-lead-over">4.4.5 Handing a lead over</h3>
+<p><strong>Reassign</strong> on the lead detail page:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>New agent</strong></td>
+<td>Who is taking it over</td>
+</tr>
+<tr>
+<td><strong>Reason</strong></td>
+<td>Workload distribution · Specialist required · Out of office · Regional availability · Other</td>
+</tr>
+<tr>
+<td><strong>Notes</strong></td>
+<td>Free text for context</td>
+</tr>
+</tbody></table>
+<p>What happens:</p>
+<ol>
+<li><strong>Both</strong> the <em>assigned agent</em> and the <em>owner</em> are moved to the new agent, so the lead appears in their list immediately.</li>
+<li>A <strong>handover record</strong> is created capturing who had it, who has it now, why and any notes.</li>
+<li>A <em>Reassignment</em> activity is logged on the timeline.</li>
+</ol>
+<blockquote>
+<p>The handover record is only written <strong>if the agent actually changed</strong>. Re-saving the same agent does not create noise.</p>
+</blockquote>
+<h3 id="446-bulk-import-leads-from-csv">4.4.6 Bulk import leads from CSV</h3>
+<p>For a campaign that generated hundreds of enquiries, importing is far faster than typing.</p>
+<p><strong>Leads</strong> → <strong>Import</strong> → download the template first (<strong>Import template</strong> button) so your columns line up.</p>
+<h4 id="the-template">The template</h4>
+<p>Header row and one example row:</p>
+<pre><code>name,phone,email,source,status,budget,preferred_location,requirements,score,next_followup
+John Doe,+919876543210,john@example.com,Website,New,1.5 Cr,Andheri West,2/3 BHK ready to move,50,
+</code></pre>
+<h4 id="rules">Rules</h4>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>File type</td>
+<td><code>.csv</code> or <code>.txt</code></td>
+</tr>
+<tr>
+<td>Maximum size</td>
+<td><strong>2 MB</strong></td>
+</tr>
+<tr>
+<td>Header row</td>
+<td>Optional. If the first row is not a header, the columns are read <strong>positionally</strong> in the order above</td>
+</tr>
+<tr>
+<td>Column names</td>
+<td>Case, spaces and underscores are ignored. Aliases are accepted (see below)</td>
+</tr>
+<tr>
+<td>Required per row</td>
+<td><strong>Name</strong> and <strong>Phone</strong></td>
+</tr>
+<tr>
+<td>Score</td>
+<td>Clamped to <strong>0–100</strong></td>
+</tr>
+<tr>
+<td>Unknown source</td>
+<td>Falls back to <strong>Campaign</strong></td>
+</tr>
+<tr>
+<td>Unknown status</td>
+<td>Falls back to <strong>New</strong></td>
+</tr>
+<tr>
+<td>Property / agent reference</td>
+<td>Matched by <strong>ID</strong> or by <strong>fuzzy name</strong> (a partial property title or agent name)</td>
+</tr>
+<tr>
+<td>Everything happens in one transaction</td>
+<td>If the file fails structurally, the whole import is rolled back and nothing is imported</td>
+</tr>
+</tbody></table>
+<h4 id="accepted-column-aliases">Accepted column aliases</h4>
+<div class="table-wrap">
+<input class="table-filter" type="search" placeholder="Filter rows…" aria-label="Filter table rows">
+<span class="table-count"></span>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Also accepted as</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>name</td>
+<td>full_name, lead_name</td>
+</tr>
+<tr>
+<td>phone</td>
+<td>mobile, contact_number, phone_number</td>
+</tr>
+<tr>
+<td>email</td>
+<td>email_address, mail</td>
+</tr>
+<tr>
+<td>source</td>
+<td>lead_source</td>
+</tr>
+<tr>
+<td>status</td>
+<td>lead_status</td>
+</tr>
+<tr>
+<td>budget</td>
+<td>budget_range</td>
+</tr>
+<tr>
+<td>preferred_location</td>
+<td>location, city</td>
+</tr>
+<tr>
+<td>interested_property</td>
+<td>property</td>
+</tr>
+<tr>
+<td>assigned_agent</td>
+<td>agent, agent_name</td>
+</tr>
+<tr>
+<td>score</td>
+<td>lead_score</td>
+</tr>
+<tr>
+<td>requirements</td>
+<td>notes, requirement</td>
+</tr>
+<tr>
+<td>next_followup</td>
+<td>followup, next_follow_up</td>
+</tr>
+</tbody></table>
+</div>
+
+<h4 id="rows-that-get-skipped">Rows that get skipped</h4>
+<table>
+<thead>
+<tr>
+<th>Reason</th>
+<th>Message</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>No name or no phone</td>
+<td><em>&quot;Row N: name and phone are required.&quot;</em></td>
+</tr>
+<tr>
+<td>Same phone twice in the file</td>
+<td><em>&quot;Row N: duplicate lead within file (Name / Phone).&quot;</em></td>
+</tr>
+<tr>
+<td>Phone already exists in the system</td>
+<td><em>&quot;Row N: duplicate lead (Name / Phone).&quot;</em></td>
+</tr>
+</tbody></table>
+<p>Skipped rows do not stop the rest of the file. The result message reads <em>&quot;N lead(s) imported, M row(s) skipped&quot;</em>, with the per-row reasons listed.</p>
+<blockquote>
+<p><strong>Watch the flash colour.</strong> A clean import shows a green toast. An import with skipped rows uses the <em>warning</em> channel, which the UI renders less prominently. <strong>Always read the per-row errors</strong> — a partially failed import still imports the good rows, so a count alone will not tell you that three leads were dropped.</p>
+</blockquote>
+<p>Each imported lead gets a <em>Lead Imported</em> activity, and a follow-up task if the row supplied a next-follow-up date.</p>
+<h3 id="447-converting-to-a-deal">4.4.7 Converting to a deal</h3>
+<p>Covered in full in <a href="manual-03-sales-lifecycle.html#36-step-6-convert-the-lead-into-a-deal"><code>03-sales-lifecycle.md</code></a>. The <strong>Convert to Deal</strong> button appears only if you hold <code>sales.create</code> and the lead is neither <code>Converted</code> nor <code>Lost</code>.</p>
+<hr>
+<h2 id="45-customers">4.5 Customers</h2>
+<p><strong>URL:</strong> <code>/admin/customers</code> · <strong>Permissions:</strong> <code>customers.view</code> / <code>.create</code> / <code>.edit</code></p>
+<p>A <strong>customer</strong> is a buyer or seller in their own right — as opposed to a lead, who is a lead <em>in a conversation</em>. A customer record is long-lived; a lead may become one.</p>
+<h3 id="creating-a-customer">Creating a customer</h3>
+<p><strong>Customers</strong> → <strong>New customer</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Name</strong></td>
+<td>Required</td>
+</tr>
+<tr>
+<td><strong>Phone / Email</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Type</strong></td>
+<td>Residential Buyer · Commercial Buyer · Investor · Renter · Seller</td>
+</tr>
+<tr>
+<td><strong>Status</strong></td>
+<td>Prospect · Active · Buyer · Investor · Past Customer</td>
+</tr>
+<tr>
+<td><strong>City</strong></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>The list can be filtered by <strong>search</strong> and by <strong>status</strong>.</p>
+<h3 id="the-customer-detail-page">The customer detail page</h3>
+<p>Edit name, phone, email, type, status, city, <strong>requirements</strong> (free text — what they are looking for) and the <strong>linked agent</strong>.</p>
+<blockquote>
+<p><strong>Buyers and Investors appear in both dropdowns.</strong> <code>Buyer</code> and <code>Investor</code> are valid <em>types</em> and also valid <em>statuses</em>. Pick deliberately: type describes <strong>what they are</strong>, status describes <strong>where they are</strong> in the relationship.</p>
+</blockquote>
+<h3 id="lead-vs-customer-which-do-i-use">Lead vs customer — which do I use?</h3>
+<table>
+<thead>
+<tr>
+<th>Use a <strong>Lead</strong> when</th>
+<th>Use a <strong>Customer</strong> when</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Someone is enquiring and you are working them</td>
+<td>Someone has signed, or is a repeat buyer</td>
+</tr>
+<tr>
+<td>You need the pipeline status and follow-up machinery</td>
+<td>You need to keep a long-lived relationship record</td>
+</tr>
+<tr>
+<td>It will become a deal</td>
+<td>It may not ever involve a specific property</td>
+</tr>
+</tbody></table>
+<p>A customer record is a <strong>readable profile of the person</strong>; a lead is <strong>a process you are running</strong>. It is entirely normal to have both for the same human.</p>
+<hr>
+<h2 id="46-site-visits">4.6 Site Visits</h2>
+<p><strong>URL:</strong> <code>/admin/site-visits</code> · <strong>Permissions:</strong> <code>site_visits.view</code> / <code>.create</code> / <code>.edit</code></p>
+<h3 id="where-visits-come-from">Where visits come from</h3>
+<table>
+<thead>
+<tr>
+<th>Origin</th>
+<th>How</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Automatic</strong></td>
+<td>A lead&#39;s status is set to <em>Site Visit Scheduled</em>. One visit per lead — no duplicates</td>
+</tr>
+<tr>
+<td><strong>Manual</strong></td>
+<td><strong>Site Visits</strong> → <strong>New visit</strong></td>
+</tr>
+</tbody></table>
+<h3 id="creating-a-visit-by-hand">Creating a visit by hand</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Customer name</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Property name</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Agent name</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Visit date</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Visit time</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Location</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Notes</strong></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>A visit gets ID <code>SV-###</code> and starts as <strong>Scheduled</strong>.</p>
+<h3 id="statuses">Statuses</h3>
+<p><strong>Scheduled</strong> → <strong>Confirmed</strong> → <strong>Completed</strong>, with <strong>Rescheduled</strong> and <strong>Cancelled</strong> as the alternatives.</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Scheduled</strong></td>
+<td>Created, not yet confirmed with the customer</td>
+</tr>
+<tr>
+<td><strong>Confirmed</strong></td>
+<td>The customer has agreed to the slot</td>
+</tr>
+<tr>
+<td><strong>Completed</strong></td>
+<td>The visit happened</td>
+</tr>
+<tr>
+<td><strong>Rescheduled</strong></td>
+<td>Moved to another date or time</td>
+</tr>
+<tr>
+<td><strong>Cancelled</strong></td>
+<td>It will not happen</td>
+</tr>
+</tbody></table>
+<p>Change the status from the list. Add <strong>feedback</strong> and <strong>notes</strong> on the visit — the feedback is what you negotiate with, and what the site-visit report counts.</p>
+<blockquote>
+<p>The <strong>site-visit report</strong> groups <em>Scheduled</em> and <em>Confirmed</em> together as &quot;scheduled&quot;, and counts completed, cancelled and rescheduled separately.</p>
+</blockquote>
+<hr>
+<p><strong>Next:</strong> <a href="manual-05-modules-operations.html"><code>05-modules-operations.md</code></a> — Sales Pipeline, Tasks, Bookings, Payments, Notifications.</p>
+
+<div class="pager"><a href="manual-03-sales-lifecycle.html">← 03. Sales Lifecycle</a><a href="manual-05-modules-operations.html">05. Modules Operations →</a></div>
+<div class="site-footer">QREX documentation · generated from the Markdown sources in <code>docs/</code> · build with <code>npm run docs:html</code></div>
+</main>
+</div>
+
+<script>
+function filterDocs(q){
+  q=(q||'').trim().toLowerCase();
+  document.querySelectorAll('#doc-nav .nav-group').forEach(function(g){
+    var visible=0;
+    g.querySelectorAll('a').forEach(function(a){
+      var hit=!q||a.getAttribute('data-title').indexOf(q)>-1;
+      a.classList.toggle('nav-hidden',!hit);
+      if(hit)visible++;
+    });
+    g.classList.toggle('nav-hidden',visible===0);
+    if(q)g.open=true;
+  });
+}
+document.querySelectorAll('.table-wrap').forEach(function(wrap){
+  var input=wrap.querySelector('.table-filter');
+  var table=wrap.querySelector('table');
+  var count=wrap.querySelector('.table-count');
+  if(!input||!table)return;
+  input.addEventListener('input',function(){
+    var q=input.value.trim().toLowerCase();
+    var shown=0,total=0;
+    table.querySelectorAll('tbody tr').forEach(function(row){
+      total++;
+      var hit=!q||row.textContent.toLowerCase().indexOf(q)>-1;
+      row.style.display=hit?'':'none';
+      if(hit)shown++;
+    });
+    if(count)count.textContent=q?shown+' of '+total+' rows':' '+total+' rows';
+  });
+});
+</script>
+</body>
+</html>

@@ -1,9 +1,11 @@
 import { useForm } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
 import { usePage } from '@/hooks/usePage';
 import AdminLayout from '@/components/layout/AdminLayout';
 import PageHeader from '@/components/shared/PageHeader';
-import { Building2, Bell, Shield, Palette, Save, Mail, Send } from 'lucide-react';
+import { Building2, Bell, Shield, Palette, Save, Mail, Send, Upload, Trash2, ImageIcon } from 'lucide-react';
 import type { PageProps } from '@/types';
+import { useState } from 'react';
 
 interface SmtpSettings {
     enabled: boolean;
@@ -100,6 +102,20 @@ export default function Settings({ settings, smtp }: Props) {
     const testForm = useForm({ email: smtp?.test_email || '' });
     const sendTestMail = () => testForm.post('/admin/settings/test-mail', { preserveScroll: true });
 
+    const storedLogo = settings.logo_url || null;
+    const logoForm = useForm<{ logo: File | null }>({ logo: null });
+    const [logoPreview, setLogoPreview] = useState<string | null>(null);
+    const uploadLogo = () => {
+        if (logoForm.data.logo) {
+            logoForm.post('/admin/settings/logo', {
+                preserveScroll: true,
+                onSuccess: () => { setLogoPreview(null); logoForm.reset(); },
+            });
+        }
+    };
+    const removeLogo = () => router.delete('/admin/settings/logo', { preserveScroll: true });
+    const displayLogo = logoPreview || storedLogo;
+
     return (
         <AdminLayout>
             <PageHeader
@@ -153,6 +169,55 @@ export default function Settings({ settings, smtp }: Props) {
                 {/* Branding */}
                 <Section title="Branding" subtitle="Portal colors & content display" icon={Palette}>
                     <div className="space-y-4">
+                        {isSuperAdmin && (
+                            <div>
+                                <Label>Logo</Label>
+                                <div className="flex items-start gap-4">
+                                    <div className="w-16 h-16 rounded-xl border border-[#E1E8F0] bg-[#F8FAFD] flex items-center justify-center overflow-hidden flex-shrink-0">
+                                        {displayLogo ? (
+                                            <img src={displayLogo} alt="Logo" className="w-full h-full object-contain p-1.5" />
+                                        ) : (
+                                            <ImageIcon size={26} className="text-gray-300" />
+                                        )}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            className="w-full text-sm file:mr-3 file:px-3.5 file:py-2 file:rounded-lg file:border-0 file:bg-[#0D1B3E] file:text-white file:text-sm file:font-semibold hover:file:bg-[#1A2B50]"
+                                            onChange={(e) => {
+                                                const file = e.target.files?.[0] || null;
+                                                logoForm.setData('logo', file);
+                                                setLogoPreview(file ? URL.createObjectURL(file) : null);
+                                            }}
+                                        />
+                                        {logoForm.data.logo && (
+                                            <div className="mt-2 flex items-center gap-2">
+                                                <button
+                                                    type="button"
+                                                    onClick={uploadLogo}
+                                                    disabled={logoForm.processing}
+                                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#0D1B3E] text-white rounded-lg text-xs font-semibold hover:bg-[#1A2B50] transition-colors disabled:opacity-60"
+                                                >
+                                                    <Upload size={13} /> {logoForm.processing ? 'Uploading...' : 'Upload Logo'}
+                                                </button>
+                                                {storedLogo && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={removeLogo}
+                                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-red-200 text-red-600 rounded-lg text-xs font-semibold hover:bg-red-50 transition-colors"
+                                                    >
+                                                        <Trash2 size={13} /> Remove
+                                                    </button>
+                                                )}
+                                            </div>
+                                        )}
+                                        {logoForm.errors.logo && <p className="text-red-500 text-xs mt-1">{logoForm.errors.logo}</p>}
+                                        <p className="text-[11px] text-gray-400 mt-2">JPG, PNG, WEBP or SVG up to 2MB. Displayed in the admin portal. Only Super Admins can change this.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <Label>Currency</Label>
