@@ -2,7 +2,7 @@ import { useState, useEffect, type ReactNode } from 'react';
 import { Link, router } from '@inertiajs/react';
 import {
     LayoutDashboard, Building2, Users, UserCheck, TrendingUp, MapPin,
-    CalendarCheck, CreditCard, FolderOpen, Megaphone, BarChart3, Globe,
+    CalendarCheck, CreditCard, DollarSign, FolderOpen, Megaphone, BarChart3, Globe,
     UserCog, Settings, Bell, Search, Plus, Menu, X, LogOut, ChevronRight,
     ChevronLeft, Home, CheckSquare, CheckCheck, Shield, ListChecks,
 } from 'lucide-react';
@@ -34,6 +34,7 @@ const navGroups: { title: string; items: NavItem[] }[] = [
             { icon: CheckSquare, href: '/admin/tasks', label: 'Tasks & Follow-ups', module: 'tasks' },
             { icon: CalendarCheck, href: '/admin/bookings', label: 'Bookings', module: 'bookings' },
             { icon: CreditCard, href: '/admin/payments', label: 'Payments', module: 'payments' },
+            { icon: DollarSign, href: '/admin/commissions', label: 'Commissions', module: 'commissions' },
         ],
     },
     {

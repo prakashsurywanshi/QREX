@@ -103,6 +103,30 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::delete('/amenities/{amenity}', [AmenityController::class, 'destroy'])->name('amenities.destroy');
     });
 
+    // Commissions
+    Route::middleware('permission:commissions.view')->group(function () {
+        Route::get('/commissions', [\App\Http\Controllers\CommissionController::class, 'index'])->name('commissions.index');
+        Route::get('/commissions/{commission}', [\App\Http\Controllers\CommissionController::class, 'show'])->name('commissions.show');
+    });
+    Route::middleware('permission:commissions.create')->group(function () {
+        Route::get('/commissions/create', [\App\Http\Controllers\CommissionController::class, 'create'])->name('commissions.create');
+        Route::post('/commissions', [\App\Http\Controllers\CommissionController::class, 'store'])->name('commissions.store');
+    });
+    Route::middleware('permission:commissions.edit')->group(function () {
+        Route::get('/commissions/{commission}/edit', [\App\Http\Controllers\CommissionController::class, 'edit'])->name('commissions.edit');
+        Route::put('/commissions/{commission}', [\App\Http\Controllers\CommissionController::class, 'update'])->name('commissions.update');
+    });
+    Route::middleware('permission:commissions.delete')->group(function () {
+        Route::delete('/commissions/{commission}', [\App\Http\Controllers\CommissionController::class, 'destroy'])->name('commissions.destroy');
+    });
+    Route::middleware('permission:commissions.approve')->group(function () {
+        Route::post('/commissions/{commission}/approve', [\App\Http\Controllers\CommissionController::class, 'approve'])->name('commissions.approve');
+        Route::post('/commissions/{commission}/reject', [\App\Http\Controllers\CommissionController::class, 'reject'])->name('commissions.reject');
+    });
+    Route::middleware('permission:commissions.pay')->group(function () {
+        Route::post('/commissions/{commission}/pay', [\App\Http\Controllers\CommissionController::class, 'pay'])->name('commissions.pay');
+    });
+
     // Leads
     Route::middleware('permission:leads.create')->group(function () {
         Route::get('/leads/import-template', [LeadController::class, 'importTemplate'])->name('leads.import-template');

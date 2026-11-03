@@ -179,3 +179,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/settings/smtp', [SettingController::class, 'updateSmtp'])->middleware('permission:settings.edit');
     Route::post('/settings/smtp/test', [SettingController::class, 'testMail'])->middleware('permission:settings.edit');
 });
+
+use App\Http\Controllers\Api\CommissionController;
+
+// Commissions
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/commissions', [CommissionController::class, 'index'])->middleware('permission:commissions.view');
+    Route::post('/commissions/calculate', [CommissionController::class, 'calculate'])->middleware('permission:commissions.view');
+    Route::post('/commissions', [CommissionController::class, 'store'])->middleware('permission:commissions.create');
+    Route::get('/commissions/{commission}', [CommissionController::class, 'show'])->middleware('permission:commissions.view');
+    Route::put('/commissions/{commission}', [CommissionController::class, 'update'])->middleware('permission:commissions.edit');
+    Route::delete('/commissions/{commission}', [CommissionController::class, 'destroy'])->middleware('permission:commissions.delete');
+    Route::post('/commissions/{commission}/approve', [CommissionController::class, 'approve'])->middleware('permission:commissions.approve');
+    Route::post('/commissions/{commission}/pay', [CommissionController::class, 'pay'])->middleware('permission:commissions.pay');
+    Route::post('/commissions/{commission}/reject', [CommissionController::class, 'reject'])->middleware('permission:commissions.approve');
+});

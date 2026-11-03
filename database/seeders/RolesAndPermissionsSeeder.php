@@ -105,6 +105,10 @@ class RolesAndPermissionsSeeder extends Seeder
                 'actions' => ['view', 'create', 'edit', 'delete'],
                 'fields' => [],
             ],
+            'commissions' => [
+                'actions' => ['view', 'create', 'edit', 'delete', 'approve', 'pay', 'export'],
+                'fields' => [],
+            ],
         ];
 
         $allPermissions = [];
@@ -241,6 +245,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'payments.view', 'payments.create', 'payments.edit',
             'reports.view', 'reports.export',
             'media.view',
+            'commissions.view', 'commissions.approve', 'commissions.pay', 'commissions.export',
         ])->pluck('id'));
     }
 }
