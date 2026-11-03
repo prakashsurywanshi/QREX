@@ -310,3 +310,19 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     Route::get('/', fn () => redirect()->route('admin.dashboard'));
 });
+
+
+/*
+|--------------------------------------------------------------------------
+| Buyer Portal Routes
+|--------------------------------------------------------------------------
+*/
+Route::prefix('portal')->name('portal.')->group(function () {
+    Route::get('/login', [\App\Http\Controllers\Portal\AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [\App\Http\Controllers\Portal\AuthController::class, 'login'])->name('login.store');
+    
+    Route::middleware('auth:buyer')->group(function () {
+        Route::get('/dashboard', [\App\Http\Controllers\Portal\DashboardController::class, 'index'])->name('dashboard');
+        Route::post('/logout', [\App\Http\Controllers\Portal\AuthController::class, 'logout'])->name('logout');
+    });
+});
