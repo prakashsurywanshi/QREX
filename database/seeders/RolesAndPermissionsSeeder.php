@@ -109,6 +109,38 @@ class RolesAndPermissionsSeeder extends Seeder
                 'actions' => ['view', 'create', 'edit', 'delete', 'approve', 'pay', 'export'],
                 'fields' => [],
             ],
+            'payment_plans' => [
+                'actions' => ['view', 'create', 'edit', 'delete'],
+                'fields' => [],
+            ],
+            'projects' => [
+                'actions' => ['view', 'create', 'edit', 'delete'],
+                'fields' => [],
+            ],
+            'units' => [
+                'actions' => ['view', 'create', 'edit', 'delete', 'hold', 'book'],
+                'fields' => [],
+            ],
+            'communications' => [
+                'actions' => ['view', 'create', 'edit', 'delete'],
+                'fields' => [],
+            ],
+            'automations' => [
+                'actions' => ['view', 'create', 'edit', 'delete', 'execute'],
+                'fields' => [],
+            ],
+            'buyer_portal' => [
+                'actions' => ['view', 'manage'],
+                'fields' => [],
+            ],
+            'tenants' => [
+                'actions' => ['view', 'create', 'edit', 'delete', 'manage'],
+                'fields' => [],
+            ],
+            'white_label' => [
+                'actions' => ['view', 'edit', 'manage'],
+                'fields' => [],
+            ],
         ];
 
         $allPermissions = [];
@@ -246,6 +278,9 @@ class RolesAndPermissionsSeeder extends Seeder
             'reports.view', 'reports.export',
             'media.view',
             'commissions.view', 'commissions.approve', 'commissions.pay', 'commissions.export',
+            'payment_plans.view', 'payment_plans.create', 'payment_plans.edit',
         ])->pluck('id'));
     }
 }
+
+// Additional modules added in Phase 1

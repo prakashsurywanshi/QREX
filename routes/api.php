@@ -238,3 +238,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/communications/{communication}', [CommunicationController::class, 'show'])->middleware('permission:communications.view');
     Route::delete('/communications/{communication}', [CommunicationController::class, 'destroy'])->middleware('permission:communications.delete');
 });
+
+
+use App\Http\Controllers\Api\WhatsAppController;
+
+// WhatsApp
+Route::post('/whatsapp/webhook', [WhatsAppController::class, 'webhook']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/whatsapp/status', [WhatsAppController::class, 'status']);
+    Route::post('/whatsapp/send', [WhatsAppController::class, 'send'])->middleware('permission:leads.edit');
+});
