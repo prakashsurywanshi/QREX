@@ -227,3 +227,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/units/{unit}/hold', [UnitController::class, 'hold'])->middleware('permission:units.hold');
     Route::post('/units/{unit}/release', [UnitController::class, 'release'])->middleware('permission:units.hold');
 });
+
+
+use App\Http\Controllers\Api\CommunicationController;
+
+// Communications Timeline
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/communications', [CommunicationController::class, 'index'])->middleware('permission:communications.view');
+    Route::post('/communications', [CommunicationController::class, 'store'])->middleware('permission:communications.create');
+    Route::get('/communications/{communication}', [CommunicationController::class, 'show'])->middleware('permission:communications.view');
+    Route::delete('/communications/{communication}', [CommunicationController::class, 'destroy'])->middleware('permission:communications.delete');
+});
