@@ -194,3 +194,36 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/commissions/{commission}/pay', [CommissionController::class, 'pay'])->middleware('permission:commissions.pay');
     Route::post('/commissions/{commission}/reject', [CommissionController::class, 'reject'])->middleware('permission:commissions.approve');
 });
+
+
+use App\Http\Controllers\Api\PaymentPlanController;
+
+// Payment Plans
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/payment-plans', [PaymentPlanController::class, 'index'])->middleware('permission:payment_plans.view');
+    Route::post('/payment-plans', [PaymentPlanController::class, 'store'])->middleware('permission:payment_plans.create');
+    Route::get('/payment-plans/{paymentPlan}', [PaymentPlanController::class, 'show'])->middleware('permission:payment_plans.view');
+    Route::delete('/payment-plans/{paymentPlan}', [PaymentPlanController::class, 'destroy'])->middleware('permission:payment_plans.delete');
+    Route::post('/installments/{installment}/pay', [PaymentPlanController::class, 'payInstallment'])->middleware('permission:payments.create');
+});
+
+
+use App\Http\Controllers\Api\ProjectController;
+use App\Http\Controllers\Api\UnitController;
+
+// Projects & Inventory
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/projects', [ProjectController::class, 'index'])->middleware('permission:projects.view');
+    Route::post('/projects', [ProjectController::class, 'store'])->middleware('permission:projects.create');
+    Route::get('/projects/{project}', [ProjectController::class, 'show'])->middleware('permission:projects.view');
+    Route::put('/projects/{project}', [ProjectController::class, 'update'])->middleware('permission:projects.edit');
+    Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->middleware('permission:projects.delete');
+
+    Route::get('/units', [UnitController::class, 'index'])->middleware('permission:units.view');
+    Route::post('/units', [UnitController::class, 'store'])->middleware('permission:units.create');
+    Route::get('/units/{unit}', [UnitController::class, 'show'])->middleware('permission:units.view');
+    Route::put('/units/{unit}', [UnitController::class, 'update'])->middleware('permission:units.edit');
+    Route::delete('/units/{unit}', [UnitController::class, 'destroy'])->middleware('permission:units.delete');
+    Route::post('/units/{unit}/hold', [UnitController::class, 'hold'])->middleware('permission:units.hold');
+    Route::post('/units/{unit}/release', [UnitController::class, 'release'])->middleware('permission:units.hold');
+});
