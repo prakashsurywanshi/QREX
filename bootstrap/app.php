@@ -27,6 +27,14 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth:sanctum' => \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'role' => \App\Http\Middleware\RoleMiddleware::class,
             'permission' => \App\Http\Middleware\PermissionMiddleware::class,
+            'tenant' => \App\Http\Middleware\ResolveTenant::class,
+        ]);
+
+        $middleware->web(append: [
+            \App\Http\Middleware\ResolveTenant::class,
+        ]);
+        $middleware->api(append: [
+            \App\Http\Middleware\ResolveTenant::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
