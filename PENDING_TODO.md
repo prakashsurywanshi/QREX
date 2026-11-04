@@ -164,3 +164,6 @@
 
 ## UPDATED - 2025-11-03 (Final)
 - [x] Settings and Reports screens in Flutter
+
+## UPDATED - 2025-11-03 (Final)
+- [x] Device token API controller
