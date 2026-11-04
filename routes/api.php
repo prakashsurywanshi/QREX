@@ -266,3 +266,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/settings', [SettingsApiController::class, 'index'])->middleware('permission:settings.view');
     Route::put('/settings', [SettingsApiController::class, 'update'])->middleware('permission:settings.edit');
 });
+
+
+use App\Http\Controllers\Api\ReportApiController;
+
+// Reports API enhanced
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/reports/summary', [ReportApiController::class, 'index'])->middleware('permission:reports.view');
+});
