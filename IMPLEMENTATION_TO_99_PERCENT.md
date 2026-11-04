@@ -40,3 +40,6 @@
 ## Progress Update
 - [x] Security headers added
 - [x] Flutter empty state widget added
+
+## Progress Update
+- [x] Flutter extensions added
