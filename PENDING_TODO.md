@@ -98,3 +98,7 @@
 1. Laravel FCM service
 2. Flutter firebase_messaging setup
 3. Device token registration
+
+## UPDATED - 2025-11-03
+- [x] WhatsApp triggers on Lead created & Site Visit scheduled (events/listeners)
+- [x] Payment Plans API cleaned up
