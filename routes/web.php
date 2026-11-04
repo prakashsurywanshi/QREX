@@ -392,3 +392,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 Route::middleware(['auth'])->group(function () {
     Route::get('/communications', [\App\Http\Controllers\Admin\CommunicationController::class, 'index'])->name('communications.index')->middleware('permission:communications.view');
 });
+
+
+// Payment Plans
+Route::middleware(['auth'])->group(function () {
+    Route::post('/payment-plans/installments/{installment}/pay', [\App\Http\Controllers\Admin\PaymentPlanController::class, 'recordInstallment'])->name('payment-plans.installments.pay')->middleware('permission:payment-plans.edit');
+});
