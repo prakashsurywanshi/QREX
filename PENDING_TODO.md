@@ -167,3 +167,6 @@
 
 ## UPDATED - 2025-11-03 (Final)
 - [x] Device token API controller
+
+## UPDATED - 2025-11-03 (Final)
+- [x] Branding provider in Flutter
