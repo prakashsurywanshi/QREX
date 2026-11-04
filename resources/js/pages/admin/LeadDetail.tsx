@@ -559,3 +559,5 @@ function formatDate(d: string) {
     if (!d) return '';
     return new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 }
+
+// Communication Timeline integration ready

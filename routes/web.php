@@ -376,3 +376,13 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::post('/tenants', [\App\Http\Controllers\TenantController::class, 'store'])->name('tenants.store');
     });
 });
+
+// Communications Web
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::middleware('permission:communications.view')->group(function () {
+        Route::get('/communications', [\App\Http\Controllers\Api\CommunicationController::class, 'index'])->name('communications.index');
+    });
+    Route::middleware('permission:communications.create')->group(function () {
+        Route::post('/communications', [\App\Http\Controllers\Api\CommunicationController::class, 'store'])->name('communications.store');
+    });
+});
