@@ -36,3 +36,7 @@
 
 ## Progress Update
 - [x] Continued implementation - all phases progressing
+
+## Progress Update
+- [x] Security headers added
+- [x] Flutter empty state widget added
