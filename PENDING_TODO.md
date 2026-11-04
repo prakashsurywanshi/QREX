@@ -112,3 +112,7 @@
 ## UPDATED - 2025-11-03 (Continued)
 - [x] Flutter Commission detail screen
 - [x] Units web controller + routes (hold/release/status)
+
+## UPDATED - 2025-11-03 (Latest)
+- [x] Tenant CRUD UI + routes + controller
+- [x] ResolveTenant middleware registered globally
