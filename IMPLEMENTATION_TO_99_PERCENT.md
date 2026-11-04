@@ -85,3 +85,6 @@
 
 ## Progress Update
 - [x] Flutter bulk actions screen added
+
+## Progress Update
+- [x] Dio client added
