@@ -58,3 +58,7 @@
 
 ## Progress Update
 - [x] Build mode - continuing implementation
+
+## Progress Update
+- [x] Booking/payment tests added
+- [x] Audit detail screen added
