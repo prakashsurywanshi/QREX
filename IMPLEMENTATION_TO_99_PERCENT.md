@@ -52,3 +52,6 @@
 
 ## Progress Update
 - [x] API health endpoint added
+
+## Progress Update
+- [x] Audit logs repository and endpoint added
