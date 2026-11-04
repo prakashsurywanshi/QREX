@@ -62,3 +62,6 @@
 ## Progress Update
 - [x] Booking/payment tests added
 - [x] Audit detail screen added
+
+## Progress Update
+- [x] Data table component added
