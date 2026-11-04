@@ -98,3 +98,6 @@
 
 ## Progress Update
 - [x] Flutter exports screen added
+
+## Progress Update
+- [x] Flutter validators added
