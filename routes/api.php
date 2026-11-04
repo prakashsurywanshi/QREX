@@ -312,3 +312,11 @@ use App\Http\Controllers\Api\HealthApiController;
 
 // Health API
 Route::get('/health', [HealthApiController::class, 'index']);
+
+
+use App\Http\Controllers\Api\ExportController;
+
+// Exports
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/export/leads', [ExportController::class, 'leads'])->middleware('permission:leads.view');
+});
