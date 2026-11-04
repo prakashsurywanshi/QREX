@@ -398,3 +398,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::post('/payment-plans/installments/{installment}/pay', [\App\Http\Controllers\Admin\PaymentPlanController::class, 'recordInstallment'])->name('payment-plans.installments.pay')->middleware('permission:payment-plans.edit');
 });
+
+
+// Health Check
+Route::get('/health', [\App\Http\Controllers\HealthController::class, 'index']);
