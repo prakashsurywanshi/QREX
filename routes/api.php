@@ -337,3 +337,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/export/payments', [ReportExportController::class, 'payments'])->middleware('permission:reports.view');
     Route::get('/export/bookings', [ReportExportController::class, 'bookings'])->middleware('permission:reports.view');
 });
+
+
+// Rate limiting for sensitive endpoints
+Route::middleware(['throttle:60,1'])->group(function () {
+    // Add sensitive routes here
+});
