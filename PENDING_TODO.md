@@ -186,3 +186,7 @@
 
 ## UPDATED - 2025-11-03 (Complete)
 - [x] Integrate CommunicationTimeline into LeadDetail page
+
+## UPDATED - 2025-11-03 (Complete)
+- [x] Payment plan installment pay flow (web + Flutter)
+- [x] Events registered
