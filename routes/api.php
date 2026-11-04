@@ -257,3 +257,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/units/{unit}/hold', [UnitApiController::class, 'hold'])->middleware('permission:units.hold');
     Route::post('/units/{unit}/release', [UnitApiController::class, 'release'])->middleware('permission:units.hold');
 });
+
+
+use App\Http\Controllers\Api\SettingsApiController;
+
+// Settings API
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/settings', [SettingsApiController::class, 'index'])->middleware('permission:settings.view');
+    Route::put('/settings', [SettingsApiController::class, 'update'])->middleware('permission:settings.edit');
+});
