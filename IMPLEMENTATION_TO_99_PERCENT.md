@@ -95,3 +95,6 @@
 ## Progress Update
 - [x] Payments/bookings export added
 - [x] Export tests added
+
+## Progress Update
+- [x] Flutter exports screen added
