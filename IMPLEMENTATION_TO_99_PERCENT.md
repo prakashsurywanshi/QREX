@@ -55,3 +55,6 @@
 
 ## Progress Update
 - [x] Audit logs repository and endpoint added
+
+## Progress Update
+- [x] Build mode - continuing implementation
