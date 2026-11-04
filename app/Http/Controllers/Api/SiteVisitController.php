@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\SiteVisitScheduled;
 use App\Http\Responses\ApiResponse;
+use Illuminate\Support\Facades\Event;
 use App\Models\SiteVisit;
 use Illuminate\Http\Request;
 
@@ -32,6 +34,7 @@ class SiteVisitController extends ApiController
         $data['visit_id'] = $this->nextId('SV');
 
         $visit = SiteVisit::create($data);
+        Event::dispatch(new SiteVisitScheduled($visit));
 
         return ApiResponse::success($this->visitBrief($visit), 'Site visit scheduled.', 201);
     }

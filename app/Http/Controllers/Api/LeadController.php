@@ -16,7 +16,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Validation\Rule;
+use App\Events\LeadCreated;
 
 class LeadController extends ApiController
 {
@@ -167,7 +169,9 @@ class LeadController extends ApiController
         $lead = Lead::create($data);
         $this->syncFollowupTask($lead, $data['next_followup'] ?? null, true);
 
-        return ApiResponse::success($this->leadFull($lead->load('assignedAgent')), 'Lead created successfully.', 201);
+        $lead->load('assignedAgent');
+        Event::dispatch(new LeadCreated($lead));
+        return ApiResponse::success($this->leadFull($lead), 'Lead created successfully.', 201);
     }
 
     public function update(Request $request, Lead $lead)

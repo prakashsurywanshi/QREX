@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Responses\ApiResponse;
-use App\Models\Booking;
 use App\Models\Installment;
 use App\Models\PaymentPlan;
 use Illuminate\Http\Request;
