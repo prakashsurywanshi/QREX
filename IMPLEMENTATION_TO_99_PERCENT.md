@@ -78,3 +78,7 @@
 
 ## Progress Update
 - [x] Active implementation
+
+## Progress Update
+- [x] Bulk actions added
+- [x] Tenant scoping test added
