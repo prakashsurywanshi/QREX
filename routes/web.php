@@ -350,3 +350,17 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::post('/projects', [\App\Http\Controllers\ProjectWebController::class, 'store'])->name('projects.store');
     });
 });
+
+// Units
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::middleware('permission:units.create')->group(function () {
+        Route::post('/units', [\App\Http\Controllers\UnitWebController::class, 'store'])->name('units.store');
+    });
+    Route::middleware('permission:units.hold')->group(function () {
+        Route::post('/units/{unit}/hold', [\App\Http\Controllers\UnitWebController::class, 'hold'])->name('units.hold');
+        Route::post('/units/{unit}/release', [\App\Http\Controllers\UnitWebController::class, 'release'])->name('units.release');
+    });
+    Route::middleware('permission:units.edit')->group(function () {
+        Route::put('/units/{unit}/status', [\App\Http\Controllers\UnitWebController::class, 'updateStatus'])->name('units.status');
+    });
+});
