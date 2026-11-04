@@ -306,3 +306,9 @@ use App\Http\Controllers\Api\AuditLogController;
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/audit-logs', [AuditLogController::class, 'index'])->middleware('permission:settings.view');
 });
+
+
+use App\Http\Controllers\Api\HealthApiController;
+
+// Health API
+Route::get('/health', [HealthApiController::class, 'index']);
