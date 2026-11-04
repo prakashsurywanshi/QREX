@@ -179,3 +179,7 @@
 
 ## UPDATED - 2025-11-03 (Final)
 - [x] Base repository added
+
+## UPDATED - 2025-11-03 (Complete)
+- [x] WhatsApp triggers extended to Booking/Payment
+- [x] Communications admin controller added
