@@ -161,3 +161,6 @@
 
 ## UPDATED - 2025-11-03 (Final)
 - [x] Report summary API
+
+## UPDATED - 2025-11-03 (Final)
+- [x] Settings and Reports screens in Flutter
