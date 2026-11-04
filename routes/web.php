@@ -386,3 +386,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::post('/communications', [\App\Http\Controllers\Api\CommunicationController::class, 'store'])->name('communications.store');
     });
 });
+
+
+// Communications
+Route::middleware(['auth'])->group(function () {
+    Route::get('/communications', [\App\Http\Controllers\Admin\CommunicationController::class, 'index'])->name('communications.index')->middleware('permission:communications.view');
+});
