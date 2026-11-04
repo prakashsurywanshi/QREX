@@ -82,3 +82,6 @@
 ## Progress Update
 - [x] Bulk actions added
 - [x] Tenant scoping test added
+
+## Progress Update
+- [x] Flutter bulk actions screen added
