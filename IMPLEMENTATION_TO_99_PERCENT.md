@@ -91,3 +91,7 @@
 
 ## Progress Update
 - [x] Build mode active - continuing
+
+## Progress Update
+- [x] Payments/bookings export added
+- [x] Export tests added
