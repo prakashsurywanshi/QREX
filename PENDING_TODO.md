@@ -155,3 +155,6 @@
 ## UPDATED - 2025-11-03 (Final)
 - [x] Campaigns screen in Flutter
 - [x] Device tokens endpoint
+
+## UPDATED - 2025-11-03 (Final)
+- [x] Settings API + model
