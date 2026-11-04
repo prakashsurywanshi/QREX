@@ -30,3 +30,6 @@
 
 ## Progress Update
 - [x] Phase 4 Complete - Error pages added
+
+## Progress Update
+- [x] Phase 3 Extended - Flutter loading widget added
