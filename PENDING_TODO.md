@@ -102,3 +102,9 @@
 ## UPDATED - 2025-11-03
 - [x] WhatsApp triggers on Lead created & Site Visit scheduled (events/listeners)
 - [x] Payment Plans API cleaned up
+
+## UPDATED - 2025-11-03 (Latest)
+- [x] Flutter Payment Plans repo/controller/screen
+- [x] Flutter Projects repo/controller/screen
+- [x] WhatsApp triggers for Lead & Site Visit
+- [x] FCM service scaffolding
