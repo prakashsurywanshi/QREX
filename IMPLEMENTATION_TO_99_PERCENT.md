@@ -65,3 +65,7 @@
 
 ## Progress Update
 - [x] Data table component added
+
+## Progress Update
+- [x] Permission service with caching added
+- [x] Commission feature test added
