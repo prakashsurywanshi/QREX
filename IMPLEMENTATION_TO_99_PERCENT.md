@@ -49,3 +49,6 @@
 
 ## Progress Update
 - [x] Flutter constants added
+
+## Progress Update
+- [x] API health endpoint added
