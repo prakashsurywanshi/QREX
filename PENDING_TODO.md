@@ -158,3 +158,6 @@
 
 ## UPDATED - 2025-11-03 (Final)
 - [x] Settings API + model
+
+## UPDATED - 2025-11-03 (Final)
+- [x] Report summary API
