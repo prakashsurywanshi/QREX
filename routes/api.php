@@ -283,3 +283,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/device-tokens', [DeviceTokenController::class, 'store']);
     Route::delete('/device-tokens', [DeviceTokenController::class, 'destroy']);
 });
+
+
+// Additional API routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('units', \App\Http\Controllers\Api\UnitApiController::class)->only(['index', 'show', 'store']);
+});
