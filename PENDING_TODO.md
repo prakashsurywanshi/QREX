@@ -120,3 +120,6 @@
 ## UPDATED - 2025-11-03 (Latest)
 - [x] CommunicationTimeline component created
 - [ ] Integrate into LeadDetail page
+
+## UPDATED - 2025-11-03 (Continued)
+- [x] Communications web routes added
