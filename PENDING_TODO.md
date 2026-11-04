@@ -108,3 +108,7 @@
 - [x] Flutter Projects repo/controller/screen
 - [x] WhatsApp triggers for Lead & Site Visit
 - [x] FCM service scaffolding
+
+## UPDATED - 2025-11-03 (Continued)
+- [x] Flutter Commission detail screen
+- [x] Units web controller + routes (hold/release/status)
