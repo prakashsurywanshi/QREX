@@ -34,7 +34,9 @@ const navGroups: { title: string; items: NavItem[] }[] = [
             { icon: CheckSquare, href: '/admin/tasks', label: 'Tasks & Follow-ups', module: 'tasks' },
             { icon: CalendarCheck, href: '/admin/bookings', label: 'Bookings', module: 'bookings' },
             { icon: CreditCard, href: '/admin/payments', label: 'Payments', module: 'payments' },
+            { icon: Calendar, href: '/admin/payment-plans', label: 'Payment Plans', module: 'payment_plans' },
             { icon: DollarSign, href: '/admin/commissions', label: 'Commissions', module: 'commissions' },
+            { icon: Building2, href: '/admin/projects', label: 'Projects & Units', module: 'projects' },
         ],
     },
     {

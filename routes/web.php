@@ -326,3 +326,27 @@ Route::prefix('portal')->name('portal.')->group(function () {
         Route::post('/logout', [\App\Http\Controllers\Portal\AuthController::class, 'logout'])->name('logout');
     });
 });
+
+// Payment Plans
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::middleware('permission:payment_plans.view')->group(function () {
+        Route::get('/payment-plans', [\App\Http\Controllers\PaymentPlanWebController::class, 'index'])->name('payment-plans.index');
+        Route::get('/payment-plans/{paymentPlan}', [\App\Http\Controllers\PaymentPlanWebController::class, 'show'])->name('payment-plans.show');
+    });
+    Route::middleware('permission:payment_plans.create')->group(function () {
+        Route::get('/payment-plans/create', [\App\Http\Controllers\PaymentPlanWebController::class, 'create'])->name('payment-plans.create');
+        Route::post('/payment-plans', [\App\Http\Controllers\PaymentPlanWebController::class, 'store'])->name('payment-plans.store');
+    });
+});
+
+// Projects & Inventory
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::middleware('permission:projects.view')->group(function () {
+        Route::get('/projects', [\App\Http\Controllers\ProjectWebController::class, 'index'])->name('projects.index');
+        Route::get('/projects/{project}', [\App\Http\Controllers\ProjectWebController::class, 'show'])->name('projects.show');
+    });
+    Route::middleware('permission:projects.create')->group(function () {
+        Route::get('/projects/create', [\App\Http\Controllers\ProjectWebController::class, 'create'])->name('projects.create');
+        Route::post('/projects', [\App\Http\Controllers\ProjectWebController::class, 'store'])->name('projects.store');
+    });
+});
