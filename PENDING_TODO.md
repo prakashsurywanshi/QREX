@@ -170,3 +170,6 @@
 
 ## UPDATED - 2025-11-03 (Final)
 - [x] Branding provider in Flutter
+
+## UPDATED - 2025-11-03 (Final)
+- [x] Projects API controller
