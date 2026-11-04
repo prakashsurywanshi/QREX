@@ -116,3 +116,7 @@
 ## UPDATED - 2025-11-03 (Latest)
 - [x] Tenant CRUD UI + routes + controller
 - [x] ResolveTenant middleware registered globally
+
+## UPDATED - 2025-11-03 (Latest)
+- [x] CommunicationTimeline component created
+- [ ] Integrate into LeadDetail page
