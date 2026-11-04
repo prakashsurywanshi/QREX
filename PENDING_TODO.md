@@ -130,3 +130,7 @@
 - [x] WhatsApp Meta Cloud, Events/Triggers, Buyer Portal
 - [x] Multi-tenancy foundation, Tenants UI/API
 - [x] Flutter parity expanding
+
+## UPDATED - 2025-11-03 (Continued)
+- [x] WhatsApp screen in Flutter
+- [x] Branding endpoint in Flutter
