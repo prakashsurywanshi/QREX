@@ -289,3 +289,12 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('units', \App\Http\Controllers\Api\UnitApiController::class)->only(['index', 'show', 'store']);
 });
+
+
+use App\Http\Controllers\Api\ProjectApiController;
+
+// Projects API
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/projects-api', [ProjectApiController::class, 'index']);
+    Route::get('/projects-api/{project}', [ProjectApiController::class, 'show']);
+});
