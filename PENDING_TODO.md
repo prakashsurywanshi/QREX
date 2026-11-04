@@ -173,3 +173,6 @@
 
 ## UPDATED - 2025-11-03 (Final)
 - [x] Projects API controller
+
+## UPDATED - 2025-11-03 (Final)
+- [x] Tenants screen in Flutter
