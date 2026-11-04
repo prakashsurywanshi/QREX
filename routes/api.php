@@ -298,3 +298,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/projects-api', [ProjectApiController::class, 'index']);
     Route::get('/projects-api/{project}', [ProjectApiController::class, 'show']);
 });
+
+
+use App\Http\Controllers\Api\AuditLogController;
+
+// Audit Logs
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/audit-logs', [AuditLogController::class, 'index'])->middleware('permission:settings.view');
+});
