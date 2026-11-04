@@ -248,3 +248,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/whatsapp/status', [WhatsAppController::class, 'status']);
     Route::post('/whatsapp/send', [WhatsAppController::class, 'send'])->middleware('permission:leads.edit');
 });
+
+
+use App\Http\Controllers\Api\UnitApiController;
+
+// Units API (additional)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/units/{unit}/hold', [UnitApiController::class, 'hold'])->middleware('permission:units.hold');
+    Route::post('/units/{unit}/release', [UnitApiController::class, 'release'])->middleware('permission:units.hold');
+});
