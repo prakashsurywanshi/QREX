@@ -46,3 +46,6 @@
 
 ## Progress Update
 - [x] Audit logs API and Flutter screen added
+
+## Progress Update
+- [x] Flutter constants added
