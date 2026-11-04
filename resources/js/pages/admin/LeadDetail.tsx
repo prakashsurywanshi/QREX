@@ -3,6 +3,7 @@ import { Link, router, useForm } from '@inertiajs/react';
 import AdminLayout from '@/components/layout/AdminLayout';
 import PageHeader from '@/components/shared/PageHeader';
 import ActivityTimeline from '@/components/shared/ActivityTimeline';
+import CommunicationTimeline from '@/components/leads/CommunicationTimeline';
 import Modal from '@/components/ui/Modal';
 import {
     ChevronLeft, Phone, Mail, MapPin, Gauge, CalendarClock, Clock, Pencil,
@@ -361,6 +362,11 @@ export default function LeadDetail(props: Props) {
                     </form>
 
                     <ActivityTimeline activities={activities} />
+
+                    <div className="mt-6">
+                        <h3 className="font-semibold text-[#0D1B3E] mb-4 flex items-center gap-2"><MessageSquare size={18} /> Communications</h3>
+                        <CommunicationTimeline communications={lead?.communications || []} />
+                    </div>
                 </div>
 
                 {/* Recommendations */}
