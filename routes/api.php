@@ -274,3 +274,12 @@ use App\Http\Controllers\Api\ReportApiController;
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/reports/summary', [ReportApiController::class, 'index'])->middleware('permission:reports.view');
 });
+
+
+use App\Http\Controllers\Api\DeviceTokenController;
+
+// Device Tokens
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/device-tokens', [DeviceTokenController::class, 'store']);
+    Route::delete('/device-tokens', [DeviceTokenController::class, 'destroy']);
+});
