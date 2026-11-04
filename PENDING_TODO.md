@@ -134,3 +134,7 @@
 ## UPDATED - 2025-11-03 (Continued)
 - [x] WhatsApp screen in Flutter
 - [x] Branding endpoint in Flutter
+
+## UPDATED - 2025-11-03 (Final Push)
+- [x] FCM service & device tokens
+- [x] Branding/Maps config in Flutter
