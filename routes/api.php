@@ -320,3 +320,11 @@ use App\Http\Controllers\Api\ExportController;
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/export/leads', [ExportController::class, 'leads'])->middleware('permission:leads.view');
 });
+
+
+use App\Http\Controllers\Api\BulkActionController;
+
+// Bulk Actions
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/bulk/leads/assign', [BulkActionController::class, 'bulkAssignLeads'])->middleware('permission:leads.edit');
+});
