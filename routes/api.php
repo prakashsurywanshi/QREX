@@ -328,3 +328,12 @@ use App\Http\Controllers\Api\BulkActionController;
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/bulk/leads/assign', [BulkActionController::class, 'bulkAssignLeads'])->middleware('permission:leads.edit');
 });
+
+
+use App\Http\Controllers\Api\ReportExportController;
+
+// Report Exports
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/export/payments', [ReportExportController::class, 'payments'])->middleware('permission:reports.view');
+    Route::get('/export/bookings', [ReportExportController::class, 'bookings'])->middleware('permission:reports.view');
+});

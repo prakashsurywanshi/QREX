@@ -88,3 +88,6 @@
 
 ## Progress Update
 - [x] Dio client added
+
+## Progress Update
+- [x] Build mode active - continuing
