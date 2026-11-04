@@ -43,3 +43,6 @@
 
 ## Progress Update
 - [x] Flutter extensions added
+
+## Progress Update
+- [x] Audit logs API and Flutter screen added
