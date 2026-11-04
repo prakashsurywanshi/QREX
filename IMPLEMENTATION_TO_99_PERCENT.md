@@ -8,3 +8,7 @@
 - [x] Phase 1 Started - Unit & Feature tests added
 - [x] Health check endpoint added
 - [x] Audit log model & migration added
+
+## Progress Update
+- [x] Phase 1 Progress - Tests added, health check, audit logs
+- [x] Phase 3 Started - UI components (skeleton, empty state)
