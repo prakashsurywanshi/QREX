@@ -151,3 +151,7 @@
 ## UPDATED - 2025-11-03 (Final)
 - [x] Communications index page
 - [x] All major features implemented
+
+## UPDATED - 2025-11-03 (Final)
+- [x] Campaigns screen in Flutter
+- [x] Device tokens endpoint
