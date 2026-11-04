@@ -2,29 +2,32 @@
 
 namespace App\Providers;
 
-use App\Events\BookingCreated;
-use App\Events\LeadCreated;
-use App\Events\SiteVisitScheduled;
-use App\Listeners\SendWhatsAppOnLeadCreated;
-use App\Listeners\SendWhatsAppOnSiteVisitScheduled;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
 {
     protected $listen = [
-        LeadCreated::class => [
-            SendWhatsAppOnLeadCreated::class,
+        \App\Events\LeadCreated::class => [
+            \App\Listeners\SendWhatsAppOnLeadCreated::class,
         ],
-        SiteVisitScheduled::class => [
-            SendWhatsAppOnSiteVisitScheduled::class,
+        \App\Events\SiteVisitScheduled::class => [
+            \App\Listeners\SendWhatsAppOnSiteVisitScheduled::class,
         ],
-        BookingCreated::class => [
-            // Can add booking WhatsApp notification later
+        \App\Events\BookingCreated::class => [
+            \App\Listeners\SendWhatsAppOnBookingCreated::class,
+        ],
+        \App\Events\PaymentReceived::class => [
+            \App\Listeners\SendWhatsAppOnPaymentReceived::class,
         ],
     ];
 
     public function boot(): void
     {
         //
+    }
+
+    public function shouldDiscoverEvents(): bool
+    {
+        return false;
     }
 }
