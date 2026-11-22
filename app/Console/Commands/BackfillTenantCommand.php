@@ -8,12 +8,13 @@ use Illuminate\Support\Facades\Schema;
 
 class BackfillTenantCommand extends Command
 {
-    protected $signature = 'qrex:backfill-tenant {--tenant=} {--dry-run}';
+    protected $signature = 'qrex:backfill-tenant {--tenant=} {--dry-run} {--chunk=500}';
     protected $description = 'Backfill tenant_id for legacy rows';
 
     public function handle(): int
     {
         $tenantId = $this->option('tenant');
+        $chunk = max(50, (int) $this->option('chunk'));
         if (!$tenantId) {
             $tenantId = DB::table('tenants')->where('slug', 'default')->value('id');
         }
@@ -31,7 +32,10 @@ class BackfillTenantCommand extends Command
                 $this->line("{$table}: {$count} rows would be updated");
                 continue;
             }
-            DB::table($table)->whereNull('tenant_id')->update(['tenant_id' => $tenantId]);
+            DB::table($table)->whereNull('tenant_id')->orderBy('id')->chunkById($chunk, function ($rows) use ($table, $tenantId) {
+                $ids = collect($rows)->pluck('id')->all();
+                if ($ids) DB::table($table)->whereIn('id', $ids)->update(['tenant_id' => $tenantId]);
+            });
             $this->info("{$table}: updated {$count}");
         }
 
