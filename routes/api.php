@@ -243,7 +243,7 @@ Route::middleware('auth:sanctum')->group(function () {
 use App\Http\Controllers\Api\WhatsAppController;
 
 // WhatsApp
-Route::post('/whatsapp/webhook', [WhatsAppController::class, 'webhook'])->middleware('throttle:120,1');
+Route::match(['get', 'post'], '/whatsapp/webhook', [WhatsAppController::class, 'webhook'])->middleware('throttle:120,1');
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/whatsapp/status', [WhatsAppController::class, 'status'])->middleware('permission:settings.view');
     Route::post('/whatsapp/send', [WhatsAppController::class, 'send'])->middleware('permission:leads.edit');
