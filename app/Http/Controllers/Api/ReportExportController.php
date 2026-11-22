@@ -10,11 +10,11 @@ class ReportExportController extends ApiController
 {
     public function payments()
     {
-        return ApiResponse::success(Payment::latest()->limit(5000)->get());
+        return ApiResponse::success(Payment::query()->latest()->limit(5000)->get());
     }
 
     public function bookings()
     {
-        return ApiResponse::success(Booking::latest()->limit(5000)->get());
+        return ApiResponse::success(Booking::query()->latest()->limit(5000)->get());
     }
 }
