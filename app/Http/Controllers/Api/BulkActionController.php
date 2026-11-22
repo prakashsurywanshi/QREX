@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Responses\ApiResponse;
 use App\Models\Lead;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BulkActionController extends ApiController
 {
@@ -12,12 +13,13 @@ class BulkActionController extends ApiController
     {
         $validated = $request->validate([
             'lead_ids' => 'required|array',
-            'lead_ids.*' => 'exists:leads,id',
+            'lead_ids.*' => 'integer',
             'agent_id' => 'required|exists:users,id',
         ]);
 
-        Lead::whereIn('id', $validated['lead_ids'])->update(['assigned_to' => $validated['agent_id']]);
+        $ids = Lead::query()->visibleTo(Auth::user())->whereIn('id', $validated['lead_ids'])->pluck('id');
+        Lead::whereIn('id', $ids)->update(['assigned_agent_id' => $validated['agent_id']]);
 
-        return ApiResponse::success(null, 'Leads assigned successfully');
+        return ApiResponse::success(['updated' => $ids->count()], 'Leads assigned successfully');
     }
 }

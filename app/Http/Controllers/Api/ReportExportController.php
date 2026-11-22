@@ -3,20 +3,18 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Responses\ApiResponse;
-use App\Models\Payment;
 use App\Models\Booking;
+use App\Models\Payment;
 
 class ReportExportController extends ApiController
 {
     public function payments()
     {
-        $payments = Payment::with(['booking'])->latest()->get();
-        return ApiResponse::success($payments);
+        return ApiResponse::success(Payment::latest()->limit(5000)->get());
     }
 
     public function bookings()
     {
-        $bookings = Booking::with(['customer', 'unit'])->latest()->get();
-        return ApiResponse::success($bookings);
+        return ApiResponse::success(Booking::latest()->limit(5000)->get());
     }
 }
