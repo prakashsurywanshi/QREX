@@ -76,32 +76,42 @@ class PaymentPlanController extends ApiController
         $validated = $request->validate([
             'amount' => 'required|numeric|min:0.01',
             'payment_id' => 'nullable|exists:payments,id',
-            'notes' => 'nullable|string',
+            'notes' => 'nullable|string|max:1000',
         ]);
 
-        $payAmount = $validated['amount'];
-        $newPaid = (float)$installment->paid_amount + $payAmount;
-        $total = (float)$installment->amount;
+        $updated = DB::transaction(function () use ($installment, $validated) {
+            $fresh = Installment::whereKey($installment->id)->lockForUpdate()->firstOrFail();
+            if (in_array($fresh->status, ['paid', 'waived'], true)) {
+                return [null, 'Installment already settled'];
+            }
 
-        if ($newPaid >= $total) {
-            $installment->update([
-                'paid_amount' => $total,
-                'balance_amount' => 0,
-                'status' => 'paid',
-                'paid_at' => now(),
-                'payment_id' => $validated['payment_id'] ?? null,
-                'notes' => $validated['notes'] ?? $installment->notes,
-            ]);
-        } else {
-            $installment->update([
-                'paid_amount' => $newPaid,
-                'balance_amount' => $total - $newPaid,
-                'status' => 'partially_paid',
-                'payment_id' => $validated['payment_id'] ?? null,
-            ]);
+            $payAmount = min((float) $validated['amount'], (float) $fresh->balance_amount);
+            $newPaid = (float) $fresh->paid_amount + $payAmount;
+            $total = (float) $fresh->amount;
+
+            $attributes = [
+                'paid_amount' => min($newPaid, $total),
+                'balance_amount' => max($total - $newPaid, 0),
+                'status' => $newPaid >= $total ? 'paid' : 'partially_paid',
+                'paid_at' => $newPaid >= $total ? now() : $fresh->paid_at,
+                'payment_id' => $validated['payment_id'] ?? $fresh->payment_id,
+                'notes' => $validated['notes'] ?? $fresh->notes,
+            ];
+            $fresh->update($attributes);
+
+            $plan = PaymentPlan::whereKey($fresh->payment_plan_id)->lockForUpdate()->first();
+            if ($plan && !$plan->installments()->whereNotIn('status', ['paid', 'waived'])->exists()) {
+                $plan->update(['status' => 'completed']);
+            }
+
+            return [$fresh->fresh(), null];
+        });
+
+        if ($updated[1]) {
+            return ApiResponse::error($updated[1], 422);
         }
 
-        return ApiResponse::success($installment->fresh(), 'Installment updated successfully');
+        return ApiResponse::success($updated[0], 'Installment updated successfully');
     }
 
     public function destroy(PaymentPlan $paymentPlan)
