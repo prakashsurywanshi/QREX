@@ -23,6 +23,10 @@ class SettingsApiController extends ApiController
 
     public function update(Request $request)
     {
+        $user = $request->user();
+        if (!$user || !$user->hasPermissionTo('settings.edit')) {
+            return ApiResponse::error('Unauthorized', 403);
+        }
         $data = $request->only(self::ALLOWED_KEYS);
         foreach ($data as $key => $value) {
             if ($value === null) continue;
