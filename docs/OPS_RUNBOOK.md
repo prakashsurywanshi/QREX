@@ -9,9 +9,12 @@
 6. Run queue worker and scheduler.
 
 ## Multi-tenant enablement
-- Set `QREX_MULTI_TENANT=true` only after validation.
-- Run: `php artisan qrex:backfill-tenant --dry-run` then `php artisan qrex:backfill-tenant`.
-- Verify tenant-safe unique indexes and no cross-tenant reads.
+- Keep `QREX_MULTI_TENANT=false` until production-like rehearsal passes.
+- Precheck: `php artisan qrex:readiness-check`.
+- Rehearsal: `php artisan qrex:backfill-tenant --dry-run --tenant=<default_tenant_id>`; review counts/collisions.
+- Execute: `php artisan qrex:backfill-tenant --tenant=<default_tenant_id>`; rerun dry-run to confirm zero pending.
+- Verify: tenant-safe unique indexes, no cross-tenant reads/writes, RBAC negative tests, login/report/export smoke on staging snapshot.
+- Only then set `QREX_MULTI_TENANT=true` and re-run smoke tests.
 
 ## Observability
 - Set `SENTRY_LARAVEL_DSN` and `SENTRY_TRACES_SAMPLE_RATE`.
