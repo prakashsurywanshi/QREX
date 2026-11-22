@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 
 #[Fillable([
+    'tenant_id',
     'user_id',
     'email',
     'purpose',
@@ -16,6 +19,8 @@ use Illuminate\Database\Eloquent\Model;
 ])]
 class EmailOtp extends Model
 {
+    use BelongsToTenant;
+
     public const PURPOSE_CURRENT = 'current';
 
     public const PURPOSE_NEW = 'new';

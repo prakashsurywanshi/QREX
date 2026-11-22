@@ -4,7 +4,7 @@ import {
     LayoutDashboard, Building2, Users, UserCheck, TrendingUp, MapPin,
     CalendarCheck, CreditCard, DollarSign, FolderOpen, Megaphone, BarChart3, Globe,
     UserCog, Settings, Bell, Search, Plus, Menu, X, LogOut, ChevronRight,
-    ChevronLeft, Home, CheckSquare, CheckCheck, Shield, ListChecks,
+    ChevronLeft, Home, CheckSquare, CheckCheck, Shield, ListChecks, Calendar,
 } from 'lucide-react';
 import { usePage } from '@/hooks/usePage';
 import Flash, { useLogout } from '@/components/shared/Flash';

@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
+    'tenant_id',
     'name',
     'type',
     'size',
@@ -17,5 +20,5 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 ])]
 class MediaFile extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, BelongsToTenant;
 }

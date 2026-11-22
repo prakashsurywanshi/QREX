@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -9,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 #[Fillable([
+    'tenant_id',
     'property_type_id',
     'name',
     'slug',
@@ -18,6 +21,8 @@ use Illuminate\Support\Str;
 ])]
 class Amenity extends Model
 {
+    use BelongsToTenant;
+
     protected static function booted(): void
     {
         static::saving(function (self $amenity) {

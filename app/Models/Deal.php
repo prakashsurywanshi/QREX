@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -9,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
+    'tenant_id',
     'deal_id',
     'lead_id',
     'customer_name',
@@ -25,7 +28,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 ])]
 class Deal extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, BelongsToTenant;
 
     public function property(): BelongsTo
     {

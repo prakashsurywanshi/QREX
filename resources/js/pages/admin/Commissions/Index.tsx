@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import AdminLayout from '@/layouts/AdminLayout';
+import AdminLayout from '@/components/layout/AdminLayout';
 import { Plus, Eye, CheckCircle, XCircle, DollarSign, Clock, CheckCheck } from 'lucide-react';
 import { useState } from 'react';
 

@@ -2,19 +2,14 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class UnitTest extends TestCase
 {
-    public function test_unit_status_values(): void
+    public function test_basic_math_for_unit_pricing(): void
     {
-        $validStatuses = ['available', 'hold', 'booked', 'sold', 'blocked'];
-        $this->assertContains('available', $validStatuses);
-        $this->assertContains('hold', $validStatuses);
-    }
-
-    public function test_hold_requires_available(): void
-    {
-        $this->assertTrue(true);
+        $base = 5000000;
+        $tax = $base * 0.05;
+        $this->assertSame(5250000.0, (float) ($base + $tax));
     }
 }

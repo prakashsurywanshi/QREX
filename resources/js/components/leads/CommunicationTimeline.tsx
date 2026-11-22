@@ -9,7 +9,7 @@ import { MessageSquare, Phone, Mail, Calendar, FileText } from 'lucide-react';
 import { router } from '@inertiajs/react';
 
 interface Props {
-    leadId: number;
+    leadId?: number;
     communications?: any[];
 }
 
@@ -22,15 +22,17 @@ export default function CommunicationTimeline({ leadId, communications = [] }: P
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        router.post(route('admin.communications.store'), {
+        if (!leadId) return;
+        router.post('/admin/communications', {
             communicable_type: 'App\\Models\\Lead',
             communicable_id: leadId,
             type,
             content,
-            direction: type === 'call' ? 'outbound' : 'outbound',
+            direction: 'outbound',
             call_outcome: callOutcome || null,
-            duration_minutes: duration ? parseInt(duration) : null,
+            duration_minutes: duration ? parseInt(duration, 10) : null,
         }, {
+            preserveScroll: true,
             onSuccess: () => {
                 setShowForm(false);
                 setContent('');
@@ -40,11 +42,11 @@ export default function CommunicationTimeline({ leadId, communications = [] }: P
         });
     };
 
-    const getIcon = (type: string) => {
-        if (type === 'call') return Phone;
-        if (type === 'whatsapp') return MessageSquare;
-        if (type === 'email') return Mail;
-        if (type === 'site_visit') return Calendar;
+    const getIcon = (t: string) => {
+        if (t === 'call') return Phone;
+        if (t === 'whatsapp') return MessageSquare;
+        if (t === 'email') return Mail;
+        if (t === 'site_visit') return Calendar;
         return FileText;
     };
 
@@ -52,11 +54,11 @@ export default function CommunicationTimeline({ leadId, communications = [] }: P
         <Card>
             <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="flex items-center gap-2"><MessageSquare className="h-5 w-5" />Communication Timeline</CardTitle>
-                <Button size="sm" onClick={() => setShowForm(!showForm)}>{showForm ? 'Cancel' : 'Log Activity'}</Button>
+                {leadId ? <Button size="sm" onClick={() => setShowForm(!showForm)}>{showForm ? 'Cancel' : 'Log Activity'}</Button> : null}
             </CardHeader>
             <CardContent className="space-y-4">
-                {showForm && (
-                    <form onSubmit={submit} className="space-y-3 p-4 border rounded-lg bg-muted/30">
+                {showForm && leadId && (
+                    <form onSubmit={submit} className="space-y-3 p-4 border rounded-lg bg-gray-50">
                         <div className="grid grid-cols-2 gap-3">
                             <div className="space-y-1">
                                 <Label>Type</Label>
@@ -102,22 +104,22 @@ export default function CommunicationTimeline({ leadId, communications = [] }: P
 
                 <div className="space-y-3">
                     {communications.length === 0 ? (
-                        <p className="text-center text-muted-foreground py-4">No communications yet</p>
+                        <p className="text-center text-gray-400 py-4">No communications yet</p>
                     ) : (
                         communications.map((comm: any) => {
                             const Icon = getIcon(comm.type);
                             return (
                                 <div key={comm.id} className="flex gap-3">
-                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
-                                        <Icon className="h-4 w-4 text-primary" />
+                                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#0D1B3E]/10">
+                                        <Icon className="h-4 w-4 text-[#0D1B3E]" />
                                     </div>
                                     <div className="flex-1 space-y-1">
                                         <div className="flex items-center justify-between">
-                                            <p className="text-sm font-medium capitalize">{comm.type.replace('_', ' ')}</p>
-                                            <span className="text-xs text-muted-foreground">{new Date(comm.created_at).toLocaleString('en-IN')}</span>
+                                            <p className="text-sm font-medium capitalize">{(comm.type || '').replace('_', ' ')}</p>
+                                            <span className="text-xs text-gray-400">{comm.created_at ? new Date(comm.created_at).toLocaleString('en-IN') : ''}</span>
                                         </div>
-                                        <p className="text-sm text-muted-foreground whitespace-pre-wrap">{comm.content}</p>
-                                        {comm.call_outcome && <p className="text-xs">Outcome: <span className="capitalize">{comm.call_outcome.replace('-', ' ')}</span></p>}
+                                        <p className="text-sm text-gray-600 whitespace-pre-wrap">{comm.content}</p>
+                                        {comm.call_outcome && <p className="text-xs">Outcome: <span className="capitalize">{String(comm.call_outcome).replace('-', ' ')}</span></p>}
                                     </div>
                                 </div>
                             );

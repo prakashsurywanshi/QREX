@@ -365,7 +365,7 @@ export default function LeadDetail(props: Props) {
 
                     <div className="mt-6">
                         <h3 className="font-semibold text-[#0D1B3E] mb-4 flex items-center gap-2"><MessageSquare size={18} /> Communications</h3>
-                        <CommunicationTimeline communications={lead?.communications || []} />
+                        <CommunicationTimeline leadId={lead.id} communications={lead?.communications || []} />
                     </div>
                 </div>
 

@@ -2,7 +2,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import AdminLayout from '@/layouts/AdminLayout';
+import AdminLayout from '@/components/layout/AdminLayout';
 import { ArrowLeft, CheckCircle, XCircle, DollarSign, Edit } from 'lucide-react';
 
 interface Props {

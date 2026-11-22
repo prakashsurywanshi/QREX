@@ -4,11 +4,12 @@ import { usePage } from '@/hooks/usePage';
 import { Building2, Eye, EyeOff, ArrowRight, Loader2 } from 'lucide-react';
 
 const roleDemoAccounts: Record<string, { email: string; password: string }> = {
-    'Super Admin': { email: 'tejas@qodeigence.com', password: '12345678' },
-    Admin: { email: 'neha@example.com', password: 'password' },
-    'Sales Executive': { email: 'amit.v@example.com', password: 'password' },
-    'Marketing User': { email: 'rahul.m@example.com', password: 'password' },
-    Accountant: { email: 'priti.s@example.com', password: 'password' },
+    'Super Admin': { email: 'vikram@example.in', password: 'password' },
+    Admin: { email: 'neha@example.in', password: 'password' },
+    'Sales Executive': { email: 'amit.v@example.in', password: 'password' },
+    'Senior Agent': { email: 'rajesh.g@example.in', password: 'password' },
+    'Marketing User': { email: 'rahul.m@example.in', password: 'password' },
+    Accountant: { email: 'priti.s@example.in', password: 'password' },
 };
 
 export default function Login({ settings }: { settings?: { project_name?: string; agency_name?: string; tagline?: string } }) {

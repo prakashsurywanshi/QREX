@@ -19,7 +19,7 @@ class UsersTableSeeder extends Seeder
             ['name' => 'Rajesh Gupta', 'email' => 'rajesh.g@example.in', 'phone' => '9876503456', 'role' => 'Senior Agent', 'branch' => 'Mumbai'],
             ['name' => 'Pooja Iyer', 'email' => 'pooja.i@example.in', 'phone' => '9876504567', 'role' => 'Sales Executive', 'branch' => 'Gurugram'],
             ['name' => 'Rahul Mehta', 'email' => 'rahul.m@example.in', 'phone' => '9810007777', 'role' => 'Marketing User', 'branch' => 'HQ Mumbai'],
-            ['name' => 'Priti Shah', 'email' => 'priti.s@example.in', 'phone' => '9810008888', 'role' => 'Accountant', 'branch' => 'HQ Mumbai', 'status' => 'Inactive'],
+            ['name' => 'Priti Shah', 'email' => 'priti.s@example.in', 'phone' => '9810008888', 'role' => 'Accountant', 'branch' => 'HQ Mumbai', 'status' => 'Active'],
         ];
 
         foreach ($users as $userData) {

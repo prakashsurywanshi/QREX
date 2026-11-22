@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
+    'tenant_id',
     'booking_id',
     'customer_name',
     'property_name',
@@ -22,7 +25,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 ])]
 class Booking extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, BelongsToTenant;
 
     protected function casts(): array
     {

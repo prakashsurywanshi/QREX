@@ -134,3 +134,7 @@ export function canField(can: CanObject | undefined, module: string, field: stri
     if (!can?.[module]) return false;
     return Boolean(can[module]?.fields?.[field]);
 }
+
+export function cn(...inputs: Array<string | false | null | undefined>): string {
+    return inputs.filter(Boolean).join(' ');
+}

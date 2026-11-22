@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -9,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
+    'tenant_id',
     'lead_id',
     'name',
     'phone',
@@ -29,7 +32,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 ])]
 class Lead extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, BelongsToTenant;
 
     public function assignedAgent(): BelongsTo
     {

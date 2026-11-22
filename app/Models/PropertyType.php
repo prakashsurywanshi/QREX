@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
+    'tenant_id',
     'name',
     'slug',
     'description',
@@ -17,6 +20,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 ])]
 class PropertyType extends Model
 {
+    use BelongsToTenant;
+
     protected function casts(): array
     {
         return [

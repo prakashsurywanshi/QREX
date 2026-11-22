@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToTenant;
+
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable([
+    'tenant_id',
     'lead_id',
     'type',
     'title',
@@ -21,6 +24,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 ])]
 class LeadActivity extends Model
 {
+    use BelongsToTenant;
+
     public function lead(): BelongsTo
     {
         return $this->belongsTo(Lead::class);

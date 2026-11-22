@@ -758,9 +758,13 @@ class LeadController extends Controller
 
         $visitDate = $this->isValidDate($visitDate) ? $visitDate : null;
 
+        do {
+            $visitId = $this->nextId('SV');
+        } while (SiteVisit::withTrashed()->where('visit_id', $visitId)->exists());
+
         SiteVisit::create([
             'lead_id' => $lead->id,
-            'visit_id' => $this->nextId('SV'),
+            'visit_id' => $visitId,
             'customer_name' => $lead->name,
             'property_name' => $propertyName,
             'agent_name' => $agentName,
