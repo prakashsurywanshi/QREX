@@ -10,3 +10,4 @@ Artisan::command('inspire', function () {
 
 Schedule::command('leads:check-followups')->dailyAt('09:00');
 Schedule::command('qrex:expire-unit-holds')->hourly();
+Schedule::command('qrex:mark-overdue-installments')->dailyAt('00:30');
