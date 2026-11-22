@@ -9,3 +9,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('leads:check-followups')->dailyAt('09:00');
+Schedule::command('qrex:expire-unit-holds')->hourly();
