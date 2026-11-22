@@ -314,7 +314,7 @@ use App\Http\Controllers\Api\ExportController;
 
 // Exports
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/export/leads', [ExportController::class, 'leads'])->middleware('permission:leads.view');
+    Route::get('/export/leads', [ExportController::class, 'leads'])->middleware(['permission:leads.view','throttle:30,1']);
 });
 
 
@@ -322,7 +322,7 @@ use App\Http\Controllers\Api\BulkActionController;
 
 // Bulk Actions
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/bulk/leads/assign', [BulkActionController::class, 'bulkAssignLeads'])->middleware('permission:leads.edit');
+    Route::post('/bulk/leads/assign', [BulkActionController::class, 'bulkAssignLeads'])->middleware(['permission:leads.edit','throttle:30,1']);
 });
 
 
@@ -330,6 +330,6 @@ use App\Http\Controllers\Api\ReportExportController;
 
 // Report Exports
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/export/payments', [ReportExportController::class, 'payments'])->middleware('permission:reports.view');
-    Route::get('/export/bookings', [ReportExportController::class, 'bookings'])->middleware('permission:reports.view');
+    Route::get('/export/payments', [ReportExportController::class, 'payments'])->middleware(['permission:reports.view','throttle:30,1']);
+    Route::get('/export/bookings', [ReportExportController::class, 'bookings'])->middleware(['permission:reports.view','throttle:30,1']);
 });
