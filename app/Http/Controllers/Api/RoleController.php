@@ -98,8 +98,9 @@ class RoleController extends ApiController
 
     public function permissions()
     {
+        $all = Permission::all();
         return ApiResponse::success([
-            'permissionGroups' => Permission::all()
+            'permissionGroups' => $all
                 ->groupBy('module')
                 ->map(fn ($perms, $module) => [
                     'module' => $module,
@@ -114,7 +115,7 @@ class RoleController extends ApiController
                     ])->values(),
                 ])
                 ->values(),
-            'total' => Permission::count(),
+            'total' => $all->count(),
         ]);
     }
 
