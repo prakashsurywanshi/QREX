@@ -285,12 +285,6 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
-// Additional API routes
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('units', [\App\Http\Controllers\Api\UnitApiController::class, 'index'])->middleware('permission:units.view');
-    Route::get('units/{unit}', [\App\Http\Controllers\Api\UnitApiController::class, 'show'])->middleware('permission:units.view');
-    Route::post('units', [\App\Http\Controllers\Api\UnitApiController::class, 'store'])->middleware('permission:units.create');
-});
 
 
 use App\Http\Controllers\Api\ProjectApiController;
