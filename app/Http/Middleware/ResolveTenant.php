@@ -12,39 +12,47 @@ class ResolveTenant
     public function handle(Request $request, Closure $next): Response
     {
         if (!config('qrex.multi_tenant')) {
+            app()->instance('current_tenant', null);
             app()->instance('current_tenant_id', null);
             return $next($request);
         }
 
-        $host = $request->getHost();
-        $tenant = null;
+        $tenant = $this->resolveTenant($request);
 
-        // Try domain first
-        $tenant = Tenant::where('domain', $host)->where('status', 'active')->first();
-        
-        // Try subdomain
+        if ($tenant && !$tenant->isActive()) {
+            $tenant = null;
+        }
+
+        app()->instance('current_tenant', $tenant);
+        app()->instance('current_tenant_id', $tenant?->id);
+
+        return $next($request);
+    }
+
+    protected function resolveTenant(Request $request): ?Tenant
+    {
+        $host = $request->getHost();
+        $tenant = Tenant::query()->where('domain', $host)->first();
+
         if (!$tenant) {
             $parts = explode('.', $host);
             if (count($parts) >= 3) {
                 $subdomain = $parts[0];
-                if ($subdomain !== 'www' && $subdomain !== 'app') {
-                    $tenant = Tenant::where('subdomain', $subdomain)->where('status', 'active')->first();
+                if (!in_array($subdomain, ['www', 'app', 'api'], true)) {
+                    $tenant = Tenant::query()->where('subdomain', $subdomain)->first();
                 }
             }
         }
 
-        // Try header for API
-        if (!$tenant && $request->header('X-Tenant-ID')) {
-            $tenant = Tenant::find($request->header('X-Tenant-ID'));
+        $headerTenantId = $request->header('X-Tenant-ID');
+        if (!$tenant && $headerTenantId) {
+            $user = $request->user();
+            $canSwitch = $user && method_exists($user, 'isSuperAdmin') && $user->isSuperAdmin();
+            if ($canSwitch) {
+                $tenant = Tenant::query()->find($headerTenantId);
+            }
         }
 
-        if ($tenant) {
-            app()->instance('current_tenant', $tenant);
-            app()->instance('current_tenant_id', $tenant->id);
-        } else {
-            app()->instance('current_tenant_id', null);
-        }
-
-        return $next($request);
+        return $tenant;
     }
 }
