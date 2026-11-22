@@ -26,8 +26,8 @@ use Illuminate\Support\Facades\Route;
 | Public API Routes
 |--------------------------------------------------------------------------
 */
-Route::post('/auth/login', [AuthController::class, 'login']);
-Route::post('/auth/reset/send', [AuthController::class, 'sendResetLink']);
+Route::post('/auth/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
+Route::post('/auth/reset/send', [AuthController::class, 'sendResetLink'])->middleware('throttle:5,10');
 
 /*
 |--------------------------------------------------------------------------
@@ -243,7 +243,7 @@ Route::middleware('auth:sanctum')->group(function () {
 use App\Http\Controllers\Api\WhatsAppController;
 
 // WhatsApp
-Route::post('/whatsapp/webhook', [WhatsAppController::class, 'webhook']);
+Route::post('/whatsapp/webhook', [WhatsAppController::class, 'webhook'])->middleware('throttle:120,1');
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/whatsapp/status', [WhatsAppController::class, 'status'])->middleware('permission:settings.view');
     Route::post('/whatsapp/send', [WhatsAppController::class, 'send'])->middleware('permission:leads.edit');
@@ -332,10 +332,4 @@ use App\Http\Controllers\Api\ReportExportController;
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/export/payments', [ReportExportController::class, 'payments'])->middleware('permission:reports.view');
     Route::get('/export/bookings', [ReportExportController::class, 'bookings'])->middleware('permission:reports.view');
-});
-
-
-// Rate limiting for sensitive endpoints
-Route::middleware(['throttle:60,1'])->group(function () {
-    // Add sensitive routes here
 });
