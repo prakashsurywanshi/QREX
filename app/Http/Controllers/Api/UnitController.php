@@ -6,6 +6,7 @@ use App\Http\Responses\ApiResponse;
 use App\Models\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UnitController extends ApiController
 {
@@ -47,26 +48,42 @@ class UnitController extends ApiController
 
     public function hold(Unit $unit, Request $request)
     {
-        if ($unit->status !== 'available') {
-            return ApiResponse::error('Unit is not available for hold', 422);
-        }
-        $hours = $request->input('hours', 24);
-        $unit->hold(Auth::id(), $hours);
-        return ApiResponse::success($unit->fresh(), 'Unit held successfully');
+        $hours = min(max((int) $request->input('hours', 24), 1), 168);
+        $held = DB::transaction(function () use ($unit, $hours) {
+            $fresh = Unit::whereKey($unit->id)->lockForUpdate()->first();
+            if (!$fresh || $fresh->status !== 'available') return null;
+            $fresh->update([
+                'status' => 'hold',
+                'held_by' => Auth::id(),
+                'hold_expires_at' => now()->addHours($hours),
+            ]);
+            return $fresh;
+        });
+        if (!$held) return ApiResponse::error('Unit not available for hold', 422);
+        return ApiResponse::success($held->fresh(), 'Unit held successfully');
     }
 
     public function release(Unit $unit)
     {
-        if ($unit->status !== 'hold') {
-            return ApiResponse::error('Unit is not on hold', 422);
-        }
-        $unit->release();
-        return ApiResponse::success($unit->fresh(), 'Unit released successfully');
+        $released = DB::transaction(function () use ($unit) {
+            $fresh = Unit::whereKey($unit->id)->lockForUpdate()->first();
+            if (!$fresh || $fresh->status !== 'hold') return null;
+            $fresh->update(['status' => 'available', 'held_by' => null, 'hold_expires_at' => null]);
+            return $fresh;
+        });
+        if (!$released) return ApiResponse::error('Unit is not on hold', 422);
+        return ApiResponse::success($released->fresh(), 'Unit released successfully');
     }
 
     public function update(Request $request, Unit $unit)
     {
-        $unit->update($request->only(['price', 'status', 'remarks', 'facing']));
+        $validated = $request->validate([
+            'price' => 'nullable|numeric|min:0',
+            'status' => 'nullable|in:available,hold,booked,sold,blocked',
+            'remarks' => 'nullable|string|max:1000',
+            'facing' => 'nullable|string|max:100',
+        ]);
+        $unit->update($validated);
         return ApiResponse::success($unit, 'Unit updated successfully');
     }
 
