@@ -195,9 +195,11 @@
 - [x] Tenant header trust hardened (X-Tenant-ID super-admin only, inactive ignored)
 - [x] Tenant-aware sequence IDs, backfill command, tenant-safe unique indexes
 - [x] Security headers web+API; Sentry SDK + config/hook (DSN required)
-- [x] Export/bulk/auth/webhook throttles; API permission tightening
-- [x] Readiness check command (`qrex:readiness-check`)
-- [x] Regression tests expanded (62 passed, 198 assertions); build passes
+- [x] Export/bulk/auth/webhook/device-token throttles; API permission tightening
+- [x] Readiness check + tenant backfill dry-run tooling
+- [x] Tenant/AuthZ audit doc, security/perf checklist, ops multi-tenant rehearsal runbook
+- [x] Regression tests expanded (63 passed, 203 assertions); npm build passes
+- [x] Flutter Android-first CI workflow + release prep/readiness docs
 - [x] QREX and QREX_Flutter pushed to feature/final-push
 
 ## STILL PENDING (manual/external)
