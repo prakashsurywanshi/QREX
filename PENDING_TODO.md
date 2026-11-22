@@ -189,3 +189,23 @@
 ## UPDATED - 2025-11-03 (Complete)
 - [x] Payment plan installment pay flow (web + Flutter)
 - [x] Events registered
+
+
+## UPDATED - 2026-11-22 (Hardening pass)
+- [x] Tenant header trust hardened (X-Tenant-ID super-admin only, inactive ignored)
+- [x] Tenant-aware sequence IDs, backfill command, tenant-safe unique indexes
+- [x] Security headers web+API; Sentry SDK + config/hook (DSN required)
+- [x] Export/bulk/auth/webhook throttles; API permission tightening
+- [x] Readiness check command (`qrex:readiness-check`)
+- [x] Regression tests expanded (62 passed, 198 assertions); build passes
+- [x] QREX and QREX_Flutter pushed to feature/final-push
+
+## STILL PENDING (manual/external)
+- [ ] Revoke exposed GitHub tokens
+- [ ] Set SENTRY_LARAVEL_DSN and verify live event delivery
+- [ ] Full staging browser/E2E smoke for core flows and cross-tenant isolation
+- [ ] Full RBAC permission matrix + negative tests for all modules
+- [ ] Production-like tenant backfill rehearsal before enabling QREX_MULTI_TENANT=true
+- [ ] Connected-env composer audit triage/remediation; N+1/load profiling
+- [ ] Backup/restore drill, prod secrets/SSL/domain/queue/scheduler monitoring
+- [ ] Flutter: SDK CI analyze/test/build, API contract QA, FCM E2E, signing/store assets
