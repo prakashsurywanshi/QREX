@@ -26,3 +26,6 @@
 ## Backup/restore
 - Nightly DB backup + storage backup.
 - Quarterly restore drill into staging; verify login, leads, bookings, payments, reports.
+
+## Readiness check
+- Run `php artisan qrex:readiness-check` before deploy; ensure SENTRY_DSN set, debug off, DB ok, writable paths.
