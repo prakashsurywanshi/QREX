@@ -8,6 +8,13 @@ use Illuminate\Http\Request;
 
 class SettingsApiController extends ApiController
 {
+    private const ALLOWED_KEYS = [
+        'project_name','agency_name','tagline','contact_email','contact_phone','address','currency','timezone','date_format',
+        'primary_color','accent_color','social_facebook','social_instagram','social_linkedin','social_twitter','office_hours',
+        'footer_about','seo_title','seo_description','analytics_code','enable_contact_form','maintenance_mode','two_factor',
+        'lead_auto_assign','visit_reminders','payment_alerts','low_inventory_alert',
+    ];
+
     public function index()
     {
         $settings = Setting::pluck('value', 'key');
@@ -16,8 +23,9 @@ class SettingsApiController extends ApiController
 
     public function update(Request $request)
     {
-        foreach ($request->all() as $key => $value) {
-            if (in_array($key, ['_token', '_method'])) continue;
+        $data = $request->only(self::ALLOWED_KEYS);
+        foreach ($data as $key => $value) {
+            if ($value === null) continue;
             Setting::updateOrCreate(['key' => $key], ['value' => is_array($value) ? json_encode($value) : $value]);
         }
         return ApiResponse::success(null, 'Settings updated');

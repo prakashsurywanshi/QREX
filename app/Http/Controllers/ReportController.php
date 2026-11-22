@@ -31,7 +31,7 @@ class ReportController extends Controller
             ->when($agentId, fn ($q) => $q->where('assigned_agent_id', $agentId))
             ->when($propertyId, fn ($q) => $q->where('property_id', $propertyId))
             ->get();
-        $dealsAll = Deal::all();
+        $dealsAll = Deal::query()->when($propertyId, fn ($q) => $q->where('property_id', $propertyId))->get();
 
         $leads = Lead::query()->visibleTo(Auth::user())
             ->when($start, fn ($q) => $q->whereBetween('created_at', [$start, $end]))
@@ -43,12 +43,12 @@ class ReportController extends Controller
         $payments = Payment::query()
             ->when($start, fn ($q) => $q->whereBetween('paid_date', [$start, $end])->orWhereBetween('due_date', [$start, $end]))
             ->get();
-        $paymentsAll = Payment::all();
+        $paymentsAll = Payment::query()->get();
 
         $bookings = \App\Models\Booking::query()
             ->when($start, fn ($q) => $q->whereBetween('booking_date', [$start, $end]))
             ->get();
-        $bookingsAll = \App\Models\Booking::all();
+        $bookingsAll = \App\Models\Booking::query()->get();
 
         $campaigns = Campaign::query()
             ->when($start, fn ($q) => $q->whereBetween('start_date', [$start, $end]))

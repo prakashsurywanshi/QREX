@@ -27,12 +27,12 @@ class ReportController extends ApiController
 
         [$start, $end] = $this->rangeBounds($range);
 
-        $deals = Deal::query()
+        $dealsQuery = Deal::query()
             ->when($start, fn ($q) => $q->whereBetween('created_at', [$start, $end]))
             ->when($agentId, fn ($q) => $q->where('assigned_agent_id', $agentId))
-            ->when($propertyId, fn ($q) => $q->where('property_id', $propertyId))
-            ->get();
-        $dealsAll = Deal::all();
+            ->when($propertyId, fn ($q) => $q->where('property_id', $propertyId));
+        $deals = (clone $dealsQuery)->get();
+        $dealsAll = Deal::query()->when($propertyId, fn ($q) => $q->where('property_id', $propertyId))->get();
 
         $leads = Lead::query()->visibleTo(Auth::user())
             ->when($start, fn ($q) => $q->whereBetween('created_at', [$start, $end]))
@@ -43,12 +43,12 @@ class ReportController extends ApiController
         $payments = Payment::query()
             ->when($start, fn ($q) => $q->whereBetween('paid_date', [$start, $end])->orWhereBetween('due_date', [$start, $end]))
             ->get();
-        $paymentsAll = Payment::all();
+        $paymentsAll = Payment::query()->get();
 
         $bookings = Booking::query()
             ->when($start, fn ($q) => $q->whereBetween('booking_date', [$start, $end]))
             ->get();
-        $bookingsAll = Booking::all();
+        $bookingsAll = Booking::query()->get();
 
         $campaigns = Campaign::query()
             ->when($start, fn ($q) => $q->whereBetween('start_date', [$start, $end]))
