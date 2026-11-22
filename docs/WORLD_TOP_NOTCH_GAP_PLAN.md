@@ -24,3 +24,10 @@ Move QREX/QREX_Flutter from hardened baseline to production-evidence-ready, top-
 - Connected-env composer audit triage/remediation
 - Staging browser/E2E smoke and production-like tenant rehearsal
 - Firebase/FCM device E2E, Play signing/store assets, Meta WhatsApp app secrets/webhook verification
+
+## Update (continuation pass)
+- [x] Audit log endpoint admin/super-admin guarded, scoped fields
+- [x] Unit hold/release made transactional with row lock and bounded hold hours
+- [x] Unit update validated (status/price/remarks/facing)
+- [x] Added API hardening regression tests (audit forbidden, commission object access, webhook bad signature)
+- [x] Full QREX suite: 67 passed, 207 assertions; npm build pass
