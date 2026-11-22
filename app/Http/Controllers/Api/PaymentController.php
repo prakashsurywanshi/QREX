@@ -28,21 +28,22 @@ class PaymentController extends ApiController
     public function store(Request $request)
     {
         $data = $request->validate([
-            'customer_name' => 'required|string',
-            'property_name' => 'required|string',
-            'amount' => 'required|numeric',
-            'mode' => 'nullable|string',
+            'customer_name' => 'required|string|max:255',
+            'property_name' => 'required|string|max:255',
+            'amount' => 'required|numeric|min:0.01',
+            'mode' => 'nullable|string|max:50',
+            'txn_id' => 'nullable|string|max:191',
             'due_date' => 'nullable|date',
-            'status' => 'nullable|string',
+            'paid_date' => 'nullable|date',
+            'status' => 'nullable|in:Pending,Paid,Partially Paid,Partial,Overdue,Cancelled',
         ]);
 
         $data['payment_id'] = $this->nextId('PAY');
         $data['amount_label'] = $this->label($data['amount']);
         $data['txn_id'] = $request->txn_id ?: '—';
-        if ($request->filled('paid_date')) {
-            $data['paid_date'] = $request->paid_date;
-        } elseif ($request->status === 'Paid') {
-            $data['paid_date'] = now()->format('Y-m-d');
+        $data['status'] = $data['status'] ?? 'Pending';
+        if (!empty($data['paid_date']) || $data['status'] === 'Paid') {
+            $data['paid_date'] = $data['paid_date'] ?? now()->format('Y-m-d');
         }
 
         $payment = Payment::create($data);
@@ -52,18 +53,22 @@ class PaymentController extends ApiController
 
     public function update(Request $request, Payment $payment)
     {
-        $request->validate([
-            'status' => ['nullable', 'string'],
-            'mode' => ['nullable', 'string'],
-            'txn_id' => ['nullable', 'string'],
+        $data = $request->validate([
+            'status' => ['nullable', 'in:Pending,Paid,Partially Paid,Partial,Overdue,Cancelled'],
+            'mode' => ['nullable', 'string', 'max:50'],
+            'txn_id' => ['nullable', 'string', 'max:191'],
             'paid_date' => ['nullable', 'date'],
             'due_date' => ['nullable', 'date'],
         ]);
 
-        $payment->update(array_merge(
-            $request->only(['status', 'mode', 'txn_id', 'paid_date', 'due_date']),
-            ['txn_id' => $request->txn_id ?: '—']
-        ));
+        if (array_key_exists('txn_id', $data)) {
+            $data['txn_id'] = $data['txn_id'] ?: '—';
+        }
+        if (($data['status'] ?? null) === 'Paid' && empty($data['paid_date']) && !$payment->paid_date) {
+            $data['paid_date'] = now()->format('Y-m-d');
+        }
+
+        $payment->update($data);
 
         return ApiResponse::success($this->paymentBrief($payment), 'Payment updated.');
     }
