@@ -104,20 +104,14 @@ class CommissionController extends ApiController
 
     public function show(Commission $commission)
     {
-        $user = Auth::user();
-        if (!$user->isSuperAdmin() && !$user->hasRole('admin') && $commission->agent_id !== $user->id) {
-            return ApiResponse::error('Forbidden', 403);
-        }
+        $this->authorize('view', $commission);
         $commission->load(['agent', 'deal', 'booking', 'property', 'approver', 'payer', 'creator', 'splits.user', 'parentCommission', 'splits']);
         return ApiResponse::success($commission);
     }
 
     public function update(Request $request, Commission $commission)
     {
-        $user = Auth::user();
-        if (!$user->isSuperAdmin() && !$user->hasRole('admin') && $commission->agent_id !== $user->id) {
-            return ApiResponse::error('Forbidden', 403);
-        }
+        $this->authorize('update', $commission);
         if ($commission->status !== 'pending') {
             return ApiResponse::error('Only pending commissions can be updated', 422);
         }
@@ -156,10 +150,7 @@ class CommissionController extends ApiController
 
     public function approve(Request $request, Commission $commission)
     {
-        $user = Auth::user();
-        if (!$user->isSuperAdmin() && !$user->hasRole('admin')) {
-            return ApiResponse::error('Forbidden', 403);
-        }
+        $this->authorize('approve', $commission);
         if ($commission->status !== 'pending') {
             return ApiResponse::error('Only pending commissions can be approved', 422);
         }
@@ -176,10 +167,7 @@ class CommissionController extends ApiController
 
     public function pay(Request $request, Commission $commission)
     {
-        $user = Auth::user();
-        if (!$user->isSuperAdmin() && !$user->hasRole('admin')) {
-            return ApiResponse::error('Forbidden', 403);
-        }
+        $this->authorize('pay', $commission);
         if ($commission->status !== 'approved') {
             return ApiResponse::error('Only approved commissions can be marked as paid', 422);
         }
@@ -202,10 +190,7 @@ class CommissionController extends ApiController
 
     public function reject(Request $request, Commission $commission)
     {
-        $user = Auth::user();
-        if (!$user->isSuperAdmin() && !$user->hasRole('admin')) {
-            return ApiResponse::error('Forbidden', 403);
-        }
+        $this->authorize('approve', $commission);
         if ($commission->status !== 'pending') {
             return ApiResponse::error('Only pending commissions can be rejected', 422);
         }
@@ -220,10 +205,7 @@ class CommissionController extends ApiController
 
     public function destroy(Commission $commission)
     {
-        $user = Auth::user();
-        if (!$user->isSuperAdmin() && !$user->hasRole('admin') && $commission->agent_id !== $user->id) {
-            return ApiResponse::error('Forbidden', 403);
-        }
+        $this->authorize('delete', $commission);
         if ($commission->status !== 'pending') {
             return ApiResponse::error('Only pending commissions can be deleted', 422);
         }
