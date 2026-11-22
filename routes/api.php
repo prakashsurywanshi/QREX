@@ -48,7 +48,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/email/otp/verify-new', [AuthController::class, 'verifyNewEmail']);
 
     // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('permission:dashboard.view');
 
     // Notifications (own data, no permission gate)
     Route::get('/notifications', [NotificationController::class, 'index']);
@@ -245,7 +245,7 @@ use App\Http\Controllers\Api\WhatsAppController;
 // WhatsApp
 Route::post('/whatsapp/webhook', [WhatsAppController::class, 'webhook']);
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/whatsapp/status', [WhatsAppController::class, 'status']);
+    Route::get('/whatsapp/status', [WhatsAppController::class, 'status'])->middleware('permission:settings.view');
     Route::post('/whatsapp/send', [WhatsAppController::class, 'send'])->middleware('permission:leads.edit');
 });
 
@@ -287,7 +287,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
 // Additional API routes
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('units', \App\Http\Controllers\Api\UnitApiController::class)->only(['index', 'show', 'store']);
+    Route::get('units', [\App\Http\Controllers\Api\UnitApiController::class, 'index'])->middleware('permission:units.view');
+    Route::get('units/{unit}', [\App\Http\Controllers\Api\UnitApiController::class, 'show'])->middleware('permission:units.view');
+    Route::post('units', [\App\Http\Controllers\Api\UnitApiController::class, 'store'])->middleware('permission:units.create');
 });
 
 
@@ -295,8 +297,8 @@ use App\Http\Controllers\Api\ProjectApiController;
 
 // Projects API
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/projects-api', [ProjectApiController::class, 'index']);
-    Route::get('/projects-api/{project}', [ProjectApiController::class, 'show']);
+    Route::get('/projects-api', [ProjectApiController::class, 'index'])->middleware('permission:projects.view');
+    Route::get('/projects-api/{project}', [ProjectApiController::class, 'show'])->middleware('permission:projects.view');
 });
 
 

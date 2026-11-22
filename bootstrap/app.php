@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->web(append: [
             HandleInertiaRequests::class,
+            \App\Http\Middleware\SecurityHeaders::class,
         ]);
 
         $middleware->api(prepend: [
@@ -35,6 +36,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->api(append: [
             \App\Http\Middleware\ResolveTenant::class,
+            \App\Http\Middleware\SecurityHeaders::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
@@ -45,6 +47,3 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Support\SentryReporter::capture($e);
         });
     })->create();
-
-// Security headers
-// $middleware->web(append: [\App\Http\Middleware\SecurityHeaders::class]);
