@@ -280,8 +280,8 @@ use App\Http\Controllers\Api\DeviceTokenController;
 
 // Device Tokens
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/device-tokens', [DeviceTokenController::class, 'store']);
-    Route::delete('/device-tokens', [DeviceTokenController::class, 'destroy']);
+    Route::post('/device-tokens', [DeviceTokenController::class, 'store'])->middleware('throttle:60,1');
+    Route::delete('/device-tokens', [DeviceTokenController::class, 'destroy'])->middleware('throttle:60,1');
 });
 
 
