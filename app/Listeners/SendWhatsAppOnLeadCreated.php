@@ -14,7 +14,7 @@ class SendWhatsAppOnLeadCreated
 
     public function handle(LeadCreated $event): void
     {
-        if (!env('WHATSAPP_ENABLED', false)) {
+        if (!config('services.whatsapp.enabled', false)) {
             return;
         }
 

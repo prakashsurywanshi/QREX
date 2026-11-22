@@ -9,14 +9,18 @@ class FcmService
 {
     public function sendToToken(string $token, string $title, string $body, array $data = []): array
     {
-        $serverKey = env('FCM_SERVER_KEY');
-        if (!$serverKey) {
+        if (!config('services.fcm.enabled', false)) {
+            return ['success' => false, 'message' => 'FCM disabled'];
+        }
+
+        $serverKey = (string) config('services.fcm.server_key', '');
+        if ($serverKey === '') {
             return ['success' => false, 'message' => 'FCM server key not configured'];
         }
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'key=' . $serverKey,
+                'Authorization' => 'key='.$serverKey,
                 'Content-Type' => 'application/json',
             ])->post('https://fcm.googleapis.com/fcm/send', [
                 'to' => $token,
@@ -28,9 +32,9 @@ class FcmService
                 'data' => $data,
             ]);
 
-            return ['success' => $response->successful(), 'data' => $response->json()];
+            return ['success' => $response->successful(), 'data' => $response->json(), 'status' => $response->status()];
         } catch (\Exception $e) {
-            Log::error('FCM error: ' . $e->getMessage());
+            Log::error('FCM error: '.$e->getMessage());
             return ['success' => false, 'message' => $e->getMessage()];
         }
     }

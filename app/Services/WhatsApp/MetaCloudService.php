@@ -13,8 +13,9 @@ class MetaCloudService
 
     public function __construct()
     {
-        $this->phoneNumberId = config('services.whatsapp.phone_number_id') ?? env('META_PHONE_NUMBER_ID', '');
-        $this->accessToken = config('services.whatsapp.access_token') ?? env('META_ACCESS_TOKEN', '');
+        $meta = config('services.whatsapp.meta', []);
+        $this->phoneNumberId = (string) ($meta['phone_number_id'] ?? config('services.whatsapp.phone_number_id') ?? '');
+        $this->accessToken = (string) ($meta['access_token'] ?? config('services.whatsapp.access_token') ?? '');
     }
 
     public function sendTemplate(string $to, string $templateName, string $language = 'en_US', array $components = []): array
@@ -70,6 +71,7 @@ class MetaCloudService
             return [
                 'success' => $response->successful(),
                 'data' => $response->json(),
+                'status' => $response->status(),
             ];
         } catch (\Exception $e) {
             Log::error('WhatsApp send error: ' . $e->getMessage());

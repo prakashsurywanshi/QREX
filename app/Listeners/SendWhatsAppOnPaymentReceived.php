@@ -17,8 +17,11 @@ class SendWhatsAppOnPaymentReceived implements ShouldQueue
 
     public function handle(PaymentReceived $event): void
     {
-        $payment = $event->payment->load(['customer']);
+        if (!config('services.whatsapp.enabled', false)) return;
+        $payment = $event->payment->loadMissing('customer');
         if (!$payment->customer || !$payment->customer->phone) return;
-        $this->whatsapp->sendTemplate($payment->customer->phone, 'payment_receipt', ['amount' => $payment->amount]);
+        $this->whatsapp->sendTemplate($payment->customer->phone, 'payment_receipt', 'en_US', [
+            ['type' => 'body', 'parameters' => [['type' => 'text', 'text' => (string) ($payment->amount ?? '')]]],
+        ]);
     }
 }

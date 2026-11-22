@@ -35,4 +35,24 @@ return [
         ],
     ],
 
+    'whatsapp' => [
+        'enabled' => env('WHATSAPP_ENABLED', false),
+        'provider' => env('WHATSAPP_PROVIDER', 'meta_cloud'),
+        'meta' => [
+            'app_id' => env('META_APP_ID'),
+            'app_secret' => env('META_APP_SECRET'),
+            'access_token' => env('META_ACCESS_TOKEN'),
+            'phone_number_id' => env('META_PHONE_NUMBER_ID'),
+            'business_account_id' => env('META_BUSINESS_ACCOUNT_ID'),
+            'verify_token' => env('META_VERIFY_TOKEN'),
+            'webhook_secret' => env('META_WEBHOOK_SECRET'),
+        ],
+    ],
+
+    'fcm' => [
+        'enabled' => env('FCM_ENABLED', false),
+        'server_key' => env('FCM_SERVER_KEY'),
+        'project_id' => env('FIREBASE_PROJECT_ID'),
+    ],
+
 ];

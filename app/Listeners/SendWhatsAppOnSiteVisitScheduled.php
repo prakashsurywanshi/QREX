@@ -14,13 +14,13 @@ class SendWhatsAppOnSiteVisitScheduled
 
     public function handle(SiteVisitScheduled $event): void
     {
-        if (!env('WHATSAPP_ENABLED', false)) {
+        if (!config('services.whatsapp.enabled', false)) {
             return;
         }
 
-        $visit = $event->siteVisit->load('lead', 'customer');
+        $visit = $event->siteVisit->loadMissing('lead', 'customer');
         $phone = $visit->lead?->phone ?? $visit->customer?->phone;
-        $name = $visit->lead?->name ?? $visit->customer?->name;
+        $name = $visit->lead?->name ?? $visit->customer?->name ?? 'there';
 
         if (!$phone) {
             return;

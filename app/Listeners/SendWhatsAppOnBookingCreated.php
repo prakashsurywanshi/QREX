@@ -17,8 +17,11 @@ class SendWhatsAppOnBookingCreated implements ShouldQueue
 
     public function handle(BookingCreated $event): void
     {
-        $booking = $event->booking->load(['customer']);
+        if (!config('services.whatsapp.enabled', false)) return;
+        $booking = $event->booking->loadMissing('customer');
         if (!$booking->customer || !$booking->customer->phone) return;
-        $this->whatsapp->sendTemplate($booking->customer->phone, 'booking_confirmed', ['name' => $booking->customer->first_name]);
+        $this->whatsapp->sendTemplate($booking->customer->phone, 'booking_confirmed', 'en_US', [
+            ['type' => 'body', 'parameters' => [['type' => 'text', 'text' => $booking->customer->first_name ?? $booking->customer->name ?? 'Customer']]],
+        ]);
     }
 }
