@@ -250,13 +250,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
-use App\Http\Controllers\Api\UnitApiController;
-
-// Units API (additional)
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/units/{unit}/hold', [UnitApiController::class, 'hold'])->middleware('permission:units.hold');
-    Route::post('/units/{unit}/release', [UnitApiController::class, 'release'])->middleware('permission:units.hold');
-});
+// Unit hold/release handled by UnitController above (transactional, bounded hours).
 
 
 use App\Http\Controllers\Api\SettingsApiController;
